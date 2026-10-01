@@ -67,6 +67,7 @@
   .intro .tagline { font-family: var(--mono); font-size: var(--small); letter-spacing: 0.08em; text-transform: uppercase; color: var(--magenta); }
   .intro h1 { font-size: clamp(1.9rem, 4.2vw, 2.75rem); font-weight: 800; font-stretch: 82%; line-height: 1.08; }
   .intro p { font-size: 1.125rem; }
+  .intro p.status { font-family: var(--mono); font-size: var(--small); color: var(--ink-2); }
 
   .toc { border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); padding-block: 1.25rem 1.5rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); gap: 1.25rem 2rem; }
   .toc h2 { font-size: 0.95rem; font-weight: 700; font-stretch: 90%; margin-bottom: 0.35rem; }
@@ -140,6 +141,7 @@
     <p class="tagline">Play in the real world</p>
     <h1 id="h1">Automation flows for turning a captured place into game assets</h1>
     <p>Each flow runs one existing tool with nobody at the controls, checks what it made, and hands a file to the next flow. One tool per flow, so each can be tested on its own and swapped when something better ships.</p>
+    <p class="status"><strong>Status:</strong> a plan, not a demo. The harness that chains these flows checks every handoff, but its stages are still stubs, and this page does not yet show a real run.</p>
     <p class="closed"><a class="send mail" href="mailto:holtby.jonathan@gmail.com?subject=RWGE%20%E2%80%94%20a%20tool%20we%20run&amp;body=Which%20tool%3A%0AHow%20we%20run%20it%3A%0AWhere%20it%20breaks%3A%0AStudio%20(optional)%3A%0A">Run one of these tools? Tell us where it breaks</a></p>
   </section>
 
