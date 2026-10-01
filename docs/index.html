@@ -1,0 +1,706 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Real World Game Engine</title>
+<meta name="description" content="Automation flows for the steps between a captured real place and a game-ready asset, one tool at a time.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  :root {
+    color-scheme: light;
+    --paper: #f1f3ee;
+    --paper-2: #e6eae2;
+    --ink: #151f1c;
+    --ink-2: #4b5853;
+    --rule: #c7cec5;
+    --magenta: #a3186b;
+    --blue: #1c5a9c;
+    --ok: #2d6a3e;
+    --display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+    --body: "Source Serif 4", Georgia, "Times New Roman", serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+    --small: 0.8125rem;
+    --gutter: clamp(16px, 4vw, 48px);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+      --paper: #111715;
+      --paper-2: #19211f;
+      --ink: #e6ebe5;
+      --ink-2: #9ba8a2;
+      --rule: #2d3834;
+      --magenta: #e467ad;
+      --blue: #74a9e2;
+      --ok: #7fc493;
+    }
+  }
+
+  html { -webkit-text-size-adjust: 100%; scroll-padding-top: 1rem; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: var(--body); font-size: 1.0625rem; line-height: 1.6;
+    padding-inline: var(--gutter);
+    padding-block: env(safe-area-inset-top, 0px) env(safe-area-inset-bottom, 0px);
+    -webkit-font-smoothing: antialiased;
+  }
+  .page { max-width: 64rem; margin-inline: auto; }
+  a { color: var(--blue); text-underline-offset: 0.18em; text-decoration-thickness: 1px; }
+  a:hover { text-decoration-thickness: 2px; }
+  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 2px solid var(--magenta); outline-offset: 3px; border-radius: 2px; }
+  h1, h2, h3, h4 { font-family: var(--display); text-wrap: balance; margin: 0; }
+  p { margin: 0; }
+  .mono { font-family: var(--mono); }
+
+  .mast { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; padding-block: 1.25rem; border-bottom: 1px solid var(--rule); }
+  .wordmark { font-family: var(--display); font-weight: 850; font-stretch: 118%; font-size: 1.25rem; letter-spacing: 0.02em; }
+  .wordmark span { font-weight: 400; font-stretch: 100%; color: var(--ink-2); font-size: 0.95rem; letter-spacing: 0; margin-left: 0.5rem; }
+  .mast a { font-family: var(--mono); font-size: var(--small); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-2); text-decoration: none; }
+  .mast a:hover { color: var(--magenta); }
+
+  .intro { padding-block: 3rem 2rem; display: grid; gap: 1rem; max-width: 44rem; }
+  .intro .tagline { font-family: var(--mono); font-size: var(--small); letter-spacing: 0.08em; text-transform: uppercase; color: var(--magenta); }
+  .intro h1 { font-size: clamp(1.9rem, 4.2vw, 2.75rem); font-weight: 800; font-stretch: 82%; line-height: 1.08; }
+  .intro p { font-size: 1.125rem; }
+
+  .toc { border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); padding-block: 1.25rem 1.5rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); gap: 1.25rem 2rem; }
+  .toc h2 { font-size: 0.95rem; font-weight: 700; font-stretch: 90%; margin-bottom: 0.35rem; }
+  .toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.15rem; font-size: 0.925rem; }
+  .toc a { text-decoration: none; color: var(--ink); }
+  .toc a:hover { color: var(--blue); text-decoration: underline; }
+
+  .step { padding-block: 2.5rem 1rem; border-bottom: 1px solid var(--rule); }
+  .step > header { display: grid; gap: 0.4rem; margin-bottom: 1rem; max-width: 44rem; }
+  .step h2 { font-size: 1.6rem; font-weight: 780; font-stretch: 85%; line-height: 1.15; }
+  .step .job { color: var(--ink-2); }
+  .step .num { font-family: var(--mono); font-size: var(--small); letter-spacing: 0.06em; color: var(--magenta); }
+  .sub { padding-top: 1.5rem; }
+  .sub > header { display: grid; gap: 0.4rem; margin-bottom: 0.75rem; max-width: 44rem; }
+  .sub h3 { font-size: 1.2rem; font-weight: 750; font-stretch: 88%; }
+  .flow h4 { margin: 0; }
+  .toc .tsub { font-family: var(--mono); font-size: var(--small); color: var(--ink-2); margin-top: 0.35rem; }
+  .step .checks { font-family: var(--mono); font-size: var(--small); color: var(--ink-2); }
+
+  .flow { display: grid; grid-template-columns: 17rem minmax(0, 1fr); gap: 0.5rem 2rem; padding-block: 1.1rem; border-top: 1px solid var(--rule); }
+  .flow h4 { font-size: 1.1rem; font-weight: 700; font-stretch: 90%; line-height: 1.3; }
+  .flow h4 a { color: inherit; text-decoration: none; }
+  .flow h4 a:hover { text-decoration: underline; }
+  .flow .lic { font-family: var(--mono); font-size: var(--small); color: var(--ink-2); margin-top: 0.25rem; }
+  .flow dl { margin: 0; display: grid; grid-template-columns: 7rem minmax(0, 1fr); gap: 0.3rem 1rem; font-size: 0.975rem; }
+  .flow dt { font-family: var(--mono); font-size: var(--small); color: var(--ink-2); padding-top: 0.2rem; }
+  .flow dd { margin: 0; }
+  .step .worked { font-family: var(--mono); font-size: var(--small); color: var(--blue); }
+  .step .finding { border-left: 3px solid var(--magenta); padding-left: 0.9rem; font-size: 1rem; }
+  .flow dd a { overflow-wrap: anywhere; }
+  .flow dd .mono { font-size: 0.88em; }
+
+  .talk { padding-block: 3rem; display: grid; gap: 1rem; max-width: 44rem; }
+  .talk h2 { font-size: 1.6rem; font-weight: 780; font-stretch: 85%; }
+  form { display: grid; gap: 1rem; margin-top: 0.25rem; }
+  .field { display: grid; gap: 0.35rem; }
+  .field label { font-family: var(--mono); font-size: var(--small); color: var(--ink-2); }
+  .field input, .field textarea { font: inherit; font-size: 1rem; color: var(--ink); background: var(--paper); border: 1px solid var(--ink-2); border-radius: 2px; padding: 0.65rem 0.8rem; width: 100%; }
+  .field textarea { min-height: 8rem; resize: vertical; }
+  .row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .send { justify-self: start; font: 500 var(--small) var(--mono); letter-spacing: 0.04em; text-transform: uppercase; padding: 0.8rem 1.2rem; border-radius: 2px; border: 1px solid var(--ink); background: var(--ink); color: var(--paper); cursor: pointer; }
+  .send:disabled { opacity: 0.5; cursor: progress; }
+  .form-msg { font-family: var(--mono); font-size: var(--small); min-height: 1.2em; }
+  .form-msg.ok { color: var(--ok); }
+  .form-msg.err { color: var(--magenta); }
+  .closed { font-family: var(--mono); font-size: var(--small); color: var(--ink-2); display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; }
+  .send.mail { display: inline-block; text-decoration: none; color: var(--paper); }
+
+  footer { border-top: 1px solid var(--rule); padding-block: 1.5rem 3rem; display: grid; gap: 0.75rem; font-family: var(--mono); font-size: var(--small); color: var(--ink-2); }
+  .foot { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+
+  @media (max-width: 760px) {
+    .flow { grid-template-columns: minmax(0, 1fr); }
+    .row { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (max-width: 420px) {
+    .flow dl { grid-template-columns: minmax(0, 1fr); gap: 0 0; }
+    .flow dd + dt { margin-top: 0.4rem; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="mast">
+    <div class="wordmark">RWGE<span>Real World Game Engine</span></div>
+    <a href="#talk">Talk to us</a>
+  </header>
+
+  <section class="intro" aria-labelledby="h1">
+    <p class="tagline">Play in the real world</p>
+    <h1 id="h1">Automation flows for turning a captured place into game assets</h1>
+    <p>Each flow runs one existing tool with nobody at the controls, checks what it made, and hands a file to the next flow. One tool per flow, so each can be tested on its own and swapped when something better ships.</p>
+  </section>
+
+  <nav class="toc" aria-label="All flows">
+    <div><h2>1 · Segmenting</h2><ol>
+      <li><a href="#seg-sam3">SAM 3</a></li>
+    </ol></div>
+    <div><h2>2 · Inference</h2><ol>
+      <li><a href="#infer-sat-skylines">Sat-Skylines</a></li>
+      <li><a href="#infer-sat2city">Sat2City</a></li>
+      <li><a href="#infer-elevate3d">Elevate3D</a></li>
+    </ol></div>
+    <div><h2>3 · Construction</h2><ol>
+      <li><a href="#shells-footprints-lidar">Building shells from footprints and LiDAR</a></li>
+      <li><a href="#reconstruct-realityscan">Reconstruction with RealityScan</a></li>
+      <li><a href="#reconstruct-colmap">Reconstruction with COLMAP</a></li>
+    </ol></div>
+    <div><h2>4 · Optimization</h2><ol>
+      <li class="tsub">Retopology</li>
+      <li><a href="#retopo-instant-meshes">Instant Meshes</a></li>
+      <li><a href="#retopo-quadriflow">QuadriFlow in Blender</a></li>
+      <li><a href="#retopo-quad-remesher">Quad Remesher</a></li>
+      <li><a href="#retopo-zremesher">ZRemesher</a></li>
+      <li class="tsub">LODs</li>
+      <li><a href="#lod-simplygon">Simplygon</a></li>
+      <li><a href="#lod-meshoptimizer">meshoptimizer</a></li>
+      <li><a href="#lod-blender">Blender Decimate</a></li>
+      <li class="tsub">Collision</li>
+      <li><a href="#col-coacd">CoACD</a></li>
+      <li><a href="#col-vhacd">V-HACD</a></li>
+    </ol></div>
+    <div><h2>5 · Texturing</h2><ol>
+      <li class="tsub">UVs</li>
+      <li><a href="#uv-xatlas">xatlas</a></li>
+      <li><a href="#uv-blender">Blender unwrap and pack</a></li>
+      <li><a href="#uv-rizomuv">RizomUV</a></li>
+      <li class="tsub">Baking</li>
+      <li><a href="#bake-blender">Blender Cycles</a></li>
+      <li><a href="#bake-sat">Substance Automation Toolkit</a></li>
+      <li><a href="#bake-marmoset">Marmoset Toolbag</a></li>
+      <li class="tsub">Materials</li>
+      <li><a href="#mat-sampler">Substance 3D Sampler Image to Material</a></li>
+    </ol></div>
+    <div><h2>6 · De-lighting</h2><ol>
+      <li><a href="#delight-metashape">Metashape Remove Lighting</a></li>
+      <li><a href="#delight-agisoft">Agisoft Texture De-Lighter</a></li>
+      <li><a href="#delight-unity">Unity De-Lighting Tool</a></li>
+      <li><a href="#delight-sampler">Substance 3D Sampler Delight</a></li>
+      <li><a href="#delight-marigold">Marigold intrinsic decomposition</a></li>
+      <li><a href="#delight-rgbx">RGB↔X</a></li>
+      <li><a href="#delight-intrinsic">Colorful diffuse intrinsics</a></li>
+      <li><a href="#delight-surgs">SU-RGS</a></li>
+      <li><a href="#delight-irgs">IRGS++</a></li>
+      <li><a href="#delight-sun">Sun-aware, from known geometry</a></li>
+      <li><a href="#delight-rebuild">Rebuild under neutral light</a></li>
+    </ol></div>
+    <div><h2>7 · Compilation</h2><ol>
+      <li><a href="#engine-unreal">Unreal Engine</a></li>
+      <li><a href="#engine-unity">Unity</a></li>
+    </ol></div>
+  </nav>
+
+  <section class="step" aria-labelledby="p-segment">
+    <header>
+      <p class="num">1 of 7</p>
+      <h2 id="p-segment">Segmenting</h2>
+      <p class="job">Split the place into things (buildings, roads, water, trees, boats) so each goes to the flow that can build it.</p>
+      <p class="checks">Checked for: every pixel labelled, classes from the project’s own list, masks against building footprints.</p>
+    </header>
+    <article class="flow" id="seg-sam3">
+      <div><h4><a href="#seg-sam3">Segmentation with SAM 3</a></h4><p class="lic">SAM License (Meta)</p></div>
+      <dl>
+        <dt>In</dt><dd>Aerial or street imagery, and a short text prompt per class (“boat”, “roof”, “pier”)</dd>
+        <dt>Out</dt><dd>A mask, box and score for every instance of each class</dd>
+        <dt>Driven by</dt><dd>Python, from Meta’s released code and weights; needs a CUDA GPU</dd>
+        <dt>Tools</dt><dd><a href="https://github.com/facebookresearch/sam3">GitHub</a></dd>
+      </dl>
+    </article>
+  </section>
+
+  <section class="step" aria-labelledby="p-infer">
+    <header>
+      <p class="num">2 of 7</p>
+      <h2 id="p-infer">Inference</h2>
+      <p class="job">From above you see roofs. Walls, overhangs and anything hidden have to come from somewhere else: measure first, generate last, and mark every surface that was inferred.</p>
+      <p class="checks">Checked for: every surface tagged measured or inferred; inferred shapes against street photos the flow never saw.</p>
+    </header>
+    <article class="flow" id="infer-sat-skylines">
+      <div><h4><a href="#infer-sat-skylines">Buildings with Sat-Skylines</a></h4><p class="lic">Research (USC, 2025) · USC Research licence</p></div>
+      <dl>
+        <dt>In</dt><dd>Satellite imagery and a coarse shape per building, such as a box from footprint and height</dd>
+        <dt>Out</dt><dd>A detailed 3D building, trained on over 50,000 hand-made game building assets</dd>
+        <dt>Driven by</dt><dd>Dataset released; model weights and inference code listed as pending</dd>
+        <dt>Tools</dt><dd><a href="https://arxiv.org/abs/2508.18531">arXiv 2508.18531</a> · <a href="https://github.com/JinZhangYu/SatSkylines">GitHub</a></dd>
+      </dl>
+    </article>
+    <article class="flow" id="infer-sat2city">
+      <div><h4><a href="#infer-sat2city">City blocks with Sat2City</a></h4><p class="lic">Research (HKUST Guangzhou, ICCV 2025)</p></div>
+      <dl>
+        <dt>In</dt><dd>A single satellite image</dd>
+        <dt>Out</dt><dd>3D city structure; version 2 outputs textured meshes</dd>
+        <dt>Driven by</dt><dd>Code repository says “coming soon”</dd>
+        <dt>Tools</dt><dd><a href="https://arxiv.org/abs/2507.04403">arXiv 2507.04403</a> · <a href="https://ai4city-hkust.github.io/Sat2City/">Project page</a></dd>
+      </dl>
+    </article>
+    <article class="flow" id="infer-elevate3d">
+      <div><h4><a href="#infer-elevate3d">Buildings with Elevate3D</a></h4><p class="lic">Open source</p></div>
+      <dl>
+        <dt>In</dt><dd>A satellite image</dd>
+        <dt>Out</dt><dd>Building masks, an estimated height map, and a mesh</dd>
+        <dt>Driven by</dt><dd>One command, pretrained weights included</dd>
+        <dt>Note</dt><dd>Its own README calls it experimental and not production-ready.</dd>
+        <dt>Tools</dt><dd><a href="https://github.com/krdgomer/Elevate3D">GitHub</a></dd>
+      </dl>
+    </article>
+  </section>
+
+  <section class="step" aria-labelledby="s-source">
+    <header>
+      <p class="num">3 of 7</p>
+      <h2 id="s-source">Construction</h2>
+      <p class="job">Turn the place into geometry, from imagery we are allowed to use.</p>
+      <p class="checks">Checked for: licence and source recorded on every file, footprint against imagery, scale.</p>
+    </header>
+    <article class="flow" id="shells-footprints-lidar">
+      <div><h4><a href="#shells-footprints-lidar">Building shells from footprints and LiDAR heights, in Blender</a></h4><p class="lic">Public-domain imagery · ODbL footprints</p></div>
+      <dl>
+        <dt>In</dt><dd>A US location: NAIP aerial imagery, USGS 3DEP LiDAR, Microsoft building footprints</dd>
+        <dt>Out</dt><dd>Building shells extruded to measured heights, imagery projected onto roofs and ground</dd>
+        <dt>Driven by</dt><dd>Headless Blender (<span class="mono">bpy</span>), or the open-source BlenderGIS add-on’s import and extrude tools; data from Planetary Computer</dd>
+        <dt>Note</dt><dd>Measured, not guessed, but only footprint and height. No facades. Projected imagery keeps the sun baked in; see <a href="#s-delight">De-lighting</a>.</dd>
+      </dl>
+    </article>
+    <article class="flow" id="reconstruct-realityscan">
+      <div><h4><a href="#reconstruct-realityscan">Reconstruction with RealityScan (formerly RealityCapture)</a></h4><p class="lic">Epic Games</p></div>
+      <dl>
+        <dt>In</dt><dd>Photos or drone imagery, optional LiDAR</dd>
+        <dt>Out</dt><dd>Dense textured mesh</dd>
+        <dt>Driven by</dt><dd>Command-line interface, including a Linux CLI build from 2.1</dd>
+      </dl>
+    </article>
+    <article class="flow" id="reconstruct-colmap">
+      <div><h4><a href="#reconstruct-colmap">Reconstruction with COLMAP</a></h4><p class="lic">Open source</p></div>
+      <dl>
+        <dt>In</dt><dd>Photos</dd>
+        <dt>Out</dt><dd>Camera poses, dense point cloud, mesh</dd>
+        <dt>Driven by</dt><dd>Command line</dd>
+      </dl>
+    </article>
+  </section>
+
+  <section class="step" aria-labelledby="p-optimize">
+    <header>
+      <p class="num">4 of 7</p>
+      <h2 id="p-optimize">Optimization</h2>
+      <p class="job">Make it cheap enough to run: clean topology, cheaper versions for distance, and shapes for physics.</p>
+    </header>
+    <div class="sub" aria-labelledby="s-retopo">
+      <header>
+        <h3 id="s-retopo">Retopology</h3>
+        <p class="job">Dense triangle soup to clean quads at a target budget.</p>
+        <p class="checks">Checked for: face count within budget, manifold, distance from the source surface, silhouette.</p>
+      </header>
+    <article class="flow" id="retopo-instant-meshes">
+      <div><h4><a href="#retopo-instant-meshes">Retopology with Instant Meshes</a></h4><p class="lic">Open source</p></div>
+      <dl>
+        <dt>In</dt><dd>Dense mesh (OBJ, PLY)</dd>
+        <dt>Out</dt><dd>Quad-dominant mesh at a target face or vertex count</dd>
+        <dt>Driven by</dt><dd>Batch mode on the command line</dd>
+      </dl>
+    </article>
+    <article class="flow" id="retopo-quadriflow">
+      <div><h4><a href="#retopo-quadriflow">Retopology with QuadriFlow in Blender</a></h4><p class="lic">Built into Blender</p></div>
+      <dl>
+        <dt>In</dt><dd>Dense mesh</dd>
+        <dt>Out</dt><dd>All-quad mesh at a target face count</dd>
+        <dt>Driven by</dt><dd>Headless Blender, the QuadriFlow remesh operator</dd>
+      </dl>
+    </article>
+    <article class="flow" id="retopo-quad-remesher">
+      <div><h4><a href="#retopo-quad-remesher">Retopology with Quad Remesher</a></h4><p class="lic">Commercial (Exoside)</p></div>
+      <dl>
+        <dt>In</dt><dd>Dense mesh, optional material and crease guides</dd>
+        <dt>Out</dt><dd>Quad mesh with edge loops that follow the form</dd>
+        <dt>Driven by</dt><dd>Its Blender add-on’s remesh operator, looped over objects in a script</dd>
+      </dl>
+    </article>
+    <article class="flow" id="retopo-zremesher">
+      <div><h4><a href="#retopo-zremesher">Retopology with ZRemesher</a></h4><p class="lic">Commercial (ZBrush)</p></div>
+      <dl>
+        <dt>In</dt><dd>Dense mesh</dd>
+        <dt>Out</dt><dd>Quad mesh</dd>
+        <dt>Driven by</dt><dd>ZBrush 2026’s official Python SDK, run from the command line with <span class="mono">-batch -script</span>. Whether the SDK reaches ZRemesher itself is not confirmed.</dd>
+        <dt>Note</dt><dd>Many artists’ default, and the hardest here to run without a person.</dd>
+      </dl>
+    </article>
+    </div>
+    <div class="sub" aria-labelledby="s-lod">
+      <header>
+        <h3 id="s-lod">LODs</h3>
+        <p class="job">A chain of cheaper versions for distance.</p>
+        <p class="checks">Checked for: triangle count per level, screen-space error, UVs and seams kept.</p>
+      </header>
+    <article class="flow" id="lod-simplygon">
+      <div><h4><a href="#lod-simplygon">LODs with Simplygon</a></h4><p class="lic">Commercial</p></div>
+      <dl>
+        <dt>In</dt><dd>Game mesh and materials</dd>
+        <dt>Out</dt><dd>LOD chain, optional proxy meshes</dd>
+        <dt>Driven by</dt><dd>SDK with a Python API</dd>
+      </dl>
+    </article>
+    <article class="flow" id="lod-meshoptimizer">
+      <div><h4><a href="#lod-meshoptimizer">LODs with meshoptimizer</a></h4><p class="lic">Open source</p></div>
+      <dl>
+        <dt>In</dt><dd>Game mesh</dd>
+        <dt>Out</dt><dd>Simplified levels</dd>
+        <dt>Driven by</dt><dd>Library, or gltfpack on the command line</dd>
+      </dl>
+    </article>
+    <article class="flow" id="lod-blender">
+      <div><h4><a href="#lod-blender">LODs with Blender Decimate</a></h4><p class="lic">Built into Blender</p></div>
+      <dl>
+        <dt>In</dt><dd>Game mesh</dd>
+        <dt>Out</dt><dd>Decimated levels</dd>
+        <dt>Driven by</dt><dd>Headless Blender, Decimate modifier</dd>
+      </dl>
+    </article>
+    </div>
+    <div class="sub" aria-labelledby="s-col">
+      <header>
+        <h3 id="s-col">Collision</h3>
+        <p class="job">Simple shapes the physics engine can use.</p>
+        <p class="checks">Checked for: hull count within budget, volume against the render mesh, no gaps a player can fall through.</p>
+      </header>
+    <article class="flow" id="col-coacd">
+      <div><h4><a href="#col-coacd">Collision with CoACD</a></h4><p class="lic">Open source</p></div>
+      <dl>
+        <dt>In</dt><dd>Game mesh</dd>
+        <dt>Out</dt><dd>Convex hulls</dd>
+        <dt>Driven by</dt><dd>Python package</dd>
+      </dl>
+    </article>
+    <article class="flow" id="col-vhacd">
+      <div><h4><a href="#col-vhacd">Collision with V-HACD</a></h4><p class="lic">Open source</p></div>
+      <dl>
+        <dt>In</dt><dd>Game mesh</dd>
+        <dt>Out</dt><dd>Convex hulls</dd>
+        <dt>Driven by</dt><dd>Command line or library</dd>
+        <dt>Note</dt><dd>Its own README now calls it end-of-life and points to <a href="#col-coacd">CoACD</a>.</dd>
+      </dl>
+    </article>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="p-texture">
+    <header>
+      <p class="num">5 of 7</p>
+      <h2 id="p-texture">Texturing</h2>
+      <p class="job">Give the clean mesh its surfaces: UVs, the scan’s detail baked on, and PBR materials.</p>
+    </header>
+    <div class="sub" aria-labelledby="s-uv">
+      <header>
+        <h3 id="s-uv">UVs</h3>
+        <p class="job">Lay the UVs out again after remeshing, and pack them.</p>
+        <p class="checks">Checked for: no overlaps, stretch under a threshold, texel density, padding for the target mip levels.</p>
+      </header>
+    <article class="flow" id="uv-xatlas">
+      <div><h4><a href="#uv-xatlas">UVs with xatlas</a></h4><p class="lic">Open source</p></div>
+      <dl>
+        <dt>In</dt><dd>Retopologised mesh</dd>
+        <dt>Out</dt><dd>Unwrapped, packed atlas</dd>
+        <dt>Driven by</dt><dd>C++ library, with community Python bindings (<span class="mono">xatlas-python</span>)</dd>
+      </dl>
+    </article>
+    <article class="flow" id="uv-blender">
+      <div><h4><a href="#uv-blender">UVs with Blender unwrap and pack</a></h4><p class="lic">Built into Blender</p></div>
+      <dl>
+        <dt>In</dt><dd>Retopologised mesh</dd>
+        <dt>Out</dt><dd>Unwrapped, packed UVs</dd>
+        <dt>Driven by</dt><dd>Headless Blender, unwrap and pack operators</dd>
+      </dl>
+    </article>
+    <article class="flow" id="uv-rizomuv">
+      <div><h4><a href="#uv-rizomuv">UVs with RizomUV</a></h4><p class="lic">Commercial</p></div>
+      <dl>
+        <dt>In</dt><dd>Retopologised mesh</dd>
+        <dt>Out</dt><dd>Unwrapped, packed UVs with cleaner seams</dd>
+        <dt>Driven by</dt><dd>Lua scripts, or RizomUVLink from 2022.2</dd>
+      </dl>
+    </article>
+    </div>
+    <div class="sub" aria-labelledby="s-bake">
+      <header>
+        <h3 id="s-bake">Baking</h3>
+        <p class="job">Carry the detail of the dense scan onto the clean mesh as textures.</p>
+        <p class="checks">Checked for: bake errors along seams, cage misses, normal map direction for the target engine.</p>
+      </header>
+    <article class="flow" id="bake-blender">
+      <div><h4><a href="#bake-blender">Baking with Blender Cycles</a></h4><p class="lic">Built into Blender</p></div>
+      <dl>
+        <dt>In</dt><dd>Dense scan and the UV’d low-poly mesh</dd>
+        <dt>Out</dt><dd>Normal, ambient occlusion and colour maps</dd>
+        <dt>Driven by</dt><dd>Headless Blender, bake selected to active</dd>
+      </dl>
+    </article>
+    <article class="flow" id="bake-sat">
+      <div><h4><a href="#bake-sat">Baking with the Substance Automation Toolkit</a></h4><p class="lic">Commercial (Adobe)</p></div>
+      <dl>
+        <dt>In</dt><dd>High and low meshes</dd>
+        <dt>Out</dt><dd>Mesh maps</dd>
+        <dt>Driven by</dt><dd>Command-line baker</dd>
+      </dl>
+    </article>
+    <article class="flow" id="bake-marmoset">
+      <div><h4><a href="#bake-marmoset">Baking with Marmoset Toolbag</a></h4><p class="lic">Commercial</p></div>
+      <dl>
+        <dt>In</dt><dd>High and low meshes</dd>
+        <dt>Out</dt><dd>Mesh maps</dd>
+        <dt>Driven by</dt><dd>A Python script passed at launch (<span class="mono">toolbag.exe script.py</span>); Marmoset’s own examples cover baking. Whether it runs without a window is not confirmed.</dd>
+      </dl>
+    </article>
+    </div>
+    <div class="sub" aria-labelledby="s-mat">
+      <header>
+        <h3 id="s-mat">Materials</h3>
+        <p class="job">One flat colour map into the PBR channels the engine expects.</p>
+        <p class="checks">Checked for: albedo in a plausible range, roughness and normal maps present, values consistent across tiles.</p>
+      </header>
+    <article class="flow" id="mat-sampler">
+      <div><h4><a href="#mat-sampler">Materials with Substance 3D Sampler Image to Material</a></h4><p class="lic">Commercial (Adobe)</p></div>
+      <dl>
+        <dt>In</dt><dd>Photo or colour map</dd>
+        <dt>Out</dt><dd>Base colour, normal, roughness, height, with de-lighting included</dd>
+        <dt>Driven by</dt><dd>Python API for scripts and plugins inside Sampler. Running it without the app open is not documented.</dd>
+      </dl>
+    </article>
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="s-delight">
+    <header>
+      <p class="num">6 of 7</p>
+      <h2 id="s-delight">De-lighting</h2>
+      <p class="job">Take the sun and shadows of the capture day out of the colour, so the asset works under any lighting.</p>
+      <p class="checks">Checked for: sunlit and shadowed patches of the same surface match after correction; the result, relit, matches a photo of the place the flow never saw.</p>
+      <p class="worked">Worked through against each tool’s own documentation, 23 September 2026.</p>
+      <p class="finding">Every production tool here assumes the capture avoided hard sun. Unity’s own photogrammetry guide says strong directional shadows are “a situation that must be avoided” because they are “difficult to remove from the generated diffuse albedo texture”. Agisoft says Metashape’s tool does not support strong shadows. Aerial imagery is flown in sunlight, so hard shadows are always in the input. That leaves two ways out at the bottom of this list: measure the shadows from geometry we already have, or skip de-lighting and rebuild the surface from scratch.</p>
+    </header>
+    <article class="flow" id="delight-metashape">
+      <div><h4><a href="#delight-metashape">De-lighting with Metashape Remove Lighting</a></h4><p class="lic">Commercial (Metashape Professional)</p></div>
+      <dl>
+        <dt>In</dt><dd>Textured model in a Metashape chunk, optional ambient occlusion map</dd>
+        <dt>Out</dt><dd>Texture with light and dark sides evened out</dd>
+        <dt>Driven by</dt><dd><span class="mono">Chunk.removeLighting()</span> in the Python API, with colour mode, blur, mesh-noise suppression and AO settings</dd>
+        <dt>Built for</dt><dd>Soft lighting. An “Aggressive” preset is tuned for rocks.</dd>
+        <dt>Breaks on</dt><dd>Strong shadows: “delighting in strong shadows is not supported.”</dd>
+        <dt>Tools</dt><dd><a href="https://agisoft.freshdesk.com/support/solutions/articles/31000158885-remove-lighting-from-texture-in-agisoft-metashape-professional">Agisoft helpdesk</a> · <a href="https://www.agisoft.com/pdf/metashape_python_api_2_2_0.pdf">Python API 2.2.0</a>, p. 67</dd>
+      </dl>
+    </article>
+    <article class="flow" id="delight-agisoft">
+      <div><h4><a href="#delight-agisoft">De-lighting with Agisoft Texture De-Lighter</a></h4><p class="lic">Free (Agisoft)</p></div>
+      <dl>
+        <dt>In</dt><dd>Textured model, 8-bit JPEG texture, and brush strokes marking lit and shadowed areas</dd>
+        <dt>Out</dt><dd>Texture with cast shadows and ambient occlusion removed</dd>
+        <dt>Driven by</dt><dd>Desktop app only</dd>
+        <dt>Built for</dt><dd>Cast shadows, which the others can’t do. It needs “one stroke per material which is undoubtedly lit/shadowed”.</dd>
+        <dt>Breaks on</dt><dd>“Highly non-uniform shadows (e.g. ambient occlusion overlapping with cast shadow)”.</dd>
+        <dt>Automating it</dt><dd>Means generating the strokes ourselves, and it has no scripting route to feed them in.</dd>
+        <dt>Tools</dt><dd><a href="https://agisoft.freshdesk.com/support/solutions/articles/31000158376-agisoft-texture-de-lighter-general-workflow">Agisoft helpdesk</a></dd>
+      </dl>
+    </article>
+    <article class="flow" id="delight-unity">
+      <div><h4><a href="#delight-unity">De-lighting with Unity’s De-Lighting Tool</a></h4><p class="lic">Open source (MIT, Unity)</p></div>
+      <dl>
+        <dt>In</dt><dd>Baked base colour, normal, bent normal, ambient occlusion and position maps, optional mask</dd>
+        <dt>Out</dt><dd>De-lit albedo</dd>
+        <dt>Driven by</dt><dd><span class="mono">Delighting.bat</span> runs <span class="mono">Unity.exe -executeMethod DelightingCLI.Run</span> with the maps as arguments</dd>
+        <dt>Built for</dt><dd>Objects shot on an overcast day or under an occluder. Supports Unity 2017.1 onward, so it may not run on current versions without work.</dd>
+        <dt>Breaks on</dt><dd>Hard shadows. Unity’s guide falls back to Photoshop “to remove lighting artistically”.</dd>
+        <dt>Tools</dt><dd><a href="https://github.com/Unity-Technologies/DeLightingTool">GitHub</a> · <a href="https://unity3d.com/files/solutions/photogrammetry/Unity-Photogrammetry-Workflow_2017-07_v2.pdf">Unity Photogrammetry Workflow</a>, pp. 18–19, 86</dd>
+      </dl>
+    </article>
+    <article class="flow" id="delight-sampler">
+      <div><h4><a href="#delight-sampler">De-lighting with Substance 3D Sampler Delight</a></h4><p class="lic">Commercial (Adobe)</p></div>
+      <dl>
+        <dt>In</dt><dd>Photo or colour map</dd>
+        <dt>Out</dt><dd>De-lit colour map. The filter has no parameters.</dd>
+        <dt>Driven by</dt><dd>Python API for scripts and plugins inside Sampler, since 3.4. Running it without the app open is not documented.</dd>
+        <dt>Tools</dt><dd><a href="https://substance3d.adobe.com/documentation/sadoc/delighter-172823952.html">Delight (AI Powered)</a></dd>
+      </dl>
+    </article>
+    <article class="flow" id="delight-marigold">
+      <div><h4><a href="#delight-marigold">De-lighting with Marigold intrinsic decomposition</a></h4><p class="lic">Open RAIL++-M licence (ETH Zürich)</p></div>
+      <dl>
+        <dt>In</dt><dd>An image</dd>
+        <dt>Out</dt><dd>Appearance model: albedo, roughness, metallicity. Lighting model: albedo, diffuse shading, non-diffuse residual.</dd>
+        <dt>Driven by</dt><dd>Python, as a Hugging Face Diffusers pipeline</dd>
+        <dt>Breaks on</dt><dd>Unknown for aerial imagery. Its albedo comes from indoor synthetic datasets (InteriorVerse, Hypersim), so roofs and roads from above are out of what it has seen.</dd>
+        <dt>Tools</dt><dd><a href="https://huggingface.co/prs-eth/marigold-iid-lighting-v1-1">Model card</a> · <a href="https://huggingface.co/docs/diffusers/en/using-diffusers/marigold_usage">Diffusers docs</a></dd>
+      </dl>
+    </article>
+    <article class="flow" id="delight-rgbx">
+      <div><h4><a href="#delight-rgbx">De-lighting with RGB↔X</a></h4><p class="lic">Non-commercial only (Adobe Research, SIGGRAPH 2024)</p></div>
+      <dl>
+        <dt>In</dt><dd>An image</dd>
+        <dt>Out</dt><dd>Albedo, normals, roughness, metallicity, irradiance</dd>
+        <dt>Driven by</dt><dd>Python, released code and weights</dd>
+        <dt>Note</dt><dd>We can test against it. The licence means we can’t ship it.</dd>
+        <dt>Tools</dt><dd><a href="https://github.com/zheng95z/rgbx">GitHub</a></dd>
+      </dl>
+    </article>
+    <article class="flow" id="delight-intrinsic">
+      <div><h4><a href="#delight-intrinsic">De-lighting with colorful diffuse intrinsics</a></h4><p class="lic">Academic use only (SFU, TOG 2024)</p></div>
+      <dl>
+        <dt>In</dt><dd>An image</dd>
+        <dt>Out</dt><dd>Albedo, coloured diffuse shading, residual</dd>
+        <dt>Driven by</dt><dd>Python package from the repo</dd>
+        <dt>Note</dt><dd>Commercial use goes through SFU’s licensing office. We can test against it; shipping needs a licence.</dd>
+        <dt>Tools</dt><dd><a href="https://github.com/compphoto/Intrinsic">GitHub</a></dd>
+      </dl>
+    </article>
+    <article class="flow" id="delight-surgs">
+      <div><h4><a href="#delight-surgs">De-lighting with SU-RGS</a></h4><p class="lic">Research (ICCV 2025)</p></div>
+      <dl>
+        <dt>In</dt><dd>A sparse set of photos of the place, taken under different lighting</dd>
+        <dt>Out</dt><dd>Relightable 3D Gaussians with surface materials and the environment lighting, with transient objects removed</dd>
+        <dt>Driven by</dt><dd>No released code found</dd>
+        <dt>Note</dt><dd>Needs several views, so it suits street or drone photos rather than a single aerial image.</dd>
+        <dt>Tools</dt><dd><a href="https://openaccess.thecvf.com/content/ICCV2025/html/Zhang_SU-RGS_Relightable_3D_Gaussian_Splatting_from_Sparse_Views_under_Unconstrained_ICCV_2025_paper.html">ICCV 2025 paper</a></dd>
+      </dl>
+    </article>
+    <article class="flow" id="delight-irgs">
+      <div><h4><a href="#delight-irgs">De-lighting with IRGS++</a></h4><p class="lic">Research (July 2026)</p></div>
+      <dl>
+        <dt>In</dt><dd>Multi-view photos</dd>
+        <dt>Out</dt><dd>Albedo, roughness, metallic and lighting, including inter-reflections, so glass and metal are handled</dd>
+        <dt>Driven by</dt><dd>No released code found</dd>
+        <dt>Tools</dt><dd><a href="https://arxiv.org/abs/2607.22780">arXiv 2607.22780</a></dd>
+      </dl>
+    </article>
+    <article class="flow" id="delight-sun">
+      <div><h4><a href="#delight-sun">Sun-aware de-lighting from known geometry</a></h4><p class="lic">Our code, public-domain inputs</p></div>
+      <dl>
+        <dt>In</dt><dd>NAIP aerial imagery, a USGS 3DEP LiDAR surface model, the flight date</dd>
+        <dt>Out</dt><dd>A cast-shadow mask computed from the geometry, and colour corrected inside it</dd>
+        <dt>Driven by</dt><dd>Our code</dd>
+        <dt>Idea</dt><dd>Aerial shadows are hard, but they are cast by geometry we already have. Find the sun direction whose shadows over the surface model best match the dark pixels, and the shadow is measured rather than guessed. Then match each shadowed surface to the same surface in sun.</dd>
+        <dt>Breaks on</dt><dd>NAIP records the date but not the time, so the sun direction has to be fitted. LiDAR and imagery can be years apart, so trees and new buildings won’t line up.</dd>
+      </dl>
+    </article>
+    <article class="flow" id="delight-rebuild">
+      <div><h4><a href="#delight-rebuild">Rebuild under neutral light, imagery as reference only</a></h4><p class="lic">Our code, library materials</p></div>
+      <dl>
+        <dt>In</dt><dd>Everything we have for the place: aerial imagery, LiDAR, licensed street photos, and a material library</dd>
+        <dt>Out</dt><dd>Geometry and PBR materials authored clean, with no lighting baked in</dd>
+        <dt>Driven by</dt><dd>Agents in headless Blender, picking a library material per surface and measuring its colour from the sunlit pixels</dd>
+        <dt>Idea</dt><dd>What artists do when the capture can’t be de-lit: use the photos as reference and rebuild by hand. Nothing is baked in, so there is nothing to remove. Colour only has to be measured once per surface, from the parts in sun.</dd>
+        <dt>Check</dt><dd>Render the rebuild under the fitted sun and compare it with the original photo.</dd>
+        <dt>Breaks on</dt><dd>Fidelity. You get the place’s materials, not its exact pixels, so stains, patches and signage are lost or have to be authored. The hardest path here, and the only one that always ends clean.</dd>
+      </dl>
+    </article>
+  </section>
+
+  <section class="step" aria-labelledby="s-engine">
+    <header>
+      <p class="num">7 of 7</p>
+      <h2 id="s-engine">Compilation</h2>
+      <p class="job">Import, assign, and set up to the project’s conventions.</p>
+      <p class="checks">Checked for: imports clean, materials assigned, LODs and collision set up, scale and pivots.</p>
+    </header>
+    <article class="flow" id="engine-unreal">
+      <div><h4><a href="#engine-unreal">Into Unreal Engine</a></h4><p class="lic">Epic Games</p></div>
+      <dl>
+        <dt>In</dt><dd>Meshes, textures, LODs, collision</dd>
+        <dt>Out</dt><dd>Static mesh assets and materials in a project</dd>
+        <dt>Driven by</dt><dd>Python editor scripting</dd>
+        <dt>Note</dt><dd>Epic marks the Editor Static Mesh Library deprecated in favour of the Static Mesh Editor Subsystem, so that is the route we would use.</dd>
+      </dl>
+    </article>
+    <article class="flow" id="engine-unity">
+      <div><h4><a href="#engine-unity">Into Unity</a></h4><p class="lic">Unity</p></div>
+      <dl>
+        <dt>In</dt><dd>Meshes, textures, LODs, collision</dd>
+        <dt>Out</dt><dd>Prefabs and materials in a project</dd>
+        <dt>Driven by</dt><dd>Editor in batch mode running an editor script (<span class="mono">-batchmode -nographics -executeMethod</span>), no GPU needed</dd>
+      </dl>
+    </article>
+  </section>
+
+  <section class="talk" id="talk" aria-labelledby="h-talk">
+    <h2 id="h-talk">Run one of these tools today?</h2>
+    <p>Tell us which one, how you drive it, and where it breaks. We would like to talk.</p>
+
+    <p class="closed" id="closed"><a class="send mail" href="mailto:holtby.jonathan@gmail.com?subject=RWGE%20%E2%80%94%20a%20tool%20we%20run&amp;body=Which%20tool%3A%0AHow%20we%20run%20it%3A%0AWhere%20it%20breaks%3A%0AStudio%20(optional)%3A%0A">Email us</a></p>
+
+    <form id="contact" hidden novalidate>
+      <div class="field">
+        <label for="msg">Which tool, how you run it, and where it breaks</label>
+        <textarea id="msg" name="msg" maxlength="2000" required></textarea>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" maxlength="200" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="studio">Studio (optional)</label>
+          <input id="studio" name="studio" type="text" maxlength="200" autocomplete="organization">
+        </div>
+      </div>
+      <div class="hp" aria-hidden="true">
+        <label for="website">Leave this empty</label>
+        <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+      </div>
+      <button class="send" id="send" type="submit">Send</button>
+      <p class="form-msg" id="form-msg" role="status" aria-live="polite"></p>
+    </form>
+  </section>
+
+  <footer>
+    <p>We work with named studios on named locations, only on imagery we can license, with sensitive sites left out. Every file keeps its source.</p>
+    <div class="foot"><span>RWGE · Real World Game Engine</span><span>v1 · September 2026</span></div>
+  </footer>
+</div>
+
+<script>
+// Contact form. Stays closed until the events table only accepts inserts from the public key.
+var CONTACT = { live: false, url: "", key: "" };
+
+(function () {
+  if (!CONTACT.live || !CONTACT.url || !CONTACT.key) return;
+  var form = document.getElementById('contact'), closed = document.getElementById('closed');
+  var send = document.getElementById('send'), msg = document.getElementById('form-msg');
+  closed.hidden = true; form.hidden = false;
+
+  var sid;
+  try { sid = sessionStorage.getItem('rwge-sid'); } catch (e) {}
+  if (!sid) { sid = Math.random().toString(36).slice(2, 12); try { sessionStorage.setItem('rwge-sid', sid); } catch (e) {} }
+
+  form.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    msg.className = 'form-msg'; msg.textContent = '';
+    if (form.website.value) { msg.className = 'form-msg ok'; msg.textContent = 'Sent. We’ll reply by email.'; form.reset(); return; }
+    var text = form.msg.value.trim(), email = form.email.value.trim();
+    if (!text) { msg.className = 'form-msg err'; msg.textContent = 'Tell us which tool and how you run it.'; form.msg.focus(); return; }
+    if (!email || !form.email.checkValidity()) { msg.className = 'form-msg err'; msg.textContent = 'Add an email address we can reply to.'; form.email.focus(); return; }
+    send.disabled = true; send.textContent = 'Sending';
+    fetch(CONTACT.url.replace(/\/$/, '') + '/rest/v1/events', {
+      method: 'POST',
+      headers: { 'apikey': CONTACT.key, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+      body: JSON.stringify({
+        test: 'landing-v1', kind: 'contact', session_id: sid,
+        payload: { message: text, email: email, studio: form.studio.value.trim(), page: location.pathname }
+      })
+    }).then(function (r) {
+      if (!r.ok) throw new Error(r.status);
+      msg.className = 'form-msg ok'; msg.textContent = 'Sent. We’ll reply by email.'; form.reset();
+    }).catch(function () {
+      msg.className = 'form-msg err'; msg.textContent = 'That didn’t send. Check your connection and try again.';
+    }).then(function () { send.disabled = false; send.textContent = 'Send'; });
+  });
+})();
+</script>
+</body>
+</html>
