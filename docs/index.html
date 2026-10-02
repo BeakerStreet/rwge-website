@@ -69,6 +69,10 @@
   .intro p { font-size: 1.125rem; }
   .intro p.status { font-family: var(--mono); font-size: var(--small); color: var(--ink-2); }
 
+  .intro figure { margin: 0; display: grid; gap: 0.4rem; max-width: 28rem; }
+  .intro figure img { width: 100%; height: auto; border: 1px solid var(--rule); display: block; }
+  .intro figcaption { font-family: var(--mono); font-size: var(--small); color: var(--ink-2); }
+
   .toc { border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); padding-block: 1.25rem 1.5rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); gap: 1.25rem 2rem; }
   .toc h2 { font-size: 0.95rem; font-weight: 700; font-stretch: 90%; margin-bottom: 0.35rem; }
   .toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.15rem; font-size: 0.925rem; }
@@ -141,7 +145,8 @@
     <p class="tagline">Play in the real world</p>
     <h1 id="h1">Automation flows for turning a captured place into game assets</h1>
     <p>Each flow runs one existing tool with nobody at the controls, checks what it made, and hands a file to the next flow. One tool per flow, so each can be tested on its own and swapped when something better ships.</p>
-    <p class="status"><strong>Status:</strong> a plan, not a demo. The harness that chains these flows checks every handoff. For one fixed spot (San Francisco), four stages now run for real: look up aerial-imagery and LiDAR records in a free public catalogue, build a terrain mesh from measured 10 m elevation data, reduce it, give it one flat colour averaged from real aerial imagery, and assemble it into a single glTF file that is read back and checked. Terrain only: no buildings, imagery is averaged to a single colour, not draped on the surface, nothing segmented. The other stages are stubs, and this page does not yet show a real run.</p>
+    <p class="status"><strong>Status:</strong> a plan, not a demo. The harness that chains these flows checks every handoff. For one fixed spot (San Francisco), four stages now run for real: look up aerial-imagery and LiDAR records in a free public catalogue, build a terrain mesh from measured 10 m elevation data, reduce it, give it one flat colour averaged from real aerial imagery, and assemble it into a single glTF file that is read back and checked. Terrain only: no buildings, imagery is averaged to a single colour, not draped on the surface, nothing segmented. The other stages are stubs.</p>
+    <figure><img src="img/sf-terrain-preview.png" width="800" height="600" alt="Grey, nearly flat rectangular terrain surface rendered from above at an angle"><figcaption>Actual output of the last run, unretouched: the glTF file read back and rendered. About 540 m of downtown San Francisco, one flat grey-blue colour. This is where it stands.</figcaption></figure>
     <p class="closed"><a class="send mail" href="mailto:holtby.jonathan@gmail.com?subject=RWGE%20%E2%80%94%20a%20tool%20we%20run&amp;body=Which%20tool%20(or%20which%20real%20place%20you%20build%20by%20hand)%3A%0AHow%20we%20run%20it%20(or%20what%20it%20costs%20us%20in%20people%20and%20weeks)%3A%0AWhere%20it%20breaks%3A%0AStudio%20(optional)%3A%0A">Run one of these tools? Tell us where it breaks</a></p>
   </section>
 
