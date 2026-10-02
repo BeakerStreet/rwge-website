@@ -67,7 +67,10 @@
   .intro .tagline { font-family: var(--mono); font-size: var(--small); letter-spacing: 0.08em; text-transform: uppercase; color: var(--magenta); }
   .intro h1 { font-size: clamp(1.9rem, 4.2vw, 2.75rem); font-weight: 800; font-stretch: 82%; line-height: 1.08; }
   .intro p { font-size: 1.125rem; }
-  .intro p.status { font-family: var(--mono); font-size: var(--small); color: var(--ink-2); }
+  .intro .status { display: grid; gap: 0.4rem; font-family: var(--mono); font-size: var(--small); color: var(--ink-2); }
+  .intro .status p, .intro .status li { font-size: var(--small); }
+  .intro .status ul { margin: 0; padding-left: 1.1rem; display: grid; gap: 0.3rem; }
+  .intro p.status_old { font-family: var(--mono); font-size: var(--small); color: var(--ink-2); }
 
   .intro figure { margin: 0; display: grid; gap: 0.4rem; max-width: 28rem; }
   .intro figure img { width: 100%; height: auto; border: 1px solid var(--rule); display: block; }
@@ -145,7 +148,13 @@
     <p class="tagline">Play in the real world</p>
     <h1 id="h1">Making a game in a real place, without modelling it by hand</h1>
     <p>We are building automation that turns a captured place (aerial imagery, LiDAR) into game assets. It is a chain of flows: each runs one existing tool with nobody at the controls, checks what it made, and hands a file to the next flow. One tool per flow, so each can be tested on its own and swapped when something better ships.</p>
-    <p class="status"><strong>Status:</strong> a plan, not a demo. The harness that chains these flows checks every handoff. For one fixed spot (San Francisco's Financial District), four stages now run for real: look up aerial-imagery and LiDAR records in a free public catalogue, build a surface from measured elevation and LiDAR height-above-ground data (buildings come out as measured heights), reduce it, drape real aerial imagery over it, and assemble it into a single glTF file that is read back and checked. It is one fused surface: no buildings are separated out, nothing is segmented, and the sun and shadows of the flight day are still baked into the colour. The other stages are stubs.</p>
+    <div class="status">
+      <p><strong>Status: a plan, not a demo.</strong> One fixed spot (San Francisco's Financial District) runs through the harness, and every handoff is checked.</p>
+      <ul>
+        <li><strong>Real:</strong> look up public aerial imagery and LiDAR; build a surface with buildings as measured heights; reduce it; drape real aerial imagery on it; assemble one glTF, read back and checked.</li>
+        <li><strong>Not yet:</strong> buildings are not separated out, nothing is segmented, and the flight day's sun and shadows are still baked into the colour. The other stages are stubs.</li>
+      </ul>
+    </div>
     <figure><img src="img/fidi-lidar-preview.png" width="800" height="600" alt="Raw 3D render of downtown San Francisco Financial District: towers rise as measured-height blocks, with aerial photo stretched down their sides into streaks"><figcaption>Actual output of the last run, unretouched: the glTF file read back and rendered. About 540 m of the Financial District, now with real heights from LiDAR, so the towers are 3D. It is rough: the aerial photo is stretched down the walls and every building is fused into the ground.</figcaption></figure>
     <figure><img src="img/sf-terrain-preview.png" width="800" height="600" alt="Aerial imagery of downtown San Francisco city blocks draped on a flat terrain surface, seen from above at an angle, with building shadows visible in the picture"><figcaption>The run before, for comparison: flat terrain with aerial imagery on it. Buildings were pictures, not 3D.</figcaption></figure>
     <p class="closed"><a class="send mail" href="mailto:holtby.jonathan@gmail.com?subject=RWGE%20%E2%80%94%20a%20tool%20we%20run&amp;body=Which%20tool%20(or%20which%20real%20place%20you%20build%20by%20hand)%3A%0AHow%20we%20run%20it%20(or%20what%20it%20costs%20us%20in%20people%20and%20weeks)%3A%0AWhere%20it%20breaks%3A%0AStudio%20(optional)%3A%0A">Run one of these tools? Tell us where it breaks</a></p>
