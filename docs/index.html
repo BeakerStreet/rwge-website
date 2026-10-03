@@ -152,6 +152,7 @@
       <ul>
         <li><strong>Real:</strong> look up public aerial imagery and LiDAR; build a surface with buildings as measured heights; reduce it; drape real aerial imagery on it; assemble one glTF, read back and checked.</li>
         <li><strong>Not yet:</strong> the heights split into 44 groups, but they are not buildings yet: the largest is still a 192 m blob of whole blocks, the mesh is still one fused piece, nothing is classified (a crane counts like a tower), and the flight day's sun and shadows are still baked into the colour. The other stages are stubs.</li>
+        <li><strong>Where:</strong> one hard-coded spot, and the United States only for now (the imagery and LiDAR are US public data). Your place elsewhere will need other sources; tell us which.</li>
       </ul>
     </div>
     <figure><img src="img/fidi-lidar-preview.png" width="800" height="600" alt="Raw 3D render of downtown San Francisco Financial District: towers rise as measured-height blocks, with aerial photo stretched down their sides into streaks"><figcaption>Actual output of the last run, unretouched: the glTF file read back and rendered. About 540 m of the Financial District, now with real heights from LiDAR, so the towers are 3D. It is rough: the aerial photo is stretched down the walls and every building is fused into the ground.</figcaption></figure>
