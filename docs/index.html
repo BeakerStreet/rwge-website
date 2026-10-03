@@ -78,6 +78,10 @@
 
   .intro figure { margin: 0; display: grid; gap: 0.4rem; max-width: 28rem; }
   .intro figure img { width: 100%; height: auto; border: 1px solid var(--rule); display: block; }
+  .intro .view { position: relative; }
+  .intro .view model-viewer { position: absolute; inset: 0; width: 100%; height: 100%; border: 1px solid var(--rule); background: var(--paper-2); }
+  .intro .orbit { justify-self: start; font-family: var(--mono); font-size: var(--small); letter-spacing: 0.04em; background: var(--ink); color: var(--paper); border: 0; padding: 0.5rem 0.9rem; cursor: pointer; border-radius: 2px; }
+  .intro .orbit:hover { background: var(--magenta); }
   .intro figcaption { font-family: var(--mono); font-size: var(--small); color: var(--ink-2); }
 
   .toc { border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); padding-block: 1.25rem 1.5rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); gap: 1.25rem 2rem; }
@@ -160,7 +164,7 @@
     <p class="tagline">Play in the real world</p>
     <h1 id="h1">Making a game in a real place, without modelling it by hand</h1>
     <p>We are building automation that turns a captured place (aerial imagery, LiDAR) into game assets: one existing tool per step, each step checked before it hands a file to the next, any tool swappable when something better ships.</p>
-    <figure><img src="img/fidi-flat-walls-preview.png" width="800" height="600" alt="Raw 3D render of downtown San Francisco Financial District: towers rise as measured-height blocks with flat-coloured walls and aerial photo on the roofs"><figcaption>Unretouched output of our latest run: about 540 m of San Francisco’s Financial District, from public aerial imagery and LiDAR to a single glTF, with building heights measured from LiDAR and the aerial photo on the roofs. <a href="files/fidi-world.glb" download>Download the glTF (2.3 MB)</a> and open it in Blender or any glTF viewer.</figcaption></figure>
+    <figure><div class="view" id="view"><img src="img/fidi-flat-walls-preview.png" width="800" height="600" alt="Raw 3D render of downtown San Francisco Financial District: towers rise as measured-height blocks with flat-coloured walls and aerial photo on the roofs"></div><button type="button" class="orbit" id="orbit">Orbit it in 3D</button><figcaption>Unretouched output of our latest run: about 540 m of San Francisco’s Financial District, from public aerial imagery and LiDAR to a single glTF, with building heights measured from LiDAR and the aerial photo on the roofs. <a href="files/fidi-world.glb" download>Download the glTF (2.3 MB)</a> and or orbit it above, no install.</figcaption></figure>
     <p class="closed"><a class="send mail" href="mailto:holtby.jonathan@gmail.com?subject=RWGE%20%E2%80%94%20a%20real%20place%20we%20build&amp;body=Which%20real%20place%20(or%20which%20tool%20you%20run%20for%20one)%3A%0AHow%20you%20build%20it%20today%20(and%20what%20it%20costs%20in%20people%20and%20weeks)%3A%0AWhere%20it%20hurts%20or%20breaks%3A%0AStudio%20(optional)%3A%0A">We’d love to hear from you</a></p>
   </section>
 
@@ -739,6 +743,28 @@ var CONTACT = { live: false, url: "", key: "" };
     }).then(function () { send.disabled = false; send.textContent = 'Send'; });
   });
 })();
+</script>
+<script>
+document.getElementById('orbit').addEventListener('click', function (e) {
+  var b = e.currentTarget, v = document.getElementById('view');
+  b.disabled = true; b.textContent = 'Loading 3D (2.3 MB)…';
+  var sc = document.createElement('script');
+  sc.type = 'module';
+  sc.src = 'https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js';
+  sc.onerror = function () { b.textContent = '3D view unavailable; download the glTF below'; };
+  sc.onload = function () {
+    var m = document.createElement('model-viewer');
+    m.setAttribute('src', 'files/fidi-world.glb');
+    m.setAttribute('camera-controls', ''); m.setAttribute('touch-action', 'pan-y');
+    m.setAttribute('shadow-intensity', '0'); m.setAttribute('exposure', '1');
+    m.setAttribute('alt', 'Orbitable 3D model of downtown San Francisco Financial District from our latest run');
+    m.addEventListener('load', function () { m.style.opacity = '1'; var i = v.querySelector('img'); if (i) i.remove(); v.style.aspectRatio = '4/3'; b.remove(); });
+    m.addEventListener('error', function () { b.textContent = '3D view unavailable; download the glTF below'; });
+    m.style.opacity = '0';
+    v.appendChild(m);
+  };
+  document.head.appendChild(sc);
+});
 </script>
 </body>
 </html>
