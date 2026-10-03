@@ -253,6 +253,18 @@
       <h2 id="p-infer">Inference</h2>
       <p class="job">From above you see roofs. Walls, overhangs and anything hidden have to come from somewhere else: measure first, generate last, and mark every surface that was inferred.</p>
     </header>
+    <div class="plan" id="infer-plan">
+      <h3>How we’ll do it</h3>
+      <ol>
+        <li><strong>Sort the tall things.</strong> Trees and buildings are equally tall from above. The infrared band of the same aerial photo tells leaves from roofs, and public building footprints split the blocks.</li>
+        <li><strong>Keep what was measured.</strong> LiDAR already gives each roof’s height and often its shape. Nothing is invented where a sensor saw it.</li>
+        <li><strong>Fill the sides nobody saw.</strong> Pick a facade style from the building’s type, age and roof colour, and set the floors from its measured height. A generative model is the upgrade, not the start.</li>
+        <li><strong>Check against data we held back.</strong> Compare footprints and heights with measurements the model never saw.</li>
+      </ol>
+      <p>Every inferred surface is tagged as inferred, with a low confidence, so a facade is never mistaken for a measurement. Step 4 needs no person to score it, so an agent loop can try, check, and keep what wins, place by place.</p>
+    </div>
+    <details class="more" id="infer-all">
+    <summary>The 3 research tools we looked at, and where each stops</summary>
     <article class="flow" id="infer-sat-skylines">
       <div><h4><a href="#infer-sat-skylines">Buildings with Sat-Skylines</a></h4><p class="lic">Research (USC, 2025) · USC Research licence</p></div>
       <dl>
@@ -281,6 +293,7 @@
         <dt>Tools</dt><dd><a href="https://github.com/krdgomer/Elevate3D">GitHub</a></dd>
       </dl>
     </article>
+    </details>
   </section>
 
   <section class="step" aria-labelledby="s-source">
