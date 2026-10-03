@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Real World Game Engine</title>
-<meta name="description" content="Building a game in a real place? We are automating the path from aerial imagery and LiDAR to game-ready assets. Early: one fixed San Francisco spot runs end to end; this page shows the raw output.">
+<meta name="description" content="We are automating the path from aerial imagery and LiDAR to game-ready assets. Here is the raw output of our latest run, San Francisco’s Financial District, and every tool in the pipeline.">
 <link rel="canonical" href="https://beakerstreet.github.io/rwge-website/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Real World Game Engine: real places to game assets, without modelling by hand">
-<meta property="og:description" content="Building a game in a real place? We are automating the path from aerial imagery and LiDAR to game-ready assets. Early: one fixed San Francisco spot runs end to end; this page shows the raw output.">
+<meta property="og:description" content="We are automating the path from aerial imagery and LiDAR to game-ready assets. Here is the raw output of our latest run, San Francisco’s Financial District, and every tool in the pipeline.">
 <meta property="og:url" content="https://beakerstreet.github.io/rwge-website/">
 <meta property="og:image" content="https://beakerstreet.github.io/rwge-website/img/fidi-flat-walls-preview.png">
 <meta property="og:image:alt" content="Raw 3D render of San Francisco's Financial District from the harness, unretouched">
@@ -75,9 +75,6 @@
   .intro .tagline { font-family: var(--mono); font-size: var(--small); letter-spacing: 0.08em; text-transform: uppercase; color: var(--magenta); }
   .intro h1 { font-size: clamp(1.9rem, 4.2vw, 2.75rem); font-weight: 800; font-stretch: 82%; line-height: 1.08; }
   .intro p { font-size: 1.125rem; }
-  .intro .status { display: grid; gap: 0.4rem; font-family: var(--mono); font-size: var(--small); color: var(--ink-2); }
-  .intro .status p, .intro .status li { font-size: var(--small); }
-  .intro .status ul { margin: 0; padding-left: 1.1rem; display: grid; gap: 0.3rem; }
 
   .intro figure { margin: 0; display: grid; gap: 0.4rem; max-width: 28rem; }
   .intro figure img { width: 100%; height: auto; border: 1px solid var(--rule); display: block; }
@@ -99,7 +96,6 @@
   .sub h3 { font-size: 1.2rem; font-weight: 750; font-stretch: 88%; }
   .flow h4 { margin: 0; }
   .toc .tsub { font-family: var(--mono); font-size: var(--small); color: var(--ink-2); margin-top: 0.35rem; }
-  .step .checks { font-family: var(--mono); font-size: var(--small); color: var(--ink-2); }
 
   .flow { display: grid; grid-template-columns: 17rem minmax(0, 1fr); gap: 0.5rem 2rem; padding-block: 1.1rem; border-top: 1px solid var(--rule); }
   .flow h4 { font-size: 1.1rem; font-weight: 700; font-stretch: 90%; line-height: 1.3; }
@@ -155,16 +151,8 @@
     <p class="tagline">Play in the real world</p>
     <h1 id="h1">Making a game in a real place, without modelling it by hand</h1>
     <p>We are building automation that turns a captured place (aerial imagery, LiDAR) into game assets: one existing tool per step, each step checked before it hands a file to the next, any tool swappable when something better ships.</p>
-    <div class="status">
-      <p><strong>Status: a plan, not a demo.</strong> One fixed spot (San Francisco's Financial District) runs through the harness, and every handoff is checked.</p>
-      <ul>
-        <li><strong>Real:</strong> look up public aerial imagery and LiDAR; build a surface with buildings as measured heights; reduce it; drape real aerial imagery on it; assemble one glTF, read back and checked.</li>
-        <li><strong>Not yet:</strong> separate buildings. The heights split into 44 groups, but the largest is still a 192 m blob of whole blocks, and the mesh is one fused piece. Also missing: facade photos (walls are a flat colour), classes (a crane counts like a tower), and de-lighting (the flight day's shadows are baked in). Other stages are stubs.</li>
-        <li><strong>Where:</strong> one hard-coded spot, and the United States only for now (the imagery and LiDAR are US public data). Your place elsewhere will need other sources; tell us which.</li>
-      </ul>
-    </div>
-    <figure><img src="img/fidi-flat-walls-preview.png" width="800" height="600" alt="Raw 3D render of downtown San Francisco Financial District: towers rise as measured-height blocks with flat-coloured walls and aerial photo on the roofs"><figcaption>Actual output of the last run, unretouched: the glTF file read back and rendered. About 540 m of the Financial District, now with real heights from LiDAR, so the towers are 3D. It is rough: walls are one flat colour copied from the roof edge (no real facades, 38% of the surface), roofs carry the aerial photo, and every building is fused into the ground.</figcaption></figure>
-    <p class="closed"><a class="send mail" href="mailto:holtby.jonathan@gmail.com?subject=RWGE%20%E2%80%94%20a%20real%20place%20we%20build&amp;body=Which%20real%20place%20(or%20which%20tool%20you%20run%20for%20one)%3A%0AHow%20you%20build%20it%20today%20(and%20what%20it%20costs%20in%20people%20and%20weeks)%3A%0AWhere%20it%20hurts%20or%20breaks%3A%0AStudio%20(optional)%3A%0A">Building a game in a real place? Tell us how you do it today</a></p>
+    <figure><img src="img/fidi-flat-walls-preview.png" width="800" height="600" alt="Raw 3D render of downtown San Francisco Financial District: towers rise as measured-height blocks with flat-coloured walls and aerial photo on the roofs"><figcaption>Unretouched output of our latest run: about 540 m of San Francisco’s Financial District, from public aerial imagery and LiDAR to a single glTF, with building heights measured from LiDAR and the aerial photo on the roofs.</figcaption></figure>
+    <p class="closed"><a class="send mail" href="mailto:holtby.jonathan@gmail.com?subject=RWGE%20%E2%80%94%20a%20real%20place%20we%20build&amp;body=Which%20real%20place%20(or%20which%20tool%20you%20run%20for%20one)%3A%0AHow%20you%20build%20it%20today%20(and%20what%20it%20costs%20in%20people%20and%20weeks)%3A%0AWhere%20it%20hurts%20or%20breaks%3A%0AStudio%20(optional)%3A%0A">We’d love to hear from you</a></p>
   </section>
 
   <nav class="toc" aria-label="All flows">
@@ -232,7 +220,6 @@
       <p class="num">1 of 7</p>
       <h2 id="p-segment">Segmenting</h2>
       <p class="job">Split the place into things (buildings, roads, water, trees, boats) so each goes to the flow that can build it.</p>
-      <p class="checks">Checked for: every pixel labelled, classes from the project’s own list, masks against building footprints.</p>
     </header>
     <article class="flow" id="seg-sam3">
       <div><h4><a href="#seg-sam3">Segmentation with SAM 3</a></h4><p class="lic">SAM License (Meta)</p></div>
@@ -250,7 +237,6 @@
       <p class="num">2 of 7</p>
       <h2 id="p-infer">Inference</h2>
       <p class="job">From above you see roofs. Walls, overhangs and anything hidden have to come from somewhere else: measure first, generate last, and mark every surface that was inferred.</p>
-      <p class="checks">Checked for: every surface tagged measured or inferred; inferred shapes against street photos the flow never saw.</p>
     </header>
     <article class="flow" id="infer-sat-skylines">
       <div><h4><a href="#infer-sat-skylines">Buildings with Sat-Skylines</a></h4><p class="lic">Research (USC, 2025) · USC Research licence</p></div>
@@ -287,7 +273,6 @@
       <p class="num">3 of 7</p>
       <h2 id="s-source">Construction</h2>
       <p class="job">Turn the place into geometry, from imagery we are allowed to use.</p>
-      <p class="checks">Checked for: licence and source recorded on every file, footprint against imagery, scale.</p>
     </header>
     <article class="flow" id="shells-footprints-lidar">
       <div><h4><a href="#shells-footprints-lidar">Building shells from footprints and LiDAR heights, in Blender</a></h4><p class="lic">Public-domain imagery · ODbL footprints</p></div>
@@ -326,7 +311,6 @@
       <header>
         <h3 id="s-retopo">Retopology</h3>
         <p class="job">Dense triangle soup to clean quads at a target budget.</p>
-        <p class="checks">Checked for: face count within budget, manifold, distance from the source surface, silhouette.</p>
       </header>
     <article class="flow" id="retopo-instant-meshes">
       <div><h4><a href="#retopo-instant-meshes">Retopology with Instant Meshes</a></h4><p class="lic">Open source</p></div>
@@ -366,7 +350,6 @@
       <header>
         <h3 id="s-lod">LODs</h3>
         <p class="job">A chain of cheaper versions for distance.</p>
-        <p class="checks">Checked for: triangle count per level, screen-space error, UVs and seams kept.</p>
       </header>
     <article class="flow" id="lod-simplygon">
       <div><h4><a href="#lod-simplygon">LODs with Simplygon</a></h4><p class="lic">Commercial</p></div>
@@ -397,7 +380,6 @@
       <header>
         <h3 id="s-col">Collision</h3>
         <p class="job">Simple shapes the physics engine can use.</p>
-        <p class="checks">Checked for: hull count within budget, volume against the render mesh, no gaps a player can fall through.</p>
       </header>
     <article class="flow" id="col-coacd">
       <div><h4><a href="#col-coacd">Collision with CoACD</a></h4><p class="lic">Open source</p></div>
@@ -429,7 +411,6 @@
       <header>
         <h3 id="s-uv">UVs</h3>
         <p class="job">Lay the UVs out again after remeshing, and pack them.</p>
-        <p class="checks">Checked for: no overlaps, stretch under a threshold, texel density, padding for the target mip levels.</p>
       </header>
     <article class="flow" id="uv-xatlas">
       <div><h4><a href="#uv-xatlas">UVs with xatlas</a></h4><p class="lic">Open source</p></div>
@@ -460,7 +441,6 @@
       <header>
         <h3 id="s-bake">Baking</h3>
         <p class="job">Carry the detail of the dense scan onto the clean mesh as textures.</p>
-        <p class="checks">Checked for: bake errors along seams, cage misses, normal map direction for the target engine.</p>
       </header>
     <article class="flow" id="bake-blender">
       <div><h4><a href="#bake-blender">Baking with Blender Cycles</a></h4><p class="lic">Built into Blender</p></div>
@@ -491,7 +471,6 @@
       <header>
         <h3 id="s-mat">Materials</h3>
         <p class="job">One flat colour map into the PBR channels the engine expects.</p>
-        <p class="checks">Checked for: albedo in a plausible range, roughness and normal maps present, values consistent across tiles.</p>
       </header>
     <article class="flow" id="mat-sampler">
       <div><h4><a href="#mat-sampler">Materials with Substance 3D Sampler Image to Material</a></h4><p class="lic">Commercial (Adobe)</p></div>
@@ -509,7 +488,6 @@
       <p class="num">6 of 7</p>
       <h2 id="s-delight">De-lighting</h2>
       <p class="job">Take the sun and shadows of the capture day out of the colour, so the asset works under any lighting.</p>
-      <p class="checks">Checked for: sunlit and shadowed patches of the same surface match after correction; the result, relit, matches a photo of the place the flow never saw.</p>
       <p class="worked">Worked through against each tool’s own documentation, 23 September 2026.</p>
       <p class="finding">Every production tool here assumes the capture avoided hard sun. Unity’s own photogrammetry guide says strong directional shadows are “a situation that must be avoided” because they are “difficult to remove from the generated diffuse albedo texture”. Agisoft says Metashape’s tool does not support strong shadows. Aerial imagery is flown in sunlight, so hard shadows are always in the input. That leaves two ways out at the bottom of this list: measure the shadows from geometry we already have, or skip de-lighting and rebuild the surface from scratch.</p>
     </header>
@@ -643,7 +621,6 @@
       <p class="num">7 of 7</p>
       <h2 id="s-engine">Compilation</h2>
       <p class="job">Import, assign, and set up to the project’s conventions.</p>
-      <p class="checks">Checked for: imports clean, materials assigned, LODs and collision set up, scale and pivots.</p>
     </header>
     <article class="flow" id="engine-unreal">
       <div><h4><a href="#engine-unreal">Into Unreal Engine</a></h4><p class="lic">Epic Games</p></div>
@@ -665,7 +642,7 @@
   </section>
 
   <section class="talk" id="talk" aria-labelledby="h-talk">
-    <h2 id="h-talk">Building a game in a real place?</h2>
+    <h2 id="h-talk">We’d love to hear from you</h2>
     <p>Tell us which place, how you build it today, and what it costs you in people and weeks. Or, if you run one of these tools, tell us which and where it breaks. We would like to talk.</p>
 
     <p class="closed" id="closed"><a class="send mail" href="mailto:holtby.jonathan@gmail.com?subject=RWGE%20%E2%80%94%20a%20real%20place%20we%20build&amp;body=Which%20real%20place%20(or%20which%20tool%20you%20run%20for%20one)%3A%0AHow%20you%20build%20it%20today%20(and%20what%20it%20costs%20in%20people%20and%20weeks)%3A%0AWhere%20it%20hurts%20or%20breaks%3A%0AStudio%20(optional)%3A%0A">Email us</a></p>
