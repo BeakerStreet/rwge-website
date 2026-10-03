@@ -106,6 +106,15 @@
   .flow dt { font-family: var(--mono); font-size: var(--small); color: var(--ink-2); padding-top: 0.2rem; }
   .flow dd { margin: 0; }
   .step .worked { font-family: var(--mono); font-size: var(--small); color: var(--blue); }
+  .plan { margin: 1.2rem 0 2rem; display: grid; gap: 0.9rem; }
+  .plan h3, h3.cat { margin: 0; font-size: 1.1rem; }
+  h3.cat { margin-top: 1.5rem; }
+  .plan ol { margin: 0; padding-left: 1.3rem; display: grid; gap: 0.4rem; }
+  .plan p { margin: 0; }
+  .plan figure { margin: 0; display: grid; gap: 0.4rem; }
+  .plan figure img { width: 100%; height: auto; border: 1px solid var(--rule); display: block; }
+  .plan figcaption { font-family: var(--mono); font-size: var(--small); color: var(--ink-2); }
+  .plan .slot { border: 1px dashed var(--rule); padding: 0.9rem; display: grid; gap: 0.2rem; font-size: 0.95rem; }
   .step .finding { border-left: 3px solid var(--magenta); padding-left: 0.9rem; font-size: 1rem; }
   .flow dd a { overflow-wrap: anywhere; }
   .flow dd .mono { font-size: 0.88em; }
@@ -489,8 +498,24 @@
       <h2 id="s-delight">De-lighting</h2>
       <p class="job">Take the sun and shadows of the capture day out of the colour, so the asset works under any lighting.</p>
       <p class="worked">Worked through against each tool’s own documentation, 23 September 2026.</p>
-      <p class="finding">Every production tool here assumes the capture avoided hard sun. Unity’s own photogrammetry guide says strong directional shadows are “a situation that must be avoided” because they are “difficult to remove from the generated diffuse albedo texture”. Agisoft says Metashape’s tool does not support strong shadows. Aerial imagery is flown in sunlight, so hard shadows are always in the input. That leaves two ways out at the bottom of this list: measure the shadows from geometry we already have, or skip de-lighting and rebuild the surface from scratch.</p>
+      <p class="finding">Every production tool here assumes the capture avoided hard sun. Unity’s own photogrammetry guide says strong directional shadows are “a situation that must be avoided” because they are “difficult to remove from the generated diffuse albedo texture”. Agisoft says Metashape’s tool does not support strong shadows. Aerial imagery is flown in sunlight, so hard shadows are always in the input. Studios de-light one photo. We don’t have to: a real place has been photographed many times under different suns, and we know its shape.</p>
     </header>
+    <div class="plan" id="delight-plan">
+      <h3>How we’ll do it</h3>
+      <ol>
+        <li><strong>Measure the light.</strong> Fit the sun to the shadows, using the building heights we already have.</li>
+        <li><strong>Divide it out.</strong> With the light known, the surface colour falls out. Shadows are dim, not lost.</li>
+        <li><strong>Use every capture.</strong> Each surface is lit in some photos and shaded in others. Combine them.</li>
+        <li><strong>Check against a photo we never used.</strong> Relight the result under that photo’s sun and compare.</li>
+      </ol>
+      <p>Where it can’t be measured (facades, glass, trees that have grown since), a model fills in and the asset marks it as inferred. Step 4 is a score no person has to give, so an agent loop can try, check against the held-out photo, and keep what wins, place by place.</p>
+      <figure>
+        <img src="img/olbedo-naip-sf-4way-zoom.png" width="2048" height="512" alt="Four panels of the same San Francisco aerial tile: the original NAIP photo with hard building shadows, then three outputs of an aerial de-lighting model in which the shadows remain or the result is noise" loading="lazy">
+        <figcaption>Why not one model on one photo. We ran the best aerial de-lighting model we found (Olbedo) on our tile: NAIP, San Francisco, 18 May 2022. Left, the input. Right, what came back. The shadows stay. It was trained on drone photos, not straight-down imagery.</figcaption>
+      </figure>
+      <div class="slot"><strong>Held-out relight</strong><span>The step-4 result goes here: one place, relit under a photo’s sun next to the photo.</span></div>
+    </div>
+    <h3 class="cat">Every other way we found</h3>
     <article class="flow" id="delight-metashape">
       <div><h4><a href="#delight-metashape">De-lighting with Metashape Remove Lighting</a></h4><p class="lic">Commercial (Metashape Professional)</p></div>
       <dl>
@@ -589,7 +614,7 @@
         <dt>In</dt><dd>A single aerial photo</dd>
         <dt>Out</dt><dd>An albedo map (colour with the lighting taken out)</dd>
         <dt>Driven by</dt><dd>Python, from the released inference code and pretrained models; trained on 5,664 drone photos</dd>
-        <dt>Note</dt><dd>The first de-lighting model we have found trained on aerial photos. Its reference albedo is computed by the authors’ own inverse-rendering pipeline, not measured on the ground, and the photos are drone shots rather than straight-down imagery like NAIP. We have not run it on our spot yet. The weights carry use restrictions (RAIL++-M for the Marigold models; the Adobe Research licence for the RGBX models), so commercial use needs a read of both first.</dd>
+        <dt>Note</dt><dd>The first de-lighting model we have found trained on aerial photos. Its reference albedo is computed by the authors’ own inverse-rendering pipeline, not measured on the ground, and the photos are drone shots rather than straight-down imagery like NAIP. We ran it on our spot: the shadows stay (see above). The weights carry use restrictions (RAIL++-M for the Marigold models; the Adobe Research licence for the RGBX models), so commercial use needs a read of both first.</dd>
         <dt>Tools</dt><dd><a href="https://arxiv.org/abs/2602.22025">arXiv 2602.22025</a> · <a href="https://github.com/GDAOSU/Olbedo">GitHub</a></dd>
       </dl>
     </article>
