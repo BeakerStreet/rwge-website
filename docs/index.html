@@ -4,7 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Real World Game Engine</title>
-<meta name="description" content="Automation flows for the steps between a captured real place and a game-ready asset, one tool at a time.">
+<meta name="description" content="Building a game in a real place? We are automating the path from aerial imagery and LiDAR to game-ready assets. Early: one fixed San Francisco spot runs end to end; this page shows the raw output.">
+<link rel="canonical" href="https://beakerstreet.github.io/rwge-website/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Real World Game Engine: real places to game assets, without modelling by hand">
+<meta property="og:description" content="Building a game in a real place? We are automating the path from aerial imagery and LiDAR to game-ready assets. Early: one fixed San Francisco spot runs end to end; this page shows the raw output.">
+<meta property="og:url" content="https://beakerstreet.github.io/rwge-website/">
+<meta property="og:image" content="https://beakerstreet.github.io/rwge-website/img/fidi-flat-walls-preview.png">
+<meta property="og:image:alt" content="Raw 3D render of San Francisco's Financial District from the harness, unretouched">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
@@ -151,7 +159,7 @@
       <p><strong>Status: a plan, not a demo.</strong> One fixed spot (San Francisco's Financial District) runs through the harness, and every handoff is checked.</p>
       <ul>
         <li><strong>Real:</strong> look up public aerial imagery and LiDAR; build a surface with buildings as measured heights; reduce it; drape real aerial imagery on it; assemble one glTF, read back and checked.</li>
-        <li><strong>Not yet:</strong> the heights split into 44 groups, but they are not buildings yet: the largest is still a 192 m blob of whole blocks, the mesh is still one fused piece, walls are a flat colour with no facade photos, nothing is classified (a crane counts like a tower), and the flight day's sun and shadows are still baked into the colour. The other stages are stubs.</li>
+        <li><strong>Not yet:</strong> separate buildings. The heights split into 44 groups, but the largest is still a 192 m blob of whole blocks, and the mesh is one fused piece. Also missing: facade photos (walls are a flat colour), classes (a crane counts like a tower), and de-lighting (the flight day's shadows are baked in). Other stages are stubs.</li>
         <li><strong>Where:</strong> one hard-coded spot, and the United States only for now (the imagery and LiDAR are US public data). Your place elsewhere will need other sources; tell us which.</li>
       </ul>
     </div>
