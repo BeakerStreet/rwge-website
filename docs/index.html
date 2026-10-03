@@ -208,6 +208,7 @@
       <li><a href="#delight-intrinsic">Colorful diffuse intrinsics</a></li>
       <li><a href="#delight-surgs">SU-RGS</a></li>
       <li><a href="#delight-irgs">IRGS++</a></li>
+      <li><a href="#delight-olbedo">Olbedo</a></li>
       <li><a href="#delight-sun">Sun-aware, from known geometry</a></li>
       <li><a href="#delight-rebuild">Rebuild under neutral light</a></li>
     </ol></div>
@@ -593,6 +594,16 @@
         <dt>Out</dt><dd>Albedo, roughness, metallic and lighting, including inter-reflections, so glass and metal are handled</dd>
         <dt>Driven by</dt><dd>No released code found</dd>
         <dt>Tools</dt><dd><a href="https://arxiv.org/abs/2607.22780">arXiv 2607.22780</a></dd>
+      </dl>
+    </article>
+    <article class="flow" id="delight-olbedo">
+      <div><h4><a href="#delight-olbedo">De-lighting with Olbedo</a></h4><p class="lic">Research (Ohio State and USC, CVPR 2026) · CC BY-SA 4.0</p></div>
+      <dl>
+        <dt>In</dt><dd>A single aerial photo</dd>
+        <dt>Out</dt><dd>An albedo map (colour with the lighting taken out)</dd>
+        <dt>Driven by</dt><dd>Python, from the released inference code and pretrained models; trained on 5,664 drone photos</dd>
+        <dt>Note</dt><dd>The first de-lighting model we have found trained on aerial photos. Its reference albedo is computed by the authors’ own inverse-rendering pipeline, not measured on the ground, and the photos are drone shots rather than straight-down imagery like NAIP. We have not run it on our spot yet.</dd>
+        <dt>Tools</dt><dd><a href="https://arxiv.org/abs/2602.22025">arXiv 2602.22025</a> · <a href="https://github.com/GDAOSU/Olbedo">GitHub</a></dd>
       </dl>
     </article>
     <article class="flow" id="delight-sun">
