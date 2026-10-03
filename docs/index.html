@@ -80,7 +80,7 @@
   .intro figure img { width: 100%; height: auto; border: 1px solid var(--rule); display: block; }
   .intro .view { position: relative; }
   .intro .view model-viewer { position: absolute; inset: 0; width: 100%; height: 100%; border: 1px solid var(--rule); background: var(--paper-2); }
-  .intro .orbit { justify-self: start; font-family: var(--mono); font-size: var(--small); letter-spacing: 0.04em; background: var(--ink); color: var(--paper); border: 0; padding: 0.5rem 0.9rem; cursor: pointer; border-radius: 2px; }
+  .intro .orbit { position: absolute; left: 0.6rem; bottom: 0.6rem; z-index: 2; font-family: var(--mono); font-size: var(--small); letter-spacing: 0.04em; background: var(--ink); color: var(--paper); border: 0; padding: 0.5rem 0.9rem; cursor: pointer; border-radius: 2px; }
   .intro .orbit:hover { background: var(--magenta); }
   .intro figcaption { font-family: var(--mono); font-size: var(--small); color: var(--ink-2); }
 
@@ -118,6 +118,8 @@
   .plan figure { margin: 0; display: grid; gap: 0.4rem; }
   .plan figure img { width: 100%; height: auto; border: 1px solid var(--rule); display: block; }
   .plan figcaption { font-family: var(--mono); font-size: var(--small); color: var(--ink-2); }
+  details.more { margin-top: 1rem; border-top: 1px solid var(--rule); }
+  details.more > summary { cursor: pointer; padding-block: 0.9rem; font-family: var(--mono); font-size: var(--small); color: var(--blue); }
   .plan .slot { border: 1px dashed var(--rule); padding: 0.9rem; display: grid; gap: 0.2rem; font-size: 0.95rem; }
   .step .finding { border-left: 3px solid var(--magenta); padding-left: 0.9rem; font-size: 1rem; }
   .flow dd a { overflow-wrap: anywhere; }
@@ -164,7 +166,7 @@
     <p class="tagline">Play in the real world</p>
     <h1 id="h1">Making a game in a real place, without modelling it by hand</h1>
     <p>We are building automation that turns a captured place (aerial imagery, LiDAR) into game assets: one existing tool per step, each step checked before it hands a file to the next, any tool swappable when something better ships.</p>
-    <figure><div class="view" id="view"><img src="img/fidi-flat-walls-preview.png" width="800" height="600" alt="Raw 3D render of downtown San Francisco Financial District: towers rise as measured-height blocks with flat-coloured walls and aerial photo on the roofs"></div><button type="button" class="orbit" id="orbit">Orbit it in 3D</button><figcaption>Unretouched output of our latest run: about 540 m of San Francisco’s Financial District, from public aerial imagery and LiDAR to a single glTF, with building heights measured from LiDAR and the aerial photo on the roofs. <a href="files/fidi-world.glb" download>Download the glTF (2.3 MB)</a> and or orbit it above, no install.</figcaption></figure>
+    <figure><div class="view" id="view"><img src="img/fidi-flat-walls-preview.png" width="800" height="600" alt="Raw 3D render of downtown San Francisco Financial District: towers rise as measured-height blocks with flat-coloured walls and aerial photo on the roofs"><button type="button" class="orbit" id="orbit">⟳ Orbit it in 3D</button></div><figcaption>Unretouched output of our latest run: about 540 m of San Francisco’s Financial District, from public aerial imagery and LiDAR to a single glTF, with building heights measured from LiDAR and the aerial photo on the roofs. <a href="files/fidi-world.glb" download>Download the glTF (2.3 MB)</a> and or orbit it above, no install.</figcaption></figure>
     <p class="closed"><a class="send mail" href="mailto:holtby.jonathan@gmail.com?subject=RWGE%20%E2%80%94%20a%20real%20place%20we%20build&amp;body=Which%20real%20place%20(or%20which%20tool%20you%20run%20for%20one)%3A%0AHow%20you%20build%20it%20today%20(and%20what%20it%20costs%20in%20people%20and%20weeks)%3A%0AWhere%20it%20hurts%20or%20breaks%3A%0AStudio%20(optional)%3A%0A">We’d love to hear from you</a></p>
   </section>
 
@@ -501,8 +503,7 @@
       <p class="num">6 of 7</p>
       <h2 id="s-delight">De-lighting</h2>
       <p class="job">Take the sun and shadows of the capture day out of the colour, so the asset works under any lighting.</p>
-      <p class="worked">Worked through against each tool’s own documentation, 23 September 2026.</p>
-      <p class="finding">Every production tool here assumes the capture avoided hard sun. Unity’s own photogrammetry guide says strong directional shadows are “a situation that must be avoided” because they are “difficult to remove from the generated diffuse albedo texture”. Agisoft says Metashape’s tool does not support strong shadows. Aerial imagery is flown in sunlight, so hard shadows are always in the input. Studios de-light one photo. We don’t have to: a real place has been photographed many times under different suns, and we know its shape.</p>
+      <p class="finding">Every production tool here assumes the capture avoided hard sun. Unity’s own guide calls strong directional shadows “a situation that must be avoided”. Aerial imagery is flown in sunlight, so hard shadows are always in the input. Studios de-light one photo. We don’t have to: a real place has been photographed many times under different suns, and we know its shape.</p>
     </header>
     <div class="plan" id="delight-plan">
       <h3>How we’ll do it</h3>
@@ -517,9 +518,9 @@
         <img src="img/olbedo-naip-sf-4way-zoom.png" width="2048" height="512" alt="Four panels of the same San Francisco aerial tile: the original NAIP photo with hard building shadows, then three outputs of an aerial de-lighting model in which the shadows remain or the result is noise" loading="lazy">
         <figcaption>Why not one model on one photo. We ran the best aerial de-lighting model we found (Olbedo) on our tile: NAIP, San Francisco, 18 May 2022. Left, the input. Right, what came back. The shadows stay. It was trained on drone photos, not straight-down imagery.</figcaption>
       </figure>
-      <div class="slot"><strong>Held-out relight</strong><span>The step-4 result goes here: one place, relit under a photo’s sun next to the photo.</span></div>
     </div>
-    <h3 class="cat">Every other way we found</h3>
+    <details class="more" id="delight-all">
+    <summary>The 12 other approaches we worked through, and where each breaks</summary>
     <article class="flow" id="delight-metashape">
       <div><h4><a href="#delight-metashape">De-lighting with Metashape Remove Lighting</a></h4><p class="lic">Commercial (Metashape Professional)</p></div>
       <dl>
@@ -643,6 +644,7 @@
         <dt>Breaks on</dt><dd>Fidelity. You get the place’s materials, not its exact pixels, so stains, patches and signage are lost or have to be authored. The hardest path here, and the only one that always ends clean.</dd>
       </dl>
     </article>
+    </details>
   </section>
 
   <section class="step" aria-labelledby="s-engine">
