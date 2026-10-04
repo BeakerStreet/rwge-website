@@ -261,7 +261,7 @@
         <li><strong>Fill the sides nobody saw.</strong> Pick a facade style from the building’s type, age and roof colour, and set the floors from its measured height. A generative model is the upgrade, not the start.</li>
         <li><strong>Check against data we held back.</strong> Compare footprints and heights with measurements the model never saw.</li>
       </ol>
-      <p><strong>First check, run on real sites.</strong> Financial District, San Francisco: 32 of 44 tall groups overlap a public building footprint. Presidio, a leafy site: the infrared test marked 36 of 53 groups as vegetation, and none of the 36 overlaps a footprint. The footprints are machine-made, so this measures agreement, not ground truth.</p>
+      <p><strong>First check, run on real sites.</strong> Financial District, San Francisco: 32 of 44 tall groups agree with a public building footprint. Saying “building” for every group scores the same 32, so this score cannot yet show the infrared split helps. On a leafy site (Presidio) the split marks most groups as vegetation, and the footprints score it below that same one-answer baseline (35 vs 45). So the check is built and running; it needs better reference data, such as tree canopy maps, before it can pick a winner. The footprints are machine-made, so this measures agreement, not ground truth.</p>
       <p>Every inferred surface is tagged as inferred, with a low confidence, so a facade is never mistaken for a measurement. Step 4 needs no person to score it, so an agent loop can try, check, and keep what wins, place by place.</p>
     </div>
     <details class="more" id="infer-all">
