@@ -84,11 +84,12 @@
   .intro .orbit:hover { background: var(--magenta); }
   .intro figcaption { font-family: var(--mono); font-size: var(--small); color: var(--ink-2); }
 
-  .toc { border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); padding-block: 1.25rem 1.5rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); gap: 1.25rem 2rem; }
-  .toc h2 { font-size: 0.95rem; font-weight: 700; font-stretch: 90%; margin-bottom: 0.35rem; }
-  .toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.15rem; font-size: 0.925rem; }
-  .toc a { text-decoration: none; color: var(--ink); }
+  .toc { border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); padding-block: 1.25rem 1.5rem; }
+  .toc ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); gap: 0.75rem 2rem; }
+  .toc a { display: block; font-weight: 700; font-stretch: 90%; text-decoration: none; color: var(--ink); }
   .toc a:hover { color: var(--blue); text-decoration: underline; }
+  .toc .tn { font-family: var(--mono); font-weight: 400; color: var(--ink-2); }
+  .toc .tj { display: block; font-size: 0.925rem; color: var(--ink-2); }
 
   .step { padding-block: 2.5rem 1rem; border-bottom: 1px solid var(--rule); }
   .step > header { display: grid; gap: 0.4rem; margin-bottom: 1rem; max-width: 44rem; }
@@ -99,7 +100,6 @@
   .sub > header { display: grid; gap: 0.4rem; margin-bottom: 0.75rem; max-width: 44rem; }
   .sub h3 { font-size: 1.2rem; font-weight: 750; font-stretch: 88%; }
   .flow h4 { margin: 0; }
-  .toc .tsub { font-family: var(--mono); font-size: var(--small); color: var(--ink-2); margin-top: 0.35rem; }
 
   .flow { display: grid; grid-template-columns: 17rem minmax(0, 1fr); gap: 0.5rem 2rem; padding-block: 1.1rem; border-top: 1px solid var(--rule); }
   .flow h4 { font-size: 1.1rem; font-weight: 700; font-stretch: 90%; line-height: 1.3; }
@@ -171,64 +171,16 @@
     <p class="closed"><a class="send mail" href="mailto:holtby.jonathan@gmail.com?subject=RWGE%20%E2%80%94%20a%20real%20place%20we%20build&amp;body=Which%20real%20place%20(or%20which%20tool%20you%20run%20for%20one)%3A%0AHow%20you%20build%20it%20today%20(and%20what%20it%20costs%20in%20people%20and%20weeks)%3A%0AWhere%20it%20hurts%20or%20breaks%3A%0AStudio%20(optional)%3A%0A">We’d love to hear from you</a></p>
   </section>
 
-  <nav class="toc" aria-label="All flows">
-    <div><h2>1 · Segmenting</h2><ol>
-      <li><a href="#seg-sam3">SAM 3</a></li>
-    </ol></div>
-    <div><h2>2 · Inference</h2><ol>
-      <li><a href="#infer-sat-skylines">Sat-Skylines</a></li>
-      <li><a href="#infer-sat2city">Sat2City</a></li>
-      <li><a href="#infer-elevate3d">Elevate3D</a></li>
-    </ol></div>
-    <div><h2>3 · Construction</h2><ol>
-      <li><a href="#shells-footprints-lidar">Building shells from footprints and LiDAR</a></li>
-      <li><a href="#reconstruct-realityscan">Reconstruction with RealityScan</a></li>
-      <li><a href="#reconstruct-colmap">Reconstruction with COLMAP</a></li>
-    </ol></div>
-    <div><h2>4 · Optimization</h2><ol>
-      <li class="tsub">Retopology</li>
-      <li><a href="#retopo-instant-meshes">Instant Meshes</a></li>
-      <li><a href="#retopo-quadriflow">QuadriFlow in Blender</a></li>
-      <li><a href="#retopo-quad-remesher">Quad Remesher</a></li>
-      <li><a href="#retopo-zremesher">ZRemesher</a></li>
-      <li class="tsub">LODs</li>
-      <li><a href="#lod-simplygon">Simplygon</a></li>
-      <li><a href="#lod-meshoptimizer">meshoptimizer</a></li>
-      <li><a href="#lod-blender">Blender Decimate</a></li>
-      <li class="tsub">Collision</li>
-      <li><a href="#col-coacd">CoACD</a></li>
-      <li><a href="#col-vhacd">V-HACD</a></li>
-    </ol></div>
-    <div><h2>5 · Texturing</h2><ol>
-      <li class="tsub">UVs</li>
-      <li><a href="#uv-xatlas">xatlas</a></li>
-      <li><a href="#uv-blender">Blender unwrap and pack</a></li>
-      <li><a href="#uv-rizomuv">RizomUV</a></li>
-      <li class="tsub">Baking</li>
-      <li><a href="#bake-blender">Blender Cycles</a></li>
-      <li><a href="#bake-sat">Substance Automation Toolkit</a></li>
-      <li><a href="#bake-marmoset">Marmoset Toolbag</a></li>
-      <li class="tsub">Materials</li>
-      <li><a href="#mat-sampler">Substance 3D Sampler Image to Material</a></li>
-    </ol></div>
-    <div><h2>6 · De-lighting</h2><ol>
-      <li><a href="#delight-metashape">Metashape Remove Lighting</a></li>
-      <li><a href="#delight-agisoft">Agisoft Texture De-Lighter</a></li>
-      <li><a href="#delight-unity">Unity De-Lighting Tool</a></li>
-      <li><a href="#delight-sampler">Substance 3D Sampler Delight</a></li>
-      <li><a href="#delight-marigold">Marigold intrinsic decomposition</a></li>
-      <li><a href="#delight-rgbx">RGB↔X</a></li>
-      <li><a href="#delight-intrinsic">Colorful diffuse intrinsics</a></li>
-      <li><a href="#delight-surgs">SU-RGS</a></li>
-      <li><a href="#delight-irgs">IRGS++</a></li>
-      <li><a href="#delight-olbedo">Olbedo</a></li>
-      <li><a href="#delight-sun">Sun-aware, from known geometry</a></li>
-      <li><a href="#delight-rebuild">Rebuild under neutral light</a></li>
-    </ol></div>
-    <div><h2>7 · Compilation</h2><ol>
-      <li><a href="#engine-unreal">Unreal Engine</a></li>
-      <li><a href="#engine-unity">Unity</a></li>
-    </ol></div>
+  <nav class="toc" aria-label="The seven steps">
+    <ol>
+      <li><a href="#p-segment"><span class="tn">1</span> Segmenting</a><span class="tj">Split it into buildings, roads, trees</span></li>
+      <li><a href="#p-infer"><span class="tn">2</span> Inference</a><span class="tj">Fill in what can’t be seen from above</span></li>
+      <li><a href="#s-source"><span class="tn">3</span> Construction</a><span class="tj">Turn it into geometry</span></li>
+      <li><a href="#p-optimize"><span class="tn">4</span> Optimization</a><span class="tj">Make it cheap enough to run</span></li>
+      <li><a href="#p-texture"><span class="tn">5</span> Texturing</a><span class="tj">UVs, baked detail, materials</span></li>
+      <li><a href="#s-delight"><span class="tn">6</span> De-lighting</a><span class="tj">Take the capture day’s sun out</span></li>
+      <li><a href="#s-engine"><span class="tn">7</span> Compilation</a><span class="tj">Into Unreal or Unity</span></li>
+    </ol>
   </nav>
 
   <section class="step" aria-labelledby="p-segment">
