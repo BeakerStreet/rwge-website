@@ -167,7 +167,7 @@
     <h1 id="h1">Real places, ready for your game</h1>
     <p>Give it a location and it builds the place as a glTF, from public aerial imagery and LiDAR. Each step runs an existing, swappable tool and is checked before it hands off; a failed check is rerun or rescoped, never passed silently.</p>
     <figure><div class="view" id="view"><img src="img/fidi-flat-walls-preview.png" width="800" height="600" alt="Raw 3D render of downtown San Francisco Financial District: towers rise as measured-height blocks with a grid of windows on the walls and aerial photo on the roofs"><button type="button" class="orbit" id="orbit">⟳ Orbit it in 3D</button></div><figcaption>Unretouched output of our latest run: about 540 m of San Francisco’s Financial District, from public aerial imagery and LiDAR to a single glTF, with building heights measured from LiDAR and the aerial photo on the roofs. The window grid on the walls is generated from each building’s measured height (one floor per 3.5 m), not photographed. <a href="files/fidi-world.glb" download>Download the glTF (2.4 MB)</a>, or orbit it above with no install.</figcaption></figure>
-    <figure><img src="img/pacheights-preview.png" width="800" height="600" alt="Raw 3D render of San Francisco’s Pacific Heights and Lafayette Park: hilly terrain with houses and trees as measured-height blocks with generated windows under aerial photo"><figcaption>Same run, a different place: Pacific Heights and Lafayette Park, hills and houses instead of towers, unretouched. Give the harness a longitude and latitude in the US and it builds the same thing. <a href="files/pacheights-world.glb" download>Download the glTF (2.3 MB)</a></figcaption></figure>
+    <figure><img src="img/pacheights-preview.png" width="800" height="600" alt="Raw 3D render of San Francisco’s Pacific Heights and Lafayette Park: hilly terrain with houses and trees as measured-height blocks with generated windows under aerial photo"><figcaption>Same run, a different place: Pacific Heights and Lafayette Park, hills and houses instead of towers, unretouched. Not every place builds yet: of five US sites we tried, three (Haight, Mission, Civic Center) failed the construction check (no usable LiDAR heights) and were not built. <a href="files/pacheights-world.glb" download>Download the glTF (2.3 MB)</a></figcaption></figure>
     <p class="closed"><a class="send mail" href="mailto:holtby.jonathan@gmail.com?subject=RWGE%20%E2%80%94%20a%20real%20place%20we%20build&amp;body=Which%20real%20place%20(or%20which%20tool%20you%20run%20for%20one)%3A%0AHow%20you%20build%20it%20today%20(and%20what%20it%20costs%20in%20people%20and%20weeks)%3A%0AWhere%20it%20hurts%20or%20breaks%3A%0AStudio%20(optional)%3A%0A">We’d love to hear from you</a></p>
   </section>
 
@@ -670,7 +670,7 @@
   </section>
 
   <footer>
-    <p>We work with named studios on named locations, only on imagery we can license, with sensitive sites left out. Every file keeps its source.</p>
+    <p>We build on named locations, only on imagery we can license, with sensitive sites left out. Every file keeps its source.</p>
     <div class="foot"><span>RWGE · Real World Game Engine</span><span>v1 · October 2026</span></div>
   </footer>
 </div>
