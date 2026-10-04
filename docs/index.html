@@ -524,7 +524,7 @@
     <div class="plan" id="delight-plan">
       <h3>How we’ll do it</h3>
       <ol>
-        <li><strong>Measure the light.</strong> Fit the sun to the shadows, using the building heights we already have.</li>
+        <li><strong>Measure the light.</strong> Fit the sun to the shadows, using the building heights we already have. Our harness already starts from the capture date: for the San Francisco tile (18 May 2022) it computes the sun at 34° above the horizon, azimuth 91°, and writes it into the glTF as a light. The time of day is the imagery’s nominal one, so that is an estimate for the shadows to refine.</li>
         <li><strong>Divide it out.</strong> With the light known, the surface colour falls out. Shadows are dim, not lost.</li>
         <li><strong>Use every capture.</strong> Each surface is lit in some photos and shaded in others. Combine them.</li>
         <li><strong>Check against a photo we never used.</strong> Relight the result under that photo’s sun and compare.</li>
