@@ -123,6 +123,12 @@
   details.more { margin-top: 1rem; border-top: 1px solid var(--rule); }
   details.more > summary { cursor: pointer; padding-block: 0.9rem; font-family: var(--mono); font-size: var(--small); color: var(--blue); }
   .plan .slot { border: 1px dashed var(--rule); padding: 0.9rem; display: grid; gap: 0.2rem; font-size: 0.95rem; }
+  .step .problem { font-size: 1.15rem; font-weight: 600; max-width: 44rem; }
+  .today { margin: 0.6rem 0 0; max-width: 44rem; display: grid; gap: 0.5rem; }
+  .today h3 { margin: 0; font-family: var(--mono); font-size: var(--small); letter-spacing: 0.06em; text-transform: uppercase; color: var(--magenta); font-weight: 500; }
+  .today ul { margin: 0; padding-left: 1.1rem; display: grid; gap: 0.45rem; }
+  .today li { color: var(--ink-2); }
+  .today a { font-family: var(--mono); font-size: var(--small); }
   .step .finding { border-left: 3px solid var(--magenta); padding-left: 0.9rem; font-size: 1rem; }
   .flow dd a { overflow-wrap: anywhere; }
   .flow dd .mono { font-size: 0.88em; }
@@ -167,6 +173,7 @@
   <section class="intro" aria-labelledby="h1">
     <p class="tagline">Play in the real world</p>
     <h1 id="h1">Real places, ready for your game</h1>
+    <p>Today a real place gets built one of three ways: modelled by hand from photos and Street View, extruded from map data into untextured boxes, or streamed from 3D tiles whose terms forbid keeping them. The seven steps below say where each one breaks, in the words of people doing it.</p>
     <p>Give us a US location and we build the place as a glTF from public aerial imagery and LiDAR, wherever the LiDAR is good enough. Every step is checked before it hands off; a failed check is rerun or rescoped, never passed silently.</p>
     <figure><div class="view" id="view"><img src="img/fidi-flat-walls-preview.png" width="800" height="600" alt="Raw 3D render of downtown San Francisco Financial District: towers rise as measured-height blocks with a grid of windows on the walls and aerial photo on the roofs"><button type="button" class="orbit" id="orbit">⟳ Orbit it in 3D</button></div><figcaption>Unretouched output of our latest run: about 540 m of San Francisco’s Financial District as one glTF that passes the Khronos validator. Heights are measured from LiDAR and clipped to building footprints, the aerial photo is on the roofs, and the windows are generated, not photographed. In our own walk-through test (no engine), 15 of 20 routes complete on this file; without the footprint clipping, none do. <details><summary>Other places, same run</summary>Routes completing out of 20, one run each: Pacific Heights 20, Denver 18, Dallas 18, Kansas City 17, Pittsburgh 17, Boston’s Back Bay 16, Austin 16.</details><span class="dl"><a href="files/fidi-world.glb" download>Download the glTF (5.8 MB)</a>, or orbit it above with no install. Sources: NAIP aerial imagery and USGS 3DEP LiDAR (public domain), Overture Maps building footprints (ODbL). Google’s Photorealistic 3D Tiles, by contrast, <a href="https://developers.google.com/maps/documentation/tile/policies">may not be cached or used offline</a>. OSM city plugins such as Osmundi and Blosm extrude footprints to tagged heights, and <a href="https://av.tib.eu/media/66355">fewer than 1 in 5 US OSM buildings has a height tag</a>; San Francisco is the exception, its heights were <a href="https://wiki.openstreetmap.org/wiki/San_Francisco_Building_Height_Import">imported from city LiDAR</a>. <a href="https://cityweft.com/coverage/united-states">Cityweft</a> sells LiDAR-measured US buildings to architects (€30/km²); its US page lists CAD and glTF exports and no textures.</span></figcaption></figure>
     <figure><img src="img/pacheights-preview.png" width="800" height="600" alt="Raw 3D render of San Francisco’s Pacific Heights and Lafayette Park: hilly terrain with houses and trees as measured-height blocks with generated windows under aerial photo"><figcaption>Same run, a different place: Pacific Heights and Lafayette Park, hills and houses instead of towers, unretouched. Three other San Francisco sites (Haight, Mission, Civic Center) and New York’s Financial District had no usable LiDAR heights or imagery, so they were not built.<span class="dl"><a href="files/pacheights-world.glb" download>Download the glTF (5.3 MB)</a></span></figcaption></figure>
@@ -175,13 +182,13 @@
 
   <nav class="toc" aria-label="The seven steps">
     <ol>
-      <li><a href="#p-segment"><span class="tn">1</span> Segmenting</a><span class="tj">Split it into buildings, roads, trees</span></li>
-      <li><a href="#p-infer"><span class="tn">2</span> Inference</a><span class="tj">Fill in what can’t be seen from above</span></li>
-      <li><a href="#s-source"><span class="tn">3</span> Construction</a><span class="tj">Turn it into geometry</span></li>
-      <li><a href="#p-optimize"><span class="tn">4</span> Optimization</a><span class="tj">Make it cheap enough to run</span></li>
-      <li><a href="#p-texture"><span class="tn">5</span> Texturing</a><span class="tj">UVs, baked detail, materials</span></li>
-      <li><a href="#s-delight"><span class="tn">6</span> De-lighting</a><span class="tj">Take the capture day’s sun out</span></li>
-      <li><a href="#s-engine"><span class="tn">7</span> Compilation</a><span class="tj">Into Unreal or Unity</span></li>
+      <li><a href="#p-segment"><span class="tn">1</span> Segmenting</a><span class="tj">Map data doesn’t say what’s there</span></li>
+      <li><a href="#p-infer"><span class="tn">2</span> Inference</a><span class="tj">From above you only see roofs</span></li>
+      <li><a href="#s-source"><span class="tn">3</span> Construction</a><span class="tj">The best-looking data can’t be kept</span></li>
+      <li><a href="#p-optimize"><span class="tn">4</span> Optimization</a><span class="tj">Players fall through it</span></li>
+      <li><a href="#p-texture"><span class="tn">5</span> Texturing</a><span class="tj">Shapes arrive as white boxes</span></li>
+      <li><a href="#s-delight"><span class="tn">6</span> De-lighting</a><span class="tj">The photo has one day’s sun baked in</span></li>
+      <li><a href="#s-engine"><span class="tn">7</span> Compilation</a><span class="tj">Many hops into the engine</span></li>
     </ol>
   </nav>
 
@@ -189,8 +196,18 @@
     <header>
       <p class="num">1 of 7</p>
       <h2 id="p-segment">Segmenting</h2>
-      <p class="job">Split the place into things (buildings, roads, water, trees, boats) so each goes to the flow that can build it.</p>
+      <p class="problem">The map doesn’t tell you what’s there. Map data only holds what someone tagged, so whole areas come in with streets and no buildings.</p>
+          <div class="today">
+        <h3>What people do today</h3>
+        <ul>
+        <li>A Roblox developer building Tokyo traces roads from Google Earth screenshots and places buildings “completely eyeballed”, because exporting the building data was “too tedious”. <a href="https://devforum.roblox.com/t/miniature-tokyo-devlog-archive/4775237">Roblox devforum</a></li>
+        <li>A buyer of a $125 Unity city generator: “rural or lesser-known areas often have almost no building data at all”. <a href="https://assetstore.unity.com/packages/tools/terrain/citygen3d-162468/reviews">Unity Asset Store review</a></li>
+        <li>Players of a real-city game find maps with “just streets and few buildings”. The answer they get is to edit OpenStreetMap and wait. <a href="https://steamcommunity.com/app/1364210/discussions/0/4039230429939367282/">Steam discussion</a></li>
+        </ul>
+      </div>
     </header>
+    <details class="more how">
+    <summary>How we’d automate it</summary>
     <article class="flow" id="seg-sam3">
       <div><h4><a href="#seg-sam3">Segmentation with SAM 3</a></h4><p class="lic">SAM License (Meta)</p></div>
       <dl>
@@ -200,14 +217,25 @@
         <dt>Tools</dt><dd><a href="https://github.com/facebookresearch/sam3">GitHub</a></dd>
       </dl>
     </article>
+    </details>
   </section>
 
   <section class="step" aria-labelledby="p-infer">
     <header>
       <p class="num">2 of 7</p>
       <h2 id="p-infer">Inference</h2>
-      <p class="job">From above you see roofs. Walls, overhangs and anything hidden have to come from somewhere else: measure first, generate last, and mark every surface that was inferred.</p>
+      <p class="problem">From above you only see roofs. Heights, walls and overhangs have to come from somewhere, and in the US the free map data mostly doesn’t have them.</p>
+          <div class="today">
+        <h3>What people do today</h3>
+        <ul>
+        <li>Fewer than 1 in 5 US OpenStreetMap buildings has a height tag, so map-based tools give every building the same height. <a href="https://av.tib.eu/media/66355">FOSS4G 2023</a></li>
+        <li>A Houdini user extruding San Francisco from map data got uniform-height buildings. The thread is unanswered. <a href="https://www.sidefx.com/forum/topic/77355">SideFX forum, 2021</a></li>
+        <li>A studio rebuilding a Tokyo station measured by phone and from memory, and found the remembered measurements wrong. They aim for 5–10 cm; errors over 20 cm show. <a href="https://digitalproduction.com/2026/08/07/workshop-building-real-time-location/">Digital Production, 2026</a></li>
+        </ul>
+      </div>
     </header>
+    <details class="more how">
+    <summary>How we’d automate it</summary>
     <div class="plan" id="infer-plan">
       <h3>How we’ll do it</h3>
       <ol>
@@ -250,14 +278,25 @@
       </dl>
     </article>
     </details>
+    </details>
   </section>
 
   <section class="step" aria-labelledby="s-source">
     <header>
       <p class="num">3 of 7</p>
       <h2 id="s-source">Construction</h2>
-      <p class="job">Turn the place into geometry, from imagery we are allowed to use.</p>
+      <p class="problem">The best-looking data can’t be kept. Photoreal 3D tiles look right but can’t be turned into game assets, so serious work goes back to modelling by hand.</p>
+          <div class="today">
+        <h3>What people do today</h3>
+        <ul>
+        <li>A glider-sim developer asked to export Google’s 3D tiles as models. Cesium staff: not allowed under Google’s or Bing’s terms. <a href="https://community.cesium.com/t/edit-3d-photorealistic-google-tiles-offline-3d-model/33278">Cesium forum, 2024</a></li>
+        <li>Under a 610-point launch of San Francisco as a game, a professional said the same terms blocked their own project, and others asked “Is there a guide out there to do this for any area?” <a href="https://news.ycombinator.com/item?id=49422784">Hacker News, 2026</a></li>
+        <li>A professional XR studio built a real station about 90% by hand in Blender, preferring that to scans whose topology it couldn’t edit. <a href="https://digitalproduction.com/2026/08/07/workshop-building-real-time-location/">Digital Production, 2026</a></li>
+        </ul>
+      </div>
     </header>
+    <details class="more how">
+    <summary>How we’d automate it</summary>
     <article class="flow" id="shells-footprints-lidar">
       <div><h4><a href="#shells-footprints-lidar">Building shells from footprints and LiDAR heights, in Blender</a></h4><p class="lic">Public-domain imagery · ODbL footprints</p></div>
       <dl>
@@ -283,14 +322,25 @@
         <dt>Driven by</dt><dd>Command line</dd>
       </dl>
     </article>
+    </details>
   </section>
 
   <section class="step" aria-labelledby="p-optimize">
     <header>
       <p class="num">4 of 7</p>
       <h2 id="p-optimize">Optimization</h2>
-      <p class="job">Make it cheap enough to run: clean topology, cheaper versions for distance, and shapes for physics.</p>
+      <p class="problem">Players fall through it. A city that looks right still has to be walkable, collide and run, and generated or streamed geometry often isn’t.</p>
+          <div class="today">
+        <h3>What people do today</h3>
+        <ul>
+        <li>Characters float above streamed 3D tiles; an aircraft sinks through buildings set to block everything. Unresolved across two years of threads. <a href="https://community.cesium.com/t/collision-detection-issue-with-unreal-and-3d-tiles/24750">Cesium forum</a></li>
+        <li>Buyers of a Unity city generator report navigation that “did not work” and roads “realy bad at usa highways and over hangs”. <a href="https://assetstore.unity.com/packages/tools/terrain/citygen3d-162468/reviews">Unity Asset Store reviews</a></li>
+        <li>Commenters on the San Francisco web game got stuck in terrain and hit 2 GB of memory and freezes. <a href="https://news.ycombinator.com/item?id=49422784">Hacker News, 2026</a></li>
+        </ul>
+      </div>
     </header>
+    <details class="more how">
+    <summary>How we’d automate it</summary>
     <div class="sub" aria-labelledby="s-retopo">
       <header>
         <h3 id="s-retopo">Retopology</h3>
@@ -383,14 +433,26 @@
       </dl>
     </article>
     </div>
+    </details>
   </section>
 
   <section class="step" aria-labelledby="p-texture">
     <header>
       <p class="num">5 of 7</p>
       <h2 id="p-texture">Texturing</h2>
-      <p class="job">Give the clean mesh its surfaces: UVs, the scan’s detail baked on, and PBR materials.</p>
+      <p class="problem">Shapes arrive as white boxes. Measured buildings come without surfaces, and textures are the part people pay extra for.</p>
+          <div class="today">
+        <h3>What people do today</h3>
+        <ul>
+        <li>Cesium staff, asked for textured buildings for a real place: “OpenStreetMap does not provide textures”. <a href="https://community.cesium.com/t/osm-buildings-to-3d-buildings/43672">Cesium forum, 2025</a></li>
+        <li>An archviz user’s generated city is “white blocks” and they want the satellite photo on them. <a href="https://forum.d5render.com/t/optimized-city-generation-satellite-3d-buildings/54822">D5 Render forum, 2025</a></li>
+        <li>Blosm, the Blender map importer (2.1k stars), charges for one thing: textures, trees and imagery on terrain. <a href="https://github.com/vvoovv/blosm">GitHub</a></li>
+        <li>A Unity developer fixes “flat-colored boxes” by painting a window texture on at runtime. <a href="https://pavelguzenfeld.com/posts/procedural-osm-terrain-buildings-entities-unity/">Developer blog</a></li>
+        </ul>
+      </div>
     </header>
+    <details class="more how">
+    <summary>How we’d automate it</summary>
     <div class="sub" aria-labelledby="s-uv">
       <header>
         <h3 id="s-uv">UVs</h3>
@@ -465,15 +527,24 @@
       </dl>
     </article>
     </div>
+    </details>
   </section>
 
   <section class="step" aria-labelledby="s-delight">
     <header>
       <p class="num">6 of 7</p>
       <h2 id="s-delight">De-lighting</h2>
-      <p class="job">Take the sun and shadows of the capture day out of the colour, so the asset works under any lighting.</p>
-      <p class="finding">Every production tool here assumes the capture avoided hard sun. Unity’s own guide calls strong directional shadows “a situation that must be avoided”. Aerial imagery is flown in sunlight, so hard shadows are always in the input. Studios de-light one photo. We don’t have to: a real place has been photographed many times under different suns, and we know its shape.</p>
+      <p class="problem">The photo has one day’s sun baked in. Put an aerial photo on a building and its shadows stay, whatever the game’s lighting.</p>
+          <div class="today">
+        <h3>What people do today</h3>
+        <ul>
+        <li>Production de-lighting tools assume the capture avoided hard sun. Unity’s own guide calls strong directional shadows “a situation that must be avoided”, and falls back to Photoshop “to remove lighting artistically”. <a href="https://unity3d.com/files/solutions/photogrammetry/Unity-Photogrammetry-Workflow_2017-07_v2.pdf">Unity Photogrammetry Workflow</a></li>
+        <li>Metashape’s remove-lighting: “delighting in strong shadows is not supported.” Aerial imagery is flown in sunlight, so hard shadows are always there. <a href="https://agisoft.freshdesk.com/support/solutions/articles/31000158885-remove-lighting-from-texture-in-agisoft-metashape-professional">Agisoft</a></li>
+        </ul>
+      </div>
     </header>
+    <details class="more how">
+    <summary>How we’d automate it</summary>
     <div class="plan" id="delight-plan">
       <h3>How we’ll do it</h3>
       <ol>
@@ -614,14 +685,25 @@
       </dl>
     </article>
     </details>
+    </details>
   </section>
 
   <section class="step" aria-labelledby="s-engine">
     <header>
       <p class="num">7 of 7</p>
       <h2 id="s-engine">Compilation</h2>
-      <p class="job">Import, assign, and set up to the project’s conventions.</p>
+      <p class="problem">Many hops into the engine. Even with the data in hand, getting a real place into Unreal or Unity is a chain of tools and hand fixes.</p>
+          <div class="today">
+        <h3>What people do today</h3>
+        <ul>
+        <li>“It’s a LOT of manual work”: a developer making 1:1 real cities in Unreal describes a five-tool hop and terrain data off by 20–30 m. <a href="https://forums.unrealengine.com/t/questions-on-how-to-create-1-1-replicas-of-real-life-cities-and-landscapes/146722">Unreal forum, 2020</a></li>
+        <li>Georeferenced data in Unreal: no native projection support, format hops, alignment issues. <a href="https://isprs-archives.copernicus.org/articles/XLVIII-M-6-2025/353/2025/">ISPRS, 2025</a></li>
+        <li>A solo WW2 shooter developer imports real heights, imagery and streets, then hand-finishes roads, ground, structures and set dressing, and wants to “explore how to maybe automate”. <a href="https://desertfoxdev.itch.io/longestfront/devlog/613826/real-world-terrain-data">itch.io devlog</a></li>
+        </ul>
+      </div>
     </header>
+    <details class="more how">
+    <summary>How we’d automate it</summary>
     <article class="flow" id="engine-unreal">
       <div><h4><a href="#engine-unreal">Into Unreal Engine</a></h4><p class="lic">Epic Games</p></div>
       <dl>
@@ -639,6 +721,7 @@
         <dt>Driven by</dt><dd>Editor in batch mode running an editor script (<span class="mono">-batchmode -nographics -executeMethod</span>), no GPU needed</dd>
       </dl>
     </article>
+    </details>
   </section>
 
   <section class="talk" id="talk" aria-labelledby="h-talk">
