@@ -11,7 +11,7 @@
 <meta property="og:description" content="Give us a US location and we build the place as a glTF from public aerial imagery and LiDAR. Unretouched output from San Francisco’s Financial District and Pacific Heights, with a download and a 3D orbit.">
 <meta property="og:url" content="https://beakerstreet.github.io/rwge-website/">
 <meta property="og:image" content="https://beakerstreet.github.io/rwge-website/img/fidi-flat-walls-preview.png">
-<meta property="og:image:alt" content="Raw 3D render of San Francisco's Financial District from the harness, unretouched">
+<meta property="og:image:alt" content="Raw 3D render of San Francisco's Financial District, unretouched">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -154,8 +154,6 @@
   .plan figure { margin: 0; display: grid; gap: 0.4rem; }
   .plan figure img { width: 100%; height: auto; border: 1px solid var(--rule); display: block; }
   .plan figcaption { font-family: var(--mono); font-size: var(--small); color: var(--ink-2); }
-  details.more { margin-top: 1rem; border-top: 1px solid var(--rule); }
-  details.more > summary { cursor: pointer; padding-block: 0.9rem; font-family: var(--mono); font-size: var(--small); color: var(--blue); }
   .plan .slot { border: 1px dashed var(--rule); padding: 0.9rem; display: grid; gap: 0.2rem; font-size: 0.95rem; }
   .step .problem { font-size: 1.15rem; font-weight: 600; max-width: 44rem; }
   .today { margin: 0.6rem 0 0; max-width: 44rem; display: grid; gap: 0.5rem; }
@@ -209,7 +207,7 @@
       <p class="tagline">Play in the real world</p>
       <h1 id="h1">Real places, ready for your game</h1>
       <p>Today a real place is modelled by hand from photos, extruded from map data into untextured boxes, or streamed from 3D tiles whose terms forbid keeping them.</p>
-      <p>Give us a US location and we build it as one glTF from public aerial imagery and LiDAR: measured heights, the aerial photo on the roofs, and a file you can keep and ship.</p>
+      <p>You can have a US location built as one glTF from public aerial imagery and LiDAR: measured heights, the aerial photo on the roofs, and a file you can keep and ship. We do this with agents.</p>
       <p class="ctas"><a class="btn" href="#talk">Tell us your place</a><a class="btn ghost" href="files/fidi-world.glb" download>Download glTF · 5.8 MB · no sign-up</a></p>
     </div>
     <figure class="hero-fig"><div class="view" id="view"><img src="img/fidi-flat-walls-preview.png" width="800" height="600" alt="Raw 3D render of downtown San Francisco Financial District: towers rise as measured-height blocks with a grid of windows on the walls and aerial photo on the roofs"><button type="button" class="orbit" id="orbit">⟳ Orbit it in 3D</button></div><figcaption>Unretouched: about 540 m of San Francisco’s Financial District from our latest run. Heights measured from LiDAR and clipped to building footprints; windows generated, not photographed.</figcaption></figure>
@@ -274,18 +272,7 @@
         </ul>
       </div>
     </header>
-    <details class="more how">
-    <summary>How we’d automate it</summary>
-    <article class="flow" id="seg-sam3">
-      <div><h4><a href="#seg-sam3">Segmentation with SAM 3</a></h4><p class="lic">SAM License (Meta)</p></div>
-      <dl>
-        <dt>In</dt><dd>Aerial or street imagery, and a short text prompt per class (“boat”, “roof”, “pier”)</dd>
-        <dt>Out</dt><dd>A mask, box and score for every instance of each class</dd>
-        <dt>Driven by</dt><dd>Python, from Meta’s released code and weights; needs a CUDA GPU</dd>
-        <dt>Tools</dt><dd><a href="https://github.com/facebookresearch/sam3">GitHub</a></dd>
-      </dl>
-    </article>
-    </details>
+    
   </section>
 
   <section class="step" aria-labelledby="p-infer">
@@ -302,51 +289,7 @@
         </ul>
       </div>
     </header>
-    <details class="more how">
-    <summary>How we’d automate it</summary>
-    <div class="plan" id="infer-plan">
-      <h3>How we’ll do it</h3>
-      <ol>
-        <li><strong>Sort the tall things.</strong> Trees and buildings are equally tall from above. The infrared band of the same aerial photo tells leaves from roofs, and public building footprints split the blocks.</li>
-        <li><strong>Keep what was measured.</strong> LiDAR already gives each roof’s height and often its shape. Nothing is invented where a sensor saw it.</li>
-        <li><strong>Fill the sides nobody saw.</strong> Pick a facade style from the building’s type, age and roof colour, and set the floors from its measured height. A generative model is the upgrade, not the start.</li>
-        <li><strong>Check against data we held back.</strong> Compare footprints and heights with measurements the model never saw.</li>
-      </ol>
-      <p><strong>Checked against hand labels.</strong> We labelled tall groups by eye from the aerial photo and tuned the infrared cut-off on them. On two further sites, Pacific Heights and Embarcadero, labelled blind, the tree-or-building call is right for 85 of 88 groups; calling every group a building gets 75. The misses are narrow tree strips and a building ringed by trees. Labels are one person’s eyeball, not ground truth, and the sites are two neighbourhoods of one city.</p>
-      <p>Every inferred surface is tagged as inferred, with a low confidence, so a facade is never mistaken for a measurement.</p>
-    </div>
-    <details class="more" id="infer-all">
-    <summary>Alternative approaches</summary>
-    <article class="flow" id="infer-sat-skylines">
-      <div><h4><a href="#infer-sat-skylines">Buildings with Sat-Skylines</a></h4><p class="lic">Research (USC, 2025) · USC Research licence</p></div>
-      <dl>
-        <dt>In</dt><dd>Satellite imagery and a coarse shape per building, such as a box from footprint and height</dd>
-        <dt>Out</dt><dd>A detailed 3D building, trained on over 50,000 hand-made game building assets</dd>
-        <dt>Driven by</dt><dd>Dataset released; model weights and inference code listed as pending</dd>
-        <dt>Tools</dt><dd><a href="https://arxiv.org/abs/2508.18531">arXiv 2508.18531</a> · <a href="https://github.com/JinZhangYu/SatSkylines">GitHub</a></dd>
-      </dl>
-    </article>
-    <article class="flow" id="infer-sat2city">
-      <div><h4><a href="#infer-sat2city">City blocks with Sat2City</a></h4><p class="lic">Research (HKUST Guangzhou, ICCV 2025)</p></div>
-      <dl>
-        <dt>In</dt><dd>A single satellite image</dd>
-        <dt>Out</dt><dd>3D city structure; version 2 (paper, Sept 2026) outputs textured meshes</dd>
-        <dt>Driven by</dt><dd>No code yet: version 1’s repository and version 2’s project page both say “coming soon”</dd>
-        <dt>Tools</dt><dd><a href="https://arxiv.org/abs/2507.04403">arXiv 2507.04403</a> · <a href="https://arxiv.org/abs/2606.24138">arXiv 2606.24138 (v2)</a> · <a href="https://ai4city-hkust.github.io/Sat2City/">Project page</a></dd>
-      </dl>
-    </article>
-    <article class="flow" id="infer-elevate3d">
-      <div><h4><a href="#infer-elevate3d">Buildings with Elevate3D</a></h4><p class="lic">Open source</p></div>
-      <dl>
-        <dt>In</dt><dd>A satellite image</dd>
-        <dt>Out</dt><dd>Building masks, an estimated height map, and a mesh</dd>
-        <dt>Driven by</dt><dd>One command, pretrained weights included</dd>
-        <dt>Note</dt><dd>Its own README calls it experimental and not production-ready.</dd>
-        <dt>Tools</dt><dd><a href="https://github.com/krdgomer/Elevate3D">GitHub</a></dd>
-      </dl>
-    </article>
-    </details>
-    </details>
+    
   </section>
 
   <section class="step" aria-labelledby="s-source">
@@ -363,34 +306,7 @@
         </ul>
       </div>
     </header>
-    <details class="more how">
-    <summary>How we’d automate it</summary>
-    <article class="flow" id="shells-footprints-lidar">
-      <div><h4><a href="#shells-footprints-lidar">Building shells from footprints and LiDAR heights, in Blender</a></h4><p class="lic">Public-domain imagery · ODbL footprints</p></div>
-      <dl>
-        <dt>In</dt><dd>A US location: NAIP aerial imagery, USGS 3DEP LiDAR, Microsoft building footprints</dd>
-        <dt>Out</dt><dd>Building shells extruded to measured heights, imagery projected onto roofs and ground</dd>
-        <dt>Driven by</dt><dd>Headless Blender (<span class="mono">bpy</span>), or the open-source BlenderGIS add-on’s import and extrude tools; data from Planetary Computer</dd>
-        <dt>Note</dt><dd>Measured, not guessed, but only footprint and height. No facades. Projected imagery keeps the sun baked in; see <a href="#s-delight">De-lighting</a>.</dd>
-      </dl>
-    </article>
-    <article class="flow" id="reconstruct-realityscan">
-      <div><h4><a href="#reconstruct-realityscan">Reconstruction with RealityScan (formerly RealityCapture)</a></h4><p class="lic">Epic Games</p></div>
-      <dl>
-        <dt>In</dt><dd>Photos or drone imagery, optional LiDAR</dd>
-        <dt>Out</dt><dd>Dense textured mesh</dd>
-        <dt>Driven by</dt><dd>Command-line interface, including a Linux CLI build from 2.1</dd>
-      </dl>
-    </article>
-    <article class="flow" id="reconstruct-colmap">
-      <div><h4><a href="#reconstruct-colmap">Reconstruction with COLMAP</a></h4><p class="lic">Open source</p></div>
-      <dl>
-        <dt>In</dt><dd>Photos</dd>
-        <dt>Out</dt><dd>Camera poses, dense point cloud, mesh</dd>
-        <dt>Driven by</dt><dd>Command line</dd>
-      </dl>
-    </article>
-    </details>
+    
   </section>
 
   <section class="step" aria-labelledby="p-optimize">
@@ -407,101 +323,7 @@
         </ul>
       </div>
     </header>
-    <details class="more how">
-    <summary>How we’d automate it</summary>
-    <div class="sub" aria-labelledby="s-retopo">
-      <header>
-        <h3 id="s-retopo">Retopology</h3>
-        <p class="job">Dense triangle soup to clean quads at a target budget.</p>
-      </header>
-    <article class="flow" id="retopo-instant-meshes">
-      <div><h4><a href="#retopo-instant-meshes">Retopology with Instant Meshes</a></h4><p class="lic">Open source</p></div>
-      <dl>
-        <dt>In</dt><dd>Dense mesh (OBJ, PLY)</dd>
-        <dt>Out</dt><dd>Quad-dominant mesh at a target face or vertex count</dd>
-        <dt>Driven by</dt><dd>Batch mode on the command line</dd>
-      </dl>
-    </article>
-    <article class="flow" id="retopo-quadriflow">
-      <div><h4><a href="#retopo-quadriflow">Retopology with QuadriFlow in Blender</a></h4><p class="lic">Built into Blender</p></div>
-      <dl>
-        <dt>In</dt><dd>Dense mesh</dd>
-        <dt>Out</dt><dd>All-quad mesh at a target face count</dd>
-        <dt>Driven by</dt><dd>Headless Blender, the QuadriFlow remesh operator</dd>
-      </dl>
-    </article>
-    <article class="flow" id="retopo-quad-remesher">
-      <div><h4><a href="#retopo-quad-remesher">Retopology with Quad Remesher</a></h4><p class="lic">Commercial (Exoside)</p></div>
-      <dl>
-        <dt>In</dt><dd>Dense mesh, optional material and crease guides</dd>
-        <dt>Out</dt><dd>Quad mesh with edge loops that follow the form</dd>
-        <dt>Driven by</dt><dd>Its Blender add-on’s remesh operator, looped over objects in a script</dd>
-      </dl>
-    </article>
-    <article class="flow" id="retopo-zremesher">
-      <div><h4><a href="#retopo-zremesher">Retopology with ZRemesher</a></h4><p class="lic">Commercial (ZBrush)</p></div>
-      <dl>
-        <dt>In</dt><dd>Dense mesh</dd>
-        <dt>Out</dt><dd>Quad mesh</dd>
-        <dt>Driven by</dt><dd>ZBrush 2026’s official Python SDK, run from the command line with <span class="mono">-batch -script</span>. Whether the SDK reaches ZRemesher itself is not confirmed.</dd>
-        <dt>Note</dt><dd>Many artists’ default, and the hardest here to run without a person.</dd>
-      </dl>
-    </article>
-    </div>
-    <div class="sub" aria-labelledby="s-lod">
-      <header>
-        <h3 id="s-lod">LODs</h3>
-        <p class="job">A chain of cheaper versions for distance.</p>
-      </header>
-    <article class="flow" id="lod-simplygon">
-      <div><h4><a href="#lod-simplygon">LODs with Simplygon</a></h4><p class="lic">Commercial</p></div>
-      <dl>
-        <dt>In</dt><dd>Game mesh and materials</dd>
-        <dt>Out</dt><dd>LOD chain, optional proxy meshes</dd>
-        <dt>Driven by</dt><dd>SDK with a Python API</dd>
-      </dl>
-    </article>
-    <article class="flow" id="lod-meshoptimizer">
-      <div><h4><a href="#lod-meshoptimizer">LODs with meshoptimizer</a></h4><p class="lic">Open source</p></div>
-      <dl>
-        <dt>In</dt><dd>Game mesh</dd>
-        <dt>Out</dt><dd>Simplified levels</dd>
-        <dt>Driven by</dt><dd>Library, or gltfpack on the command line</dd>
-      </dl>
-    </article>
-    <article class="flow" id="lod-blender">
-      <div><h4><a href="#lod-blender">LODs with Blender Decimate</a></h4><p class="lic">Built into Blender</p></div>
-      <dl>
-        <dt>In</dt><dd>Game mesh</dd>
-        <dt>Out</dt><dd>Decimated levels</dd>
-        <dt>Driven by</dt><dd>Headless Blender, Decimate modifier</dd>
-      </dl>
-    </article>
-    </div>
-    <div class="sub" aria-labelledby="s-col">
-      <header>
-        <h3 id="s-col">Collision</h3>
-        <p class="job">Simple shapes the physics engine can use.</p>
-      </header>
-    <article class="flow" id="col-coacd">
-      <div><h4><a href="#col-coacd">Collision with CoACD</a></h4><p class="lic">Open source</p></div>
-      <dl>
-        <dt>In</dt><dd>Game mesh</dd>
-        <dt>Out</dt><dd>Convex hulls</dd>
-        <dt>Driven by</dt><dd>Python package</dd>
-      </dl>
-    </article>
-    <article class="flow" id="col-vhacd">
-      <div><h4><a href="#col-vhacd">Collision with V-HACD</a></h4><p class="lic">Open source</p></div>
-      <dl>
-        <dt>In</dt><dd>Game mesh</dd>
-        <dt>Out</dt><dd>Convex hulls</dd>
-        <dt>Driven by</dt><dd>Command line or library</dd>
-        <dt>Note</dt><dd>Its own README now calls it end-of-life and points to <a href="#col-coacd">CoACD</a>.</dd>
-      </dl>
-    </article>
-    </div>
-    </details>
+    
   </section>
 
   <section class="step" aria-labelledby="p-texture">
@@ -519,83 +341,7 @@
         </ul>
       </div>
     </header>
-    <details class="more how">
-    <summary>How we’d automate it</summary>
-    <div class="sub" aria-labelledby="s-uv">
-      <header>
-        <h3 id="s-uv">UVs</h3>
-        <p class="job">Lay the UVs out again after remeshing, and pack them.</p>
-      </header>
-    <article class="flow" id="uv-xatlas">
-      <div><h4><a href="#uv-xatlas">UVs with xatlas</a></h4><p class="lic">Open source</p></div>
-      <dl>
-        <dt>In</dt><dd>Retopologised mesh</dd>
-        <dt>Out</dt><dd>Unwrapped, packed atlas</dd>
-        <dt>Driven by</dt><dd>C++ library, with community Python bindings (<span class="mono">xatlas-python</span>)</dd>
-      </dl>
-    </article>
-    <article class="flow" id="uv-blender">
-      <div><h4><a href="#uv-blender">UVs with Blender unwrap and pack</a></h4><p class="lic">Built into Blender</p></div>
-      <dl>
-        <dt>In</dt><dd>Retopologised mesh</dd>
-        <dt>Out</dt><dd>Unwrapped, packed UVs</dd>
-        <dt>Driven by</dt><dd>Headless Blender, unwrap and pack operators</dd>
-      </dl>
-    </article>
-    <article class="flow" id="uv-rizomuv">
-      <div><h4><a href="#uv-rizomuv">UVs with RizomUV</a></h4><p class="lic">Commercial</p></div>
-      <dl>
-        <dt>In</dt><dd>Retopologised mesh</dd>
-        <dt>Out</dt><dd>Unwrapped, packed UVs with cleaner seams</dd>
-        <dt>Driven by</dt><dd>Lua scripts, or RizomUVLink from 2022.2</dd>
-      </dl>
-    </article>
-    </div>
-    <div class="sub" aria-labelledby="s-bake">
-      <header>
-        <h3 id="s-bake">Baking</h3>
-        <p class="job">Carry the detail of the dense scan onto the clean mesh as textures.</p>
-      </header>
-    <article class="flow" id="bake-blender">
-      <div><h4><a href="#bake-blender">Baking with Blender Cycles</a></h4><p class="lic">Built into Blender</p></div>
-      <dl>
-        <dt>In</dt><dd>Dense scan and the UV’d low-poly mesh</dd>
-        <dt>Out</dt><dd>Normal, ambient occlusion and colour maps</dd>
-        <dt>Driven by</dt><dd>Headless Blender, bake selected to active</dd>
-      </dl>
-    </article>
-    <article class="flow" id="bake-sat">
-      <div><h4><a href="#bake-sat">Baking with the Substance Automation Toolkit</a></h4><p class="lic">Commercial (Adobe)</p></div>
-      <dl>
-        <dt>In</dt><dd>High and low meshes</dd>
-        <dt>Out</dt><dd>Mesh maps</dd>
-        <dt>Driven by</dt><dd>Command-line baker</dd>
-      </dl>
-    </article>
-    <article class="flow" id="bake-marmoset">
-      <div><h4><a href="#bake-marmoset">Baking with Marmoset Toolbag</a></h4><p class="lic">Commercial</p></div>
-      <dl>
-        <dt>In</dt><dd>High and low meshes</dd>
-        <dt>Out</dt><dd>Mesh maps</dd>
-        <dt>Driven by</dt><dd>A Python script passed at launch (<span class="mono">toolbag.exe script.py</span>); Marmoset’s own examples cover baking. Whether it runs without a window is not confirmed.</dd>
-      </dl>
-    </article>
-    </div>
-    <div class="sub" aria-labelledby="s-mat">
-      <header>
-        <h3 id="s-mat">Materials</h3>
-        <p class="job">One flat colour map into the PBR channels the engine expects.</p>
-      </header>
-    <article class="flow" id="mat-sampler">
-      <div><h4><a href="#mat-sampler">Materials with Substance 3D Sampler Image to Material</a></h4><p class="lic">Commercial (Adobe)</p></div>
-      <dl>
-        <dt>In</dt><dd>Photo or colour map</dd>
-        <dt>Out</dt><dd>Base colour, normal, roughness, height, with de-lighting included</dd>
-        <dt>Driven by</dt><dd>Python API for scripts and plugins inside Sampler. Running it without the app open is not documented.</dd>
-      </dl>
-    </article>
-    </div>
-    </details>
+    
   </section>
 
   <section class="step" aria-labelledby="s-delight">
@@ -611,149 +357,7 @@
         </ul>
       </div>
     </header>
-    <details class="more how">
-    <summary>How we’d automate it</summary>
-    <div class="plan" id="delight-plan">
-      <h3>How we’ll do it</h3>
-      <ol>
-        <li><strong>Measure the light.</strong> Fit the sun to the shadows, using the building heights we already have. Our harness already starts from the capture date: for the San Francisco tile (18 May 2022) it computes the sun at 34° above the horizon, azimuth 91°, and writes it into the glTF as a light. We then tested that nominal time against the photo’s own shadows (a 74×93 m patch of the Financial District): shadowed ground is no darker than lit ground at 16:00 UTC, so the assumed time is wrong. The shadows match best near 21:30 UTC, sun 64° high, azimuth 231°. The time has to be fitted from the shadows, not read from the metadata.</li>
-        <li><strong>Divide it out.</strong> With the light known, the surface colour falls out. Shadows are dim, not lost.</li>
-        <li><strong>Use every capture.</strong> Each surface is lit in some photos and shaded in others. Combine them.</li>
-        <li><strong>Check against a photo we never used.</strong> Relight the result under that photo’s sun and compare.</li>
-      </ol>
-      <p>Where it can’t be measured (facades, glass, trees that have grown since), a model fills in and the asset marks it as inferred. Step 4 is a score no person has to give, so an agent loop can try, check against the held-out photo, and keep what wins, place by place.</p>
-      <figure>
-        <img src="img/olbedo-naip-sf-4way-zoom.png" width="2048" height="512" alt="Four panels of the same San Francisco aerial tile: the original NAIP photo with hard building shadows, then three outputs of an aerial de-lighting model in which the shadows remain or the result is noise" loading="lazy">
-        <figcaption>Why not one model on one photo. We ran the best aerial de-lighting model we found (Olbedo) on our tile: NAIP, San Francisco, 18 May 2022. Left, the input. Right, what came back. The shadows stay. It was trained on drone photos, not straight-down imagery.</figcaption>
-      </figure>
-    </div>
-    <details class="more" id="delight-all">
-    <summary>Alternative approaches</summary>
-    <article class="flow" id="delight-metashape">
-      <div><h4><a href="#delight-metashape">De-lighting with Metashape Remove Lighting</a></h4><p class="lic">Commercial (Metashape Professional)</p></div>
-      <dl>
-        <dt>In</dt><dd>Textured model in a Metashape chunk, optional ambient occlusion map</dd>
-        <dt>Out</dt><dd>Texture with light and dark sides evened out</dd>
-        <dt>Driven by</dt><dd><span class="mono">Chunk.removeLighting()</span> in the Python API, with colour mode, blur, mesh-noise suppression and AO settings</dd>
-        <dt>Built for</dt><dd>Soft lighting. An “Aggressive” preset is tuned for rocks.</dd>
-        <dt>Breaks on</dt><dd>Strong shadows: “delighting in strong shadows is not supported.”</dd>
-        <dt>Tools</dt><dd><a href="https://agisoft.freshdesk.com/support/solutions/articles/31000158885-remove-lighting-from-texture-in-agisoft-metashape-professional">Agisoft helpdesk</a> · <a href="https://www.agisoft.com/pdf/metashape_python_api_2_2_0.pdf">Python API 2.2.0</a>, p. 67</dd>
-      </dl>
-    </article>
-    <article class="flow" id="delight-agisoft">
-      <div><h4><a href="#delight-agisoft">De-lighting with Agisoft Texture De-Lighter</a></h4><p class="lic">Free (Agisoft)</p></div>
-      <dl>
-        <dt>In</dt><dd>Textured model, 8-bit JPEG texture, and brush strokes marking lit and shadowed areas</dd>
-        <dt>Out</dt><dd>Texture with cast shadows and ambient occlusion removed</dd>
-        <dt>Driven by</dt><dd>Desktop app only</dd>
-        <dt>Built for</dt><dd>Cast shadows, which the others can’t do. It needs “one stroke per material which is undoubtedly lit/shadowed”.</dd>
-        <dt>Breaks on</dt><dd>“Highly non-uniform shadows (e.g. ambient occlusion overlapping with cast shadow)”.</dd>
-        <dt>Automating it</dt><dd>Means generating the strokes ourselves, and it has no scripting route to feed them in.</dd>
-        <dt>Tools</dt><dd><a href="https://agisoft.freshdesk.com/support/solutions/articles/31000158376-agisoft-texture-de-lighter-general-workflow">Agisoft helpdesk</a></dd>
-      </dl>
-    </article>
-    <article class="flow" id="delight-unity">
-      <div><h4><a href="#delight-unity">De-lighting with Unity’s De-Lighting Tool</a></h4><p class="lic">Open source (MIT, Unity)</p></div>
-      <dl>
-        <dt>In</dt><dd>Baked base colour, normal, bent normal, ambient occlusion and position maps, optional mask</dd>
-        <dt>Out</dt><dd>De-lit albedo</dd>
-        <dt>Driven by</dt><dd><span class="mono">Delighting.bat</span> runs <span class="mono">Unity.exe -executeMethod DelightingCLI.Run</span> with the maps as arguments</dd>
-        <dt>Built for</dt><dd>Objects shot on an overcast day or under an occluder. Supports Unity 2017.1 onward, so it may not run on current versions without work.</dd>
-        <dt>Breaks on</dt><dd>Hard shadows. Unity’s guide falls back to Photoshop “to remove lighting artistically”.</dd>
-        <dt>Tools</dt><dd><a href="https://github.com/Unity-Technologies/DeLightingTool">GitHub</a> · <a href="https://unity3d.com/files/solutions/photogrammetry/Unity-Photogrammetry-Workflow_2017-07_v2.pdf">Unity Photogrammetry Workflow</a>, pp. 18–19, 86</dd>
-      </dl>
-    </article>
-    <article class="flow" id="delight-sampler">
-      <div><h4><a href="#delight-sampler">De-lighting with Substance 3D Sampler Delight</a></h4><p class="lic">Commercial (Adobe)</p></div>
-      <dl>
-        <dt>In</dt><dd>Photo or colour map</dd>
-        <dt>Out</dt><dd>De-lit colour map. The filter has no parameters.</dd>
-        <dt>Driven by</dt><dd>Python API for scripts and plugins inside Sampler, since 3.4. Running it without the app open is not documented.</dd>
-        <dt>Tools</dt><dd><a href="https://substance3d.adobe.com/documentation/sadoc/delighter-172823952.html">Delight (AI Powered)</a></dd>
-      </dl>
-    </article>
-    <article class="flow" id="delight-marigold">
-      <div><h4><a href="#delight-marigold">De-lighting with Marigold intrinsic decomposition</a></h4><p class="lic">Open RAIL++-M licence (ETH Zürich)</p></div>
-      <dl>
-        <dt>In</dt><dd>An image</dd>
-        <dt>Out</dt><dd>Appearance model: albedo, roughness, metallicity. Lighting model: albedo, diffuse shading, non-diffuse residual.</dd>
-        <dt>Driven by</dt><dd>Python, as a Hugging Face Diffusers pipeline</dd>
-        <dt>Breaks on</dt><dd>Unknown for aerial imagery. Its albedo comes from indoor synthetic datasets (InteriorVerse, Hypersim), so roofs and roads from above are out of what it has seen.</dd>
-        <dt>Tools</dt><dd><a href="https://huggingface.co/prs-eth/marigold-iid-lighting-v1-1">Model card</a> · <a href="https://huggingface.co/docs/diffusers/en/using-diffusers/marigold_usage">Diffusers docs</a></dd>
-      </dl>
-    </article>
-    <article class="flow" id="delight-rgbx">
-      <div><h4><a href="#delight-rgbx">De-lighting with RGB↔X</a></h4><p class="lic">Non-commercial only (Adobe Research, SIGGRAPH 2024)</p></div>
-      <dl>
-        <dt>In</dt><dd>An image</dd>
-        <dt>Out</dt><dd>Albedo, normals, roughness, metallicity, irradiance</dd>
-        <dt>Driven by</dt><dd>Python, released code and weights</dd>
-        <dt>Note</dt><dd>We can test against it. The licence means we can’t ship it.</dd>
-        <dt>Tools</dt><dd><a href="https://github.com/zheng95z/rgbx">GitHub</a></dd>
-      </dl>
-    </article>
-    <article class="flow" id="delight-intrinsic">
-      <div><h4><a href="#delight-intrinsic">De-lighting with colorful diffuse intrinsics</a></h4><p class="lic">Academic use only (SFU, TOG 2024)</p></div>
-      <dl>
-        <dt>In</dt><dd>An image</dd>
-        <dt>Out</dt><dd>Albedo, coloured diffuse shading, residual</dd>
-        <dt>Driven by</dt><dd>Python package from the repo</dd>
-        <dt>Note</dt><dd>Commercial use goes through SFU’s licensing office. We can test against it; shipping needs a licence.</dd>
-        <dt>Tools</dt><dd><a href="https://github.com/compphoto/Intrinsic">GitHub</a></dd>
-      </dl>
-    </article>
-    <article class="flow" id="delight-surgs">
-      <div><h4><a href="#delight-surgs">De-lighting with SU-RGS</a></h4><p class="lic">Research (ICCV 2025)</p></div>
-      <dl>
-        <dt>In</dt><dd>A sparse set of photos of the place, taken under different lighting</dd>
-        <dt>Out</dt><dd>Relightable 3D Gaussians with surface materials and the environment lighting, with transient objects removed</dd>
-        <dt>Driven by</dt><dd>No released code found</dd>
-        <dt>Note</dt><dd>Needs several views, so it suits street or drone photos rather than a single aerial image.</dd>
-        <dt>Tools</dt><dd><a href="https://openaccess.thecvf.com/content/ICCV2025/html/Zhang_SU-RGS_Relightable_3D_Gaussian_Splatting_from_Sparse_Views_under_Unconstrained_ICCV_2025_paper.html">ICCV 2025 paper</a></dd>
-      </dl>
-    </article>
-    <article class="flow" id="delight-irgs">
-      <div><h4><a href="#delight-irgs">De-lighting with IRGS++</a></h4><p class="lic">Research (July 2026)</p></div>
-      <dl>
-        <dt>In</dt><dd>Multi-view photos</dd>
-        <dt>Out</dt><dd>Albedo, roughness, metallic and lighting, including inter-reflections, so glass and metal are handled</dd>
-        <dt>Driven by</dt><dd>No released code found</dd>
-        <dt>Tools</dt><dd><a href="https://arxiv.org/abs/2607.22780">arXiv 2607.22780</a></dd>
-      </dl>
-    </article>
-    <article class="flow" id="delight-olbedo">
-      <div><h4><a href="#delight-olbedo">De-lighting with Olbedo</a></h4><p class="lic">Research (Ohio State and USC, CVPR 2026) · Code Apache-2.0, data CC BY 4.0, weights RAIL++-M and Adobe Research licence</p></div>
-      <dl>
-        <dt>In</dt><dd>A single aerial photo</dd>
-        <dt>Out</dt><dd>An albedo map (colour with the lighting taken out)</dd>
-        <dt>Driven by</dt><dd>Python, from the released inference code and pretrained models; trained on 5,664 drone photos</dd>
-        <dt>Note</dt><dd>The first de-lighting model we have found trained on aerial photos. Its reference albedo is computed by the authors’ own inverse-rendering pipeline, not measured on the ground, and the photos are drone shots rather than straight-down imagery like NAIP. We ran it on our spot: the shadows stay (see above). The weights carry use restrictions (RAIL++-M for the Marigold models; the Adobe Research licence for the RGBX models), so commercial use needs a read of both first.</dd>
-        <dt>Tools</dt><dd><a href="https://arxiv.org/abs/2602.22025">arXiv 2602.22025</a> · <a href="https://github.com/GDAOSU/Olbedo">GitHub</a></dd>
-      </dl>
-    </article>
-    <article class="flow" id="delight-sun">
-      <div><h4><a href="#delight-sun">Sun-aware de-lighting from known geometry</a></h4><p class="lic">Our code, public-domain inputs</p></div>
-      <dl>
-        <dt>In</dt><dd>NAIP aerial imagery, a USGS 3DEP LiDAR surface model, the flight date</dd>
-        <dt>Out</dt><dd>A cast-shadow mask computed from the geometry, and colour corrected inside it</dd>
-        <dt>Driven by</dt><dd>Our code</dd>
-        <dt>Idea</dt><dd>Aerial shadows are hard, but they are cast by geometry we already have. Find the sun direction whose shadows over the surface model best match the dark pixels, and the shadow is measured rather than guessed. Then match each shadowed surface to the same surface in sun.</dd>
-        <dt>Breaks on</dt><dd>NAIP records the date but not the time, so the sun direction has to be fitted. LiDAR and imagery can be years apart, so trees and new buildings won’t line up.</dd>
-      </dl>
-    </article>
-    <article class="flow" id="delight-rebuild">
-      <div><h4><a href="#delight-rebuild">Rebuild under neutral light, imagery as reference only</a></h4><p class="lic">Our code, library materials</p></div>
-      <dl>
-        <dt>In</dt><dd>Everything we have for the place: aerial imagery, LiDAR, licensed street photos, and a material library</dd>
-        <dt>Out</dt><dd>Geometry and PBR materials authored clean, with no lighting baked in</dd>
-        <dt>Driven by</dt><dd>Agents in headless Blender, picking a library material per surface and measuring its colour from the sunlit pixels</dd>
-        <dt>Idea</dt><dd>What artists do when the capture can’t be de-lit: use the photos as reference and rebuild by hand. Nothing is baked in, so there is nothing to remove. Colour only has to be measured once per surface, from the parts in sun.</dd>
-        <dt>Check</dt><dd>Render the rebuild under the fitted sun and compare it with the original photo.</dd>
-        <dt>Breaks on</dt><dd>Fidelity. You get the place’s materials, not its exact pixels, so stains, patches and signage are lost or have to be authored. The hardest path here, and the only one that always ends clean.</dd>
-      </dl>
-    </article>
-    </details>
-    </details>
+    
   </section>
 
   <section class="step" aria-labelledby="s-engine">
@@ -770,26 +374,7 @@
         </ul>
       </div>
     </header>
-    <details class="more how">
-    <summary>How we’d automate it</summary>
-    <article class="flow" id="engine-unreal">
-      <div><h4><a href="#engine-unreal">Into Unreal Engine</a></h4><p class="lic">Epic Games</p></div>
-      <dl>
-        <dt>In</dt><dd>Meshes, textures, LODs, collision</dd>
-        <dt>Out</dt><dd>Static mesh assets and materials in a project</dd>
-        <dt>Driven by</dt><dd>Python editor scripting</dd>
-        <dt>Note</dt><dd>Epic marks the Editor Static Mesh Library deprecated in favour of the Static Mesh Editor Subsystem, so that is the route we would use.</dd>
-      </dl>
-    </article>
-    <article class="flow" id="engine-unity">
-      <div><h4><a href="#engine-unity">Into Unity</a></h4><p class="lic">Unity</p></div>
-      <dl>
-        <dt>In</dt><dd>Meshes, textures, LODs, collision</dd>
-        <dt>Out</dt><dd>Prefabs and materials in a project</dd>
-        <dt>Driven by</dt><dd>Editor in batch mode running an editor script (<span class="mono">-batchmode -nographics -executeMethod</span>), no GPU needed</dd>
-      </dl>
-    </article>
-    </details>
+    
   </section>
 
   <section class="talk" id="talk" aria-labelledby="h-talk">
