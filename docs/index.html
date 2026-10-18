@@ -170,7 +170,7 @@
   form { display: grid; gap: 1rem; margin-top: 0.25rem; }
   .field { display: grid; gap: 0.35rem; }
   .field label { font-family: var(--mono); font-size: var(--small); color: var(--ink-2); }
-  .field input, .field textarea { font: inherit; font-size: 1rem; color: var(--ink); background: var(--paper); border: 1px solid var(--ink-2); border-radius: 2px; padding: 0.65rem 0.8rem; width: 100%; }
+  .field input, .field textarea, .field select { font: inherit; font-size: 1rem; color: var(--ink); background: var(--paper); border: 1px solid var(--ink-2); border-radius: 2px; padding: 0.65rem 0.8rem; width: 100%; }
   .field textarea { min-height: 8rem; resize: vertical; }
   .row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; }
   .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
@@ -244,24 +244,24 @@
     </div>
   </section>
 
-  <h2 class="kicker toc-kick">Seven ways a real place breaks, in the words of people building one</h2>
+  <h2 class="kicker toc-kick">Seven jobs that break when you build a real place, in the words of people doing it</h2>
 
-  <nav class="toc" aria-label="The seven steps">
+  <nav class="toc" aria-label="The seven jobs">
     <ol>
-      <li><a href="#p-segment"><span class="tn">1</span> Segmenting</a><span class="tj">Map data doesn’t say what’s there</span></li>
-      <li><a href="#p-infer"><span class="tn">2</span> Inference</a><span class="tj">From above you only see roofs</span></li>
-      <li><a href="#s-source"><span class="tn">3</span> Construction</a><span class="tj">The best-looking data can’t be kept</span></li>
-      <li><a href="#p-optimize"><span class="tn">4</span> Optimization</a><span class="tj">Players fall through it</span></li>
-      <li><a href="#p-texture"><span class="tn">5</span> Texturing</a><span class="tj">Shapes arrive as white boxes</span></li>
-      <li><a href="#s-delight"><span class="tn">6</span> De-lighting</a><span class="tj">The photo has one day’s sun baked in</span></li>
-      <li><a href="#s-engine"><span class="tn">7</span> Compilation</a><span class="tj">Many hops into the engine</span></li>
+      <li><a href="#p-segment"><span class="tn">1</span> Find what’s there</a><span class="tj">Map data doesn’t say what’s there</span></li>
+      <li><a href="#p-infer"><span class="tn">2</span> Get real heights</a><span class="tj">From above you only see roofs</span></li>
+      <li><a href="#s-source"><span class="tn">3</span> Build it so you can keep it</a><span class="tj">The best-looking data can’t be kept</span></li>
+      <li><a href="#p-optimize"><span class="tn">4</span> Make it walkable</a><span class="tj">Players fall through it</span></li>
+      <li><a href="#p-texture"><span class="tn">5</span> Texture the white boxes</a><span class="tj">Shapes arrive as white boxes</span></li>
+      <li><a href="#s-delight"><span class="tn">6</span> Take one day’s sun out of the photo</a><span class="tj">The photo has one day’s sun baked in</span></li>
+      <li><a href="#s-engine"><span class="tn">7</span> Get it into your engine</a><span class="tj">Many hops into the engine</span></li>
     </ol>
   </nav>
 
   <section class="step" aria-labelledby="p-segment">
     <header>
-      <p class="num">1 of 7</p>
-      <h2 id="p-segment">Segmenting</h2>
+      <p class="num">Job 1 of 7</p>
+      <h2 id="p-segment">Find what’s there</h2>
       <p class="problem">The map doesn’t tell you what’s there. Map data only holds what someone tagged, so whole areas come in with streets and no buildings.</p>
           <div class="today">
         <h3>What people do today</h3>
@@ -277,8 +277,8 @@
 
   <section class="step" aria-labelledby="p-infer">
     <header>
-      <p class="num">2 of 7</p>
-      <h2 id="p-infer">Inference</h2>
+      <p class="num">Job 2 of 7</p>
+      <h2 id="p-infer">Get real heights</h2>
       <p class="problem">From above you only see roofs. Heights, walls and overhangs have to come from somewhere. Open map data has heights for most buildings in many US cities and for few in others.</p>
           <div class="today">
         <h3>What people do today</h3>
@@ -294,8 +294,8 @@
 
   <section class="step" aria-labelledby="s-source">
     <header>
-      <p class="num">3 of 7</p>
-      <h2 id="s-source">Construction</h2>
+      <p class="num">Job 3 of 7</p>
+      <h2 id="s-source">Build it so you can keep it</h2>
       <p class="problem">The best-looking data can’t be kept. Photoreal 3D tiles look right but can’t be turned into game assets, so serious work goes back to modelling by hand.</p>
           <div class="today">
         <h3>What people do today</h3>
@@ -311,8 +311,8 @@
 
   <section class="step" aria-labelledby="p-optimize">
     <header>
-      <p class="num">4 of 7</p>
-      <h2 id="p-optimize">Optimization</h2>
+      <p class="num">Job 4 of 7</p>
+      <h2 id="p-optimize">Make it walkable</h2>
       <p class="problem">Players fall through it. A city that looks right still has to be walkable, collide and run, and generated or streamed geometry often isn’t.</p>
           <div class="today">
         <h3>What people do today</h3>
@@ -328,8 +328,8 @@
 
   <section class="step" aria-labelledby="p-texture">
     <header>
-      <p class="num">5 of 7</p>
-      <h2 id="p-texture">Texturing</h2>
+      <p class="num">Job 5 of 7</p>
+      <h2 id="p-texture">Texture the white boxes</h2>
       <p class="problem">Shapes arrive as white boxes. Measured buildings come without surfaces, and textures are the part people pay extra for.</p>
           <div class="today">
         <h3>What people do today</h3>
@@ -346,8 +346,8 @@
 
   <section class="step" aria-labelledby="s-delight">
     <header>
-      <p class="num">6 of 7</p>
-      <h2 id="s-delight">De-lighting</h2>
+      <p class="num">Job 6 of 7</p>
+      <h2 id="s-delight">Take one day’s sun out of the photo</h2>
       <p class="problem">The photo has one day’s sun baked in. Put an aerial photo on a building and its shadows stay, whatever the game’s lighting.</p>
           <div class="today">
         <h3>What people do today</h3>
@@ -362,8 +362,8 @@
 
   <section class="step" aria-labelledby="s-engine">
     <header>
-      <p class="num">7 of 7</p>
-      <h2 id="s-engine">Compilation</h2>
+      <p class="num">Job 7 of 7</p>
+      <h2 id="s-engine">Get it into your engine</h2>
       <p class="problem">Many hops into the engine. Even with the data in hand, getting a real place into Unreal or Unity is a chain of tools and hand fixes.</p>
           <div class="today">
         <h3>What people do today</h3>
@@ -378,15 +378,23 @@
   </section>
 
   <section class="talk" id="talk" aria-labelledby="h-talk">
-    <h2 id="h-talk">We’d love to hear from you</h2>
-    <p>Tell us which place, how you build it today, and what it costs you in people and weeks. Or, if you run one of these tools, tell us which and where it breaks. We would like to talk.</p>
+    <h2 id="h-talk">You can start with one job or the whole place</h2>
+    <p>Tell us which place, which of the seven jobs hurts most (or all of them), how you do it today, and what it costs you in people and weeks. We’d like to talk.</p>
 
-    <p class="closed" id="closed"><a class="send mail" href="mailto:holtby.jonathan@gmail.com?subject=RWGE%20%E2%80%94%20a%20real%20place%20we%20build&amp;body=Which%20real%20place%20(or%20which%20tool%20you%20run%20for%20one)%3A%0AHow%20you%20build%20it%20today%20(and%20what%20it%20costs%20in%20people%20and%20weeks)%3A%0AWhere%20it%20hurts%20or%20breaks%3A%0AStudio%20(optional)%3A%0A">Email us</a></p>
+    <p class="closed" id="closed"><a class="send mail" href="mailto:holtby.jonathan@gmail.com?subject=RWGE%20%E2%80%94%20a%20real%20place%20we%20build&amp;body=Which%20real%20place%3A%0AWhich%20job%20hurts%20most%2C%20or%20the%20whole%20place%3A%0AHow%20you%20build%20it%20today%20(and%20what%20it%20costs%20in%20people%20and%20weeks)%3A%0AWhere%20it%20hurts%20or%20breaks%3A%0AStudio%20(optional)%3A%0A">Email us</a></p>
 
     <form id="contact" hidden novalidate>
       <div class="field">
-        <label for="msg">Which place, how you build it today, what it costs, and where it hurts (or which tool you run and where it breaks)</label>
+        <label for="msg">Which place, how you build it today, what it costs, and where it hurts</label>
         <textarea id="msg" name="msg" maxlength="2000" required></textarea>
+      </div>
+      <div class="field">
+        <label for="job">What would you hand over?</label>
+        <select id="job" name="job">
+          <option value="">Pick one (optional)</option>
+          <option>The whole place</option>
+          <option>1 Find what’s there</option><option>2 Get real heights</option><option>3 Build it so you can keep it</option><option>4 Make it walkable</option><option>5 Texture the white boxes</option><option>6 Take one day’s sun out of the photo</option><option>7 Get it into your engine</option>
+        </select>
       </div>
       <div class="row">
         <div class="field">
@@ -432,7 +440,7 @@ var CONTACT = { live: true, url: "https://qdfgvfukozsssiuicbtt.supabase.co", key
     msg.className = 'form-msg'; msg.textContent = '';
     if (form.website.value) { msg.className = 'form-msg ok'; msg.textContent = 'Sent. We’ll reply by email.'; form.reset(); return; }
     var text = form.msg.value.trim(), email = form.email.value.trim();
-    if (!text) { msg.className = 'form-msg err'; msg.textContent = 'Tell us which tool and how you run it.'; form.msg.focus(); return; }
+    if (!text) { msg.className = 'form-msg err'; msg.textContent = 'Tell us which place and how you build it today.'; form.msg.focus(); return; }
     if (!email || !form.email.checkValidity()) { msg.className = 'form-msg err'; msg.textContent = 'Add an email address we can reply to.'; form.email.focus(); return; }
     send.disabled = true; send.textContent = 'Sending';
     fetch(CONTACT.url.replace(/\/$/, '') + '/rest/v1/events', {
@@ -440,7 +448,7 @@ var CONTACT = { live: true, url: "https://qdfgvfukozsssiuicbtt.supabase.co", key
       headers: { 'apikey': CONTACT.key, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
       body: JSON.stringify({
         test: 'landing-v1', kind: 'contact', session_id: sid,
-        payload: { message: text, email: email, studio: form.studio.value.trim(), page: location.pathname }
+        payload: { message: text, email: email, studio: form.studio.value.trim(), job: form.job.value, page: location.pathname }
       })
     }).then(function (r) {
       if (!r.ok) throw new Error(r.status);
