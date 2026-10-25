@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Real US places as game-ready glTF, with LiDAR building heights | RWGE</title>
+<title>Real US places as glTF for your game, with LiDAR building heights | RWGE</title>
 <meta name="description" content="Give us a US location and we build the place as a glTF from public aerial imagery and LiDAR. Unretouched output from San Francisco’s Financial District and Pacific Heights, with a download and a 3D orbit.">
 <link rel="canonical" href="https://beakerstreet.github.io/rwge-website/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Real US places as game-ready glTF, with LiDAR building heights">
+<meta property="og:title" content="Real US places as glTF for your game, with LiDAR building heights">
 <meta property="og:description" content="Give us a US location and we build the place as a glTF from public aerial imagery and LiDAR. Unretouched output from San Francisco’s Financial District and Pacific Heights, with a download and a 3D orbit.">
 <meta property="og:url" content="https://beakerstreet.github.io/rwge-website/">
 <meta property="og:image" content="https://beakerstreet.github.io/rwge-website/img/fidi-flat-walls-preview.png">
@@ -15,271 +15,290 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400..700&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23181818'/%3E%3Cpath d='M7 24V14h4v10zm7 0V8h4v16zm7 0V11h4v13z' fill='%23e467ad'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#181818">
+<script>document.documentElement.classList.add('js');</script>
 <style>
+  /* Design values: elayadesign landing-page-design / redesign-existing-projects.
+     One typeface (Geist; Geist Mono only for numbers), Tailwind type scale,
+     spacing 0 2 4 8 12 16 24 32 40 48 64 80 96, approved dark surfaces, one accent. */
   *, *::before, *::after { box-sizing: border-box; }
   [hidden] { display: none !important; }
   :root {
-    color-scheme: light;
-    --paper: #f1f3ee;
-    --paper-2: #e6eae2;
-    --ink: #151f1c;
-    --ink-2: #4b5853;
-    --rule: #c7cec5;
-    --magenta: #a3186b;
-    --blue: #1c5a9c;
-    --ok: #2d6a3e;
-    --display: "Archivo", "Helvetica Neue", Arial, sans-serif;
-    --body: "Source Serif 4", Georgia, "Times New Roman", serif;
-    --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
-    --small: 0.8125rem;
-    --gutter: clamp(16px, 4vw, 48px);
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      color-scheme: dark;
-      --paper: #111715;
-      --paper-2: #19211f;
-      --ink: #e6ebe5;
-      --ink-2: #9ba8a2;
-      --rule: #2d3834;
-      --magenta: #e467ad;
-      --blue: #74a9e2;
-      --ok: #7fc493;
-    }
+    color-scheme: dark;
+    --bg: #181818;
+    --bg-1: #1F1F1F;
+    --bg-2: #272727;
+    --line: #313131;
+    --ink: #FFFFFF;
+    --ink-2: #9B9B9B;
+    --accent: #e467ad;
+    --ok: #7fc493;
+    --sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+    --mono: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+    --ease: cubic-bezier(0.32, 0.72, 0, 1);
+    --s2: 2px; --s4: 4px; --s8: 8px; --s12: 12px; --s16: 16px; --s24: 24px; --s32: 32px;
+    --s40: 40px; --s48: 48px; --s64: 64px; --s80: 80px; --s96: 96px;
   }
 
-  html { -webkit-text-size-adjust: 100%; scroll-padding-top: 1rem; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: var(--s96); }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
   body {
-    margin: 0; background: var(--paper); color: var(--ink);
-    font-family: var(--body); font-size: 1.0625rem; line-height: 1.6;
-    padding-inline: var(--gutter);
-    padding-block: env(safe-area-inset-top, 0px) env(safe-area-inset-bottom, 0px);
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: var(--sans); font-size: 1rem; line-height: 1.5rem;
+    padding-inline: var(--s16);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
     -webkit-font-smoothing: antialiased;
   }
-  .page { max-width: 64rem; margin-inline: auto; }
-  a { color: var(--blue); text-underline-offset: 0.18em; text-decoration-thickness: 1px; }
-  a:hover { text-decoration-thickness: 2px; }
-  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 2px solid var(--magenta); outline-offset: 3px; border-radius: 2px; }
-  h1, h2, h3, h4 { font-family: var(--display); text-wrap: balance; margin: 0; }
+  @media (min-width: 760px) { body { padding-inline: var(--s48); } }
+  .page { max-width: 80rem; margin-inline: auto; }
+  h1, h2, h3, h4 { text-wrap: balance; margin: 0; font-weight: 600; letter-spacing: -0.02em; }
+  p, li, figcaption, dd { text-wrap: pretty; }
   p { margin: 0; }
-  .mono { font-family: var(--mono); }
+  a { color: var(--ink); text-underline-offset: 0.2em; text-decoration-thickness: 1px; text-decoration-color: var(--ink-2); transition: text-decoration-color 300ms var(--ease), color 300ms var(--ease); }
+  a:hover { text-decoration-color: var(--accent); }
+  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
 
-  .mast { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; padding-block: 1.25rem; border-bottom: 1px solid var(--rule); }
-  .wordmark { font-family: var(--display); font-weight: 850; font-stretch: 118%; font-size: 1.25rem; letter-spacing: 0.02em; }
-  .wordmark span { font-weight: 400; font-stretch: 100%; color: var(--ink-2); font-size: 0.95rem; letter-spacing: 0; margin-left: 0.5rem; }
-  .mast a { font-family: var(--mono); font-size: var(--small); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-2); text-decoration: none; }
-  .mast a:hover { color: var(--magenta); }
+  .skip { position: absolute; left: var(--s16); top: var(--s16); z-index: 30; background: var(--ink); color: var(--bg); padding: var(--s8) var(--s12); border-radius: 8px; font-size: 0.875rem; line-height: 1.25rem; font-weight: 600; transform: translateY(-200%); transition: transform 300ms var(--ease); }
+  .skip:focus { transform: none; }
 
-  .intro { padding-block: 3rem 2.5rem; display: grid; gap: 2rem 3rem; align-items: center; }
-  .hero-copy { display: grid; gap: 1rem; max-width: 36rem; }
-  .intro .tagline { font-family: var(--mono); font-size: var(--small); letter-spacing: 0.08em; text-transform: uppercase; color: var(--magenta); }
-  .intro h1 { font-size: clamp(2.1rem, 5vw, 3.6rem); font-weight: 820; font-stretch: 80%; line-height: 1.02; }
-  .intro p { font-size: 1.125rem; }
-  .ctas { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.5rem; }
-  .btn { display: inline-block; font: 500 var(--small) var(--mono); letter-spacing: 0.04em; text-transform: uppercase; text-decoration: none; padding: 0.85rem 1.25rem; border-radius: 2px; border: 1px solid var(--ink); background: var(--ink); color: var(--paper); }
-  .btn:hover { background: var(--magenta); border-color: var(--magenta); text-decoration: none; }
-  .btn.ghost { background: transparent; color: var(--ink); }
-  .btn.ghost:hover { color: var(--paper); }
-  .intro figure, .places figure { margin: 0; display: grid; gap: 0.5rem; }
-  .intro figure img, .places figure img { width: 100%; height: auto; border: 1px solid var(--rule); display: block; }
-  .intro .view { position: relative; }
-  .intro .view model-viewer { position: absolute; inset: 0; width: 100%; height: 100%; border: 1px solid var(--rule); background: var(--paper-2); }
-  .intro .orbit { position: absolute; left: 0.6rem; bottom: 0.6rem; z-index: 2; font-family: var(--mono); font-size: var(--small); letter-spacing: 0.04em; background: var(--ink); color: var(--paper); border: 0; padding: 0.5rem 0.9rem; cursor: pointer; border-radius: 2px; }
-  .intro .orbit:hover { background: var(--magenta); }
-  .intro figcaption, .places figcaption { font-family: var(--mono); font-size: var(--small); color: var(--ink-2); }
-  @media (min-width: 900px) { .intro { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); padding-block: 3.5rem 3rem; } }
+  /* Floating island nav */
+  .island { position: sticky; top: var(--s24); z-index: 20; margin: var(--s24) auto 0; width: max-content; max-width: 100%; display: flex; align-items: center; gap: var(--s4); padding: var(--s4); border-radius: 9999px; background: rgb(31 31 31 / 0.72); backdrop-filter: blur(24px) saturate(1.4); -webkit-backdrop-filter: blur(24px) saturate(1.4); border: 1px solid rgb(255 255 255 / 0.08); box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.06), 0 8px 24px rgb(0 0 0 / 0.4); }
+  .wordmark { font-weight: 700; font-size: 0.875rem; line-height: 1.25rem; letter-spacing: 0.02em; padding: var(--s8) var(--s12); text-decoration: none; }
+  .island .links { display: none; gap: var(--s2); list-style: none; margin: 0; padding: 0; }
+  .island .links a { display: block; font-size: 0.875rem; line-height: 1.25rem; color: var(--ink-2); text-decoration: none; padding: var(--s8) var(--s12); border-radius: 9999px; transition: color 300ms var(--ease), background-color 300ms var(--ease); }
+  .island .links a:hover { color: var(--ink); background: var(--bg-2); }
+  .island .links a[aria-current="true"] { color: var(--ink); background: var(--bg-2); }
+  @media (min-width: 760px) { .island .links { display: flex; } }
 
-  .proof { list-style: none; margin: 0; padding: 1.25rem 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(13rem, 42%), 1fr)); gap: 1rem 1.5rem; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); }
-  .proof li { display: grid; gap: 0.2rem; }
-  .proof b { font-family: var(--display); font-weight: 820; font-stretch: 85%; font-size: 1.75rem; line-height: 1.1; }
-  .proof span { font-size: 0.95rem; color: var(--ink-2); }
+  .btn { display: inline-flex; align-items: center; gap: var(--s8); font: 600 1rem/1.5rem var(--sans); text-decoration: none; padding: var(--s8) var(--s12); border-radius: 8px; border: 0; background: var(--ink); color: var(--bg); cursor: pointer; transition: transform 300ms var(--ease), background-color 300ms var(--ease); }
+  .btn:hover { background: #e6e6e6; transform: translateY(-1px); }
+  .btn:active { transform: scale(0.98); }
+  .btn.sm { font-size: 0.875rem; line-height: 1.25rem; border-radius: 9999px; }
+  .btn:disabled { opacity: 0.5; cursor: progress; transform: none; }
+  .ph { font-size: 1.25em; line-height: 1; }
 
-  .kicker { font-family: var(--mono); font-size: var(--small); font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--magenta); }
-  .places { padding-block: 2.5rem; display: grid; gap: 1rem 3rem; border-bottom: 1px solid var(--rule); }
-  .places-list { display: grid; gap: 0.75rem; align-content: start; }
-  .routes { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr)); gap: 0.25rem 1.5rem; font-size: 0.975rem; }
-  .routes li { display: flex; justify-content: space-between; border-bottom: 1px dotted var(--rule); padding-block: 0.2rem; }
-  .routes b { font-family: var(--mono); font-weight: 500; }
-  .places .pair { grid-column: 1 / -1; }
-  .places .pair > div { display: grid; gap: 1rem; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); align-items: start; }
-  .places .note { font-family: var(--mono); font-size: var(--small); color: var(--ink-2); }
-  @media (min-width: 900px) { .places { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } .places .kicker { grid-column: 1 / -1; } }
+  /* Hero */
+  .intro { padding-block: var(--s40) var(--s48); display: grid; gap: var(--s32); align-items: center; }
+  .hero-copy > .lead + .lead { margin-top: calc(-1 * var(--s8)); }
+  .hero-copy { display: grid; gap: var(--s16); max-width: 680px; }
+  .tagline { font-size: 0.875rem; line-height: 1.25rem; font-weight: 500; color: var(--accent); }
+  .intro h1 { font-size: 2.25rem; line-height: 2.5rem; letter-spacing: -0.035em; background: linear-gradient(90deg, #FFFFFF, #9B9B9B); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  @media (min-width: 640px) { .intro h1 { font-size: 3.75rem; line-height: 1; } }
+  .lead { font-size: 1.125rem; line-height: 1.75rem; color: var(--ink-2); max-width: 65ch; }
+  .lead b { color: var(--ink); font-weight: 500; }
+  .ctas { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s16) var(--s24); }
+  .ctas .dl { display: inline-flex; align-items: center; gap: var(--s8); font-size: 0.875rem; line-height: 1.25rem; color: var(--ink-2); }
+  .ctas .dl:hover { color: var(--ink); }
+  figure { margin: 0; display: grid; gap: var(--s12); }
+  figure img { width: 100%; height: auto; display: block; border-radius: 12px; background: var(--bg-1); }
+  figcaption { font-size: 0.875rem; line-height: 1.25rem; color: var(--ink-2); max-width: 72ch; }
+  .view { position: relative; border-radius: 16px; overflow: hidden; background: var(--bg-1); box-shadow: 0 24px 64px rgb(0 0 0 / 0.5); }
+  .view img { border-radius: 0; }
+  .view model-viewer { position: absolute; inset: 0; width: 100%; height: 100%; background: var(--bg-1); transition: opacity 700ms var(--ease); }
+  .orbit { position: absolute; left: var(--s12); bottom: var(--s12); z-index: 2; }
+  @media (min-width: 1024px) { .intro { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); padding-block: var(--s96) var(--s64); } .hero-fig { margin-right: calc(-1 * var(--s48)); } }
 
-  .compare { padding-block: 2.5rem; display: grid; gap: 1.25rem; }
-  .compare h2 { font-size: 1.6rem; font-weight: 780; font-stretch: 85%; }
-  .cmp { display: grid; font-size: 0.95rem; }
-  .cmp-row { display: grid; grid-template-columns: 12rem repeat(4, minmax(0, 1fr)); gap: 0.25rem 1.25rem; padding: 0.8rem 0.6rem; border-top: 1px solid var(--rule); }
-  .cmp-row > b { font-family: var(--display); font-stretch: 90%; }
-  .cmp-row a { font-size: inherit; }
-  .cmp-head { font-family: var(--mono); font-size: var(--small); color: var(--ink-2); border-top: 0; padding-bottom: 0.4rem; }
-  .cmp-row.us { background: var(--paper-2); border-top: 2px solid var(--magenta); }
-  .cmp-row.us > b { color: var(--magenta); }
-  @media (max-width: 760px) {
+  /* Proof strip */
+  .proof { list-style: none; margin: 0; padding: var(--s24); display: grid; grid-template-columns: repeat(auto-fit, minmax(min(13rem, 100%), 1fr)); gap: var(--s24) var(--s32); background: var(--bg-1); border-radius: 16px; }
+  .proof li { display: grid; gap: var(--s4); align-content: start; }
+  .proof b { font-family: var(--mono); font-variant-numeric: tabular-nums; font-weight: 500; font-size: 1.875rem; line-height: 2.25rem; letter-spacing: -0.02em; }
+  .proof span { font-size: 0.875rem; line-height: 1.25rem; color: var(--ink-2); }
+
+  section > h2, .sec-h { font-size: 1.875rem; line-height: 2.25rem; }
+  @media (min-width: 760px) { section > h2, .sec-h { font-size: 2.25rem; line-height: 2.5rem; } }
+  .eyebrow { font-size: 0.875rem; line-height: 1.25rem; font-weight: 500; color: var(--accent); }
+
+  /* Places */
+  .places { padding-block: var(--s96) var(--s64); display: grid; gap: var(--s32) var(--s48); }
+  .places > header { display: grid; gap: var(--s12); max-width: 680px; }
+  .places-list { display: grid; gap: var(--s16); align-content: start; }
+  .places-list > p:first-child { color: var(--ink-2); }
+  .routes { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(15rem, 100%), 1fr)); gap: 0 var(--s24); }
+  .routes li { display: flex; justify-content: space-between; gap: var(--s12); padding-block: var(--s8); border-bottom: 1px solid var(--line); font-size: 0.875rem; line-height: 1.25rem; }
+  .routes b { font-family: var(--mono); font-variant-numeric: tabular-nums; font-weight: 500; }
+  .notes { margin: 0; padding-left: var(--s16); display: grid; gap: var(--s8); font-size: 0.875rem; line-height: 1.25rem; color: var(--ink-2); max-width: 72ch; }
+  .src { font-size: 0.875rem; line-height: 1.25rem; color: var(--ink-2); }
+  .pair { grid-column: 1 / -1; }
+  .pair > div { display: grid; gap: var(--s12); grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); align-items: start; }
+  .pair .street { grid-column: 1 / -1; max-width: 640px; }
+  @media (min-width: 1024px) { .places { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); } .places > header { grid-column: 1 / -1; } }
+
+  /* Tagline reveal */
+  .reveal-line { padding-block: var(--s96); }
+  .reveal-line p { max-width: 900px; font-size: 2.25rem; line-height: 2.5rem; font-weight: 600; letter-spacing: -0.03em; text-wrap: balance; }
+  @media (min-width: 760px) { .reveal-line p { font-size: 3rem; line-height: 1; } }
+  @media (min-width: 1024px) { .reveal-line p { font-size: 3.75rem; line-height: 1; } }
+  .js .reveal-line .w { color: rgb(255 255 255 / 0.3); transition: color 700ms var(--ease); }
+  .js .reveal-line .w.on { color: var(--ink); }
+
+  /* Compare */
+  .compare { padding-block: var(--s64); display: grid; gap: var(--s32); }
+  .cmp { display: grid; font-size: 0.875rem; line-height: 1.25rem; }
+  .cmp-row { display: grid; grid-template-columns: 11rem repeat(4, minmax(0, 1fr)); gap: var(--s4) var(--s24); padding: var(--s16) var(--s12); border-bottom: 1px solid var(--line); }
+  .cmp-row > b { font-weight: 600; }
+  .cmp-row > span { color: var(--ink-2); }
+  .cmp-head { color: var(--ink-2); font-weight: 500; padding-bottom: var(--s8); }
+  .cmp-row.us { margin-top: var(--s16); background: var(--bg-1); border: 1px solid var(--accent); border-radius: 12px; }
+  .cmp-row.us > span { color: var(--ink); }
+  .cmp-row.us > b { color: var(--accent); }
+  @media (max-width: 860px) {
     .cmp-head { display: none; }
-    .cmp-row { grid-template-columns: minmax(0, 1fr); padding-inline: 0.6rem; }
-    .cmp-row > span::before { content: attr(data-k) ": "; font-family: var(--mono); font-size: var(--small); color: var(--ink-2); }
+    .cmp-row { grid-template-columns: minmax(0, 1fr); padding-inline: 0; }
+    .cmp-row.us { padding-inline: var(--s16); }
+    .cmp-row > span::before { content: attr(data-k) ": "; color: var(--ink); font-weight: 500; }
   }
-  .toc-kick { padding-block: 2rem 0.75rem; }
 
-  .toc { border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding-block: 1.25rem 1.5rem; }
-  .toc ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); gap: 0.75rem 2rem; }
-  .toc a { display: block; font-weight: 700; font-stretch: 90%; text-decoration: none; color: var(--ink); }
-  .toc a:hover { color: var(--blue); text-decoration: underline; }
-  .toc .tn { font-family: var(--mono); font-weight: 400; color: var(--ink-2); }
-  .toc .tj { display: block; font-size: 0.925rem; color: var(--ink-2); }
+  /* Jobs */
+  .jobs-h { padding-top: var(--s64); display: grid; gap: var(--s12); max-width: 680px; }
+  .toc { padding-block: var(--s32) var(--s48); }
+  .toc ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr)); gap: var(--s8); }
+  .toc a { display: grid; grid-template-columns: var(--s32) 1fr; gap: 0 var(--s8); padding: var(--s12) var(--s16); border-radius: 12px; background: var(--bg-1); text-decoration: none; font-weight: 600; transition: background-color 300ms var(--ease), transform 300ms var(--ease); }
+  .toc a:hover { background: var(--bg-2); transform: translateY(-2px); }
+  .toc a:active { transform: scale(0.98); }
+  .toc .tn { grid-row: span 2; font-family: var(--mono); font-weight: 400; color: var(--accent); }
+  .toc .tj { font-size: 0.875rem; line-height: 1.25rem; font-weight: 400; color: var(--ink-2); }
 
-  .step { padding-block: 2.5rem 1rem; border-bottom: 1px solid var(--rule); }
-  .step > header { display: grid; gap: 0.4rem; margin-bottom: 1rem; max-width: 44rem; }
-  .step h2 { font-size: 1.6rem; font-weight: 780; font-stretch: 85%; line-height: 1.15; }
-  .step .job { color: var(--ink-2); }
-  .step .num { font-family: var(--mono); font-size: var(--small); letter-spacing: 0.06em; color: var(--magenta); }
-  .sub { padding-top: 1.5rem; }
-  .sub > header { display: grid; gap: 0.4rem; margin-bottom: 0.75rem; max-width: 44rem; }
-  .sub h3 { font-size: 1.2rem; font-weight: 750; font-stretch: 88%; }
-  .flow h4 { margin: 0; }
+  .step { padding-block: var(--s48); border-top: 1px solid var(--line); }
+  .step > header { display: grid; gap: var(--s16) var(--s48); }
+  .step .num-l { font-family: var(--mono); font-size: 0.875rem; line-height: 1.25rem; color: var(--accent); }
+  .step h2 { font-size: 1.5rem; line-height: 2rem; }
+  .step .problem { font-size: 1.125rem; line-height: 1.75rem; color: var(--ink-2); max-width: 60ch; }
+  .step .lede { display: grid; gap: var(--s8); align-content: start; }
+  .today { display: grid; gap: var(--s12); }
+  .today h3 { font-size: 0.875rem; line-height: 1.25rem; font-weight: 500; color: var(--ink-2); letter-spacing: 0; }
+  .today ul { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s8); }
+  .today li { padding: var(--s16); border-radius: 12px; background: var(--bg-1); max-width: 72ch; }
+  .today li a { display: inline-block; margin-top: var(--s4); font-size: 0.875rem; line-height: 1.25rem; color: var(--ink-2); }
+  .today li a:hover { color: var(--ink); }
+  @media (min-width: 1024px) { .step > header { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); } .step .lede { position: sticky; top: var(--s96); } }
 
-  .flow { display: grid; grid-template-columns: 17rem minmax(0, 1fr); gap: 0.5rem 2rem; padding-block: 1.1rem; border-top: 1px solid var(--rule); }
-  .flow h4 { font-size: 1.1rem; font-weight: 700; font-stretch: 90%; line-height: 1.3; }
-  .flow h4 a { color: inherit; text-decoration: none; }
-  .flow h4 a:hover { text-decoration: underline; }
-  .flow .lic { font-family: var(--mono); font-size: var(--small); color: var(--ink-2); margin-top: 0.25rem; }
-  .flow dl { margin: 0; display: grid; grid-template-columns: 7rem minmax(0, 1fr); gap: 0.3rem 1rem; font-size: 0.975rem; }
-  .flow dt { font-family: var(--mono); font-size: var(--small); color: var(--ink-2); padding-top: 0.2rem; }
-  .flow dd { margin: 0; }
-  .step .worked { font-family: var(--mono); font-size: var(--small); color: var(--blue); }
-  .plan { margin: 1.2rem 0 2rem; display: grid; gap: 0.9rem; }
-  .plan h3, h3.cat { margin: 0; font-size: 1.1rem; }
-  h3.cat { margin-top: 1.5rem; }
-  .plan ol { margin: 0; padding-left: 1.3rem; display: grid; gap: 0.4rem; }
-  .plan p { margin: 0; }
-  .plan figure { margin: 0; display: grid; gap: 0.4rem; }
-  .plan figure img { width: 100%; height: auto; border: 1px solid var(--rule); display: block; }
-  .plan figcaption { font-family: var(--mono); font-size: var(--small); color: var(--ink-2); }
-  .plan .slot { border: 1px dashed var(--rule); padding: 0.9rem; display: grid; gap: 0.2rem; font-size: 0.95rem; }
-  .step .problem { font-size: 1.15rem; font-weight: 600; max-width: 44rem; }
-  .today { margin: 0.6rem 0 0; max-width: 44rem; display: grid; gap: 0.5rem; }
-  .today h3 { margin: 0; font-family: var(--mono); font-size: var(--small); letter-spacing: 0.06em; text-transform: uppercase; color: var(--magenta); font-weight: 500; }
-  .today ul { margin: 0; padding-left: 1.1rem; display: grid; gap: 0.45rem; }
-  .today li { color: var(--ink-2); }
-  .today a { font-family: var(--mono); font-size: var(--small); }
-  .step .finding { border-left: 3px solid var(--magenta); padding-left: 0.9rem; font-size: 1rem; }
-  .flow dd a { overflow-wrap: anywhere; }
-  .flow dd .mono { font-size: 0.88em; }
-
-  .talk { padding-block: 3rem; display: grid; gap: 1rem; max-width: 44rem; }
-  .talk h2 { font-size: 1.6rem; font-weight: 780; font-stretch: 85%; }
-  form { display: grid; gap: 1rem; margin-top: 0.25rem; }
-  .field { display: grid; gap: 0.35rem; }
-  .field label { font-family: var(--mono); font-size: var(--small); color: var(--ink-2); }
-  .field input, .field textarea, .field select { font: inherit; font-size: 1rem; color: var(--ink); background: var(--paper); border: 1px solid var(--ink-2); border-radius: 2px; padding: 0.65rem 0.8rem; width: 100%; }
+  /* Talk */
+  .talk { padding-block: var(--s96); display: grid; gap: var(--s16); max-width: 680px; }
+  .talk > p { color: var(--ink-2); font-size: 1.125rem; line-height: 1.75rem; }
+  form { display: grid; gap: var(--s16); margin-top: var(--s8); }
+  .field { display: grid; gap: var(--s8); }
+  .field label { font-size: 0.875rem; line-height: 1.25rem; color: var(--ink-2); }
+  .field input, .field textarea, .field select { font: inherit; color: var(--ink); background: var(--bg-1); border: 1px solid var(--line); border-radius: 8px; padding: var(--s12); width: 100%; transition: border-color 300ms var(--ease); }
+  .field input:hover, .field textarea:hover, .field select:hover { border-color: #4a4a4a; }
+  .field [aria-invalid="true"] { border-color: var(--accent); }
   .field textarea { min-height: 8rem; resize: vertical; }
-  .row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; }
+  .row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--s16); }
   .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
-  .send { justify-self: start; font: 500 var(--small) var(--mono); letter-spacing: 0.04em; text-transform: uppercase; padding: 0.8rem 1.2rem; border-radius: 2px; border: 1px solid var(--ink); background: var(--ink); color: var(--paper); cursor: pointer; }
-  .send:disabled { opacity: 0.5; cursor: progress; }
-  .form-msg { font-family: var(--mono); font-size: var(--small); min-height: 1.2em; }
+  .send { justify-self: start; }
+  .form-msg { font-size: 0.875rem; line-height: 1.25rem; min-height: 1.25rem; }
   .form-msg.ok { color: var(--ok); }
-  .form-msg.err { color: var(--magenta); }
-  .closed { font-family: var(--mono); font-size: var(--small); color: var(--ink-2); display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; }
-  .send.mail { display: inline-block; text-decoration: none; color: var(--paper); }
+  .form-msg.err { color: var(--accent); }
 
-  footer { border-top: 1px solid var(--rule); padding-block: 1.5rem 3rem; display: grid; gap: 0.75rem; font-family: var(--mono); font-size: var(--small); color: var(--ink-2); }
-  .foot { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+  footer { border-top: 1px solid var(--line); padding-block: var(--s24) var(--s48); display: grid; gap: var(--s12); font-size: 0.875rem; line-height: 1.25rem; color: var(--ink-2); }
+  .foot { display: flex; justify-content: space-between; gap: var(--s16); flex-wrap: wrap; }
 
-  @media (max-width: 760px) {
-    .flow { grid-template-columns: minmax(0, 1fr); }
-    .row { grid-template-columns: minmax(0, 1fr); }
-  }
-  @media (max-width: 420px) {
-    .flow dl { grid-template-columns: minmax(0, 1fr); gap: 0 0; }
-    .flow dd + dt { margin-top: 0.4rem; }
+  @media (max-width: 760px) { .row { grid-template-columns: minmax(0, 1fr); } }
+
+  /* Scroll reveal: only when JS is on and motion is allowed */
+  @media (prefers-reduced-motion: no-preference) {
+    .js .rv { opacity: 0; transform: translateY(var(--s64)); filter: blur(12px); transition: opacity 900ms var(--ease), transform 900ms var(--ease), filter 900ms var(--ease); }
+    .js .rv.in { opacity: 1; transform: none; filter: none; }
   }
 </style>
 </head>
 <body>
-<div class="page">
-  <header class="mast">
-    <div class="wordmark">RWGE<span>Real World Game Engine</span></div>
-    <a href="#talk">Email us about your project</a>
-  </header>
+<a class="skip" href="#main">Skip to content</a>
+<nav class="island" aria-label="Primary">
+  <a class="wordmark" href="#top" aria-label="RWGE, Real World Game Engine, back to top">RWGE</a>
+  <ul class="links">
+    <li><a href="#places">Places</a></li>
+    <li><a href="#compare">Compare</a></li>
+    <li><a href="#jobs">Seven jobs</a></li>
+  </ul>
+  <a class="btn sm" href="#talk">Tell us your place</a>
+</nav>
+<div class="page" id="top">
+<main id="main">
 
   <section class="intro" aria-labelledby="h1">
     <div class="hero-copy">
       <p class="tagline">Play in the real world</p>
       <h1 id="h1">Real places, ready for your game</h1>
-      <p>Today a real place is modelled by hand from photos, extruded from map data into untextured boxes, or streamed from 3D tiles whose terms forbid keeping them.</p>
-      <p>You can have a US location built as one glTF from public aerial imagery and LiDAR: measured heights, the aerial photo on the roofs, and a file you can keep and ship. We do this with agents.</p>
-      <p class="ctas"><a class="btn" href="#talk">Tell us your place</a><a class="btn ghost" href="files/fidi-world.glb" download>Download glTF · 5.8 MB · no sign-up</a></p>
+      <p class="lead">Today a real place is modelled by hand from photos, extruded from map data into untextured boxes, or streamed from 3D tiles whose terms forbid keeping them.</p>
+      <p class="lead">You can have a US location built as one glTF from public aerial imagery and LiDAR: <b>measured heights, the aerial photo on the roofs, and a file you can keep and ship.</b> We do this with agents.</p>
+      <p class="ctas"><a class="btn" href="#talk">Tell us your place <i class="ph ph-arrow-right" aria-hidden="true"></i></a><a class="dl" href="files/fidi-world.glb" download><i class="ph ph-download-simple" aria-hidden="true"></i>Download the glTF · 5.8 MB · no account</a></p>
     </div>
-    <figure class="hero-fig"><div class="view" id="view"><img src="img/fidi-flat-walls-preview.png" width="800" height="600" alt="Raw 3D render of downtown San Francisco Financial District: towers rise as measured-height blocks with a grid of windows on the walls and aerial photo on the roofs"><button type="button" class="orbit" id="orbit">⟳ Orbit it in 3D</button></div><figcaption>Unretouched: about 540 m of San Francisco’s Financial District from our latest run. Heights measured from LiDAR and clipped to building footprints; windows generated, not photographed.</figcaption></figure>
+    <figure class="hero-fig"><div class="view" id="view"><img src="img/fidi-flat-walls-preview.png" width="800" height="600" alt="Raw 3D render of downtown San Francisco Financial District: towers rise as blocks at measured height with a grid of windows on the walls and aerial photo on the roofs"><button type="button" class="btn sm orbit" id="orbit"><i class="ph ph-cube" aria-hidden="true"></i>Orbit it in 3D</button></div><figcaption>Unretouched: about 540 m of San Francisco’s Financial District from our latest run. Heights measured from LiDAR and clipped to building footprints; windows generated, not photographed.</figcaption></figure>
   </section>
 
-  <ul class="proof" aria-label="What the latest runs show">
+  <ul class="proof rv" aria-label="What the latest runs show">
     <li><b>13</b><span>US places built from public data, one run each</span></li>
-    <li><b>16–20 of 20</b><span>routes complete in our walk-through test, per place</span></li>
+    <li><b>16–20 of 20</b><span>routes complete in our walkthrough test, per place</span></li>
     <li><b>0 errors</b><span>in the Khronos glTF validator, on the file you can download</span></li>
     <li><b>Public domain</b><span>imagery and LiDAR, so the file is yours to cache and ship</span></li>
   </ul>
 
-  <section class="places" aria-labelledby="h-places">
-    <h2 id="h-places" class="kicker">Same run, a different place</h2>
-    <figure><img src="img/pacheights-preview.png" width="800" height="600" loading="lazy" alt="Raw 3D render of San Francisco’s Pacific Heights and Lafayette Park: hilly terrain with houses and trees as measured-height blocks with generated windows under aerial photo"><figcaption>Pacific Heights and Lafayette Park: hills and houses instead of towers, unretouched. <a href="files/pacheights-world.glb" download>Download the glTF (5.3 MB)</a></figcaption></figure>
-    <div class="places-list">
-      <p>Routes completing out of 20 in our own walk-through test (no engine), one run each:</p>
+  <section class="places" id="places" aria-labelledby="h-places">
+    <header class="rv"><p class="eyebrow">13 places, one run each</p><h2 id="h-places" class="sec-h">Same run, a different place</h2></header>
+    <figure class="rv"><img src="img/pacheights-preview.png" width="800" height="600" loading="lazy" alt="Raw 3D render of San Francisco’s Pacific Heights and Lafayette Park: hilly terrain with houses and trees as blocks at measured height with generated windows under aerial photo"><figcaption>Pacific Heights and Lafayette Park: hills and houses instead of towers, unretouched. <a href="files/pacheights-world.glb" download>Download the glTF (5.3 MB)</a></figcaption></figure>
+    <div class="places-list rv">
+      <p>Routes completing out of 20 in our own walkthrough test (no engine), one run each:</p>
       <ol class="routes"><li>Pacific Heights <b>20</b></li><li>Times Square, Midtown Manhattan <b>20</b></li><li>Seattle <b>20</b></li><li>SF Financial District <b>20</b></li><li>Austin’s Allandale (houses) <b>19</b></li><li>Park Slope, Brooklyn (rowhouses, street trees) <b>18</b></li><li>Red Hook port, Brooklyn (container terminal) <b>18</b></li><li>Denver <b>18</b></li><li>Dallas <b>18</b></li><li>Kansas City <b>17</b></li><li>Pittsburgh <b>17</b></li><li>Boston’s Back Bay <b>16</b></li><li>Downtown Austin <b>16</b></li></ol>
-      <p class="note">Without clipping heights to footprints, none of 20 complete. Runs took 15 to 32 minutes and $3.62 to $10.53 of model compute (not a price). Seattle’s LiDAR was missing from our usual catalogue; the agents found the USGS dataset themselves. Austin’s houses are measured but only 16% of places LiDAR puts above 3 m have anything built (the trees), and its ground has no roads. Park Slope’s 18 was a lucky draw: over 60 routes it is 78%. Red Hook built 6 structures (target 100), no cranes, ships or containers. Times Square, Seattle, the Financial District and Allandale are runs from 24 October (Allandale is a re-run of the 20-route house block; the Financial District’s earlier 15 became 20): $4.14 to $4.78 each, with 105 buildings in Times Square, 90% at LiDAR height. Times Square has none of its signage or LED billboards, only uniform glass towers, and a model judge comparing held-out street photos with renders found at most 1 of 4 buildings matching in any of the four. Three other San Francisco sites and New York’s Financial District were not built in earlier runs and haven’t been re-run.</p>
-      <p class="note">Sources: NAIP aerial imagery and USGS 3DEP LiDAR (public domain), Overture Maps building footprints (ODbL).</p>
+      <ul class="notes"><li>Without clipping heights to footprints, none of 20 complete.</li><li>Runs took 15 to 32 minutes and $3.62 to $10.53 of model compute (not a price).</li><li>Seattle’s LiDAR was missing from our usual catalogue; the agents found the USGS dataset themselves.</li><li>Austin’s houses are measured but only 16% of places LiDAR puts above 3 m have anything built (the trees), and its ground has no roads.</li><li>Park Slope’s 18 was a lucky draw: over 60 routes it is 78%.</li><li>Red Hook built 6 structures (target 100), no cranes, ships or containers.</li><li>Times Square, Seattle, the Financial District and Allandale are runs from 24 October (Allandale reruns the house block that completed 20 routes; the Financial District’s earlier 15 became 20): $4.14 to $4.78 each, with 105 buildings in Times Square, 90% at LiDAR height.</li><li>Times Square has none of its signage or LED billboards, only uniform glass towers, and a model judge comparing street photos held out from the run with renders found at most 1 of 4 buildings matching in any of the four.</li><li>Three other San Francisco sites and New York’s Financial District were not built in earlier runs and haven’t been rerun.</li></ul>
+      <p class="src">Sources: NAIP aerial imagery and USGS 3DEP LiDAR (public domain), Overture Maps building footprints (ODbL).</p>
     </div>
-    <figure class="pair"><div><img src="img/parkslope-source.jpg" width="508" height="662" loading="lazy" alt="Aerial photo of Park Slope, Brooklyn: rows of rowhouses with tree-lined streets"><img src="img/parkslope-built.jpg" width="960" height="540" loading="lazy" alt="Raw 3D render of the same Park Slope blocks: brick rowhouses at measured heights under aerial-photo roofs, with bare branching trees along the streets"><img src="img/parkslope-street.jpg" width="640" height="360" loading="lazy" style="grid-column:1/-1;max-width:640px" alt="Raw street-level render in Park Slope: brick blocks, lamp posts, bare trees and a row of parked cars drawn as grey boxes"></div><figcaption>Park Slope, Brooklyn: the aerial photo the run started from (left), the world our latest run shipped (right) and its street level (below), unretouched. Heights are LiDAR; this run built kerbed sidewalks, lamps, parked cars (grey boxes) and bare branching trees, which the run before it lacked. A model judge comparing 15 Mapillary photos with renders from the same spots found the same buildings in only 2 (generic brick blocks for brownstones), and rates the street a layout blockout (2 of 5, up from 1); the judge is uncalibrated, and the file isn’t posted yet.</figcaption></figure>
-    <figure class="pair"><div><img src="img/redhook-source.jpg" width="299" height="393" loading="lazy" alt="Aerial photo of Red Hook, Brooklyn: a pier with ships moored along a warehouse, container yard at top right"><img src="img/redhook-built.jpg" width="960" height="540" loading="lazy" alt="Raw 3D render of the same Red Hook basin: flat blue water, the warehouse as a measured-height block, ships and containers present only as photo on the ground"></div><figcaption>Red Hook, Brooklyn, the miss: the aerial the run started from (left) and what shipped (right), unretouched. Water is segmented and the warehouse has LiDAR height; the ships, containers and cranes are only pixels in the ground photo, and the file isn’t posted yet.</figcaption></figure>
+    <figure class="pair rv"><div><img src="img/parkslope-source.jpg" width="508" height="662" loading="lazy" alt="Aerial photo of Park Slope, Brooklyn: rows of rowhouses on streets lined with trees"><img src="img/parkslope-built.jpg" width="960" height="540" loading="lazy" alt="Raw 3D render of the same Park Slope blocks: brick rowhouses at measured heights under aerial photo roofs, with bare branching trees along the streets"><img src="img/parkslope-street.jpg" width="640" height="360" loading="lazy" class="street" alt="Raw render at street level in Park Slope: brick blocks, lamp posts, bare trees and a row of parked cars drawn as grey boxes"></div><figcaption>Park Slope, Brooklyn: the aerial photo the run started from (left), the world our latest run shipped (right) and its street level (below), unretouched. Heights are LiDAR; this run built kerbed sidewalks, lamps, parked cars (grey boxes) and bare branching trees, which the run before it lacked. A model judge comparing 15 Mapillary photos with renders from the same spots found the same buildings in only 2 (generic brick blocks for brownstones), and rates the street a layout blockout (2 of 5, up from 1); the judge is uncalibrated, and the file isn’t posted yet.</figcaption></figure>
+    <figure class="pair rv"><div><img src="img/redhook-source.jpg" width="299" height="393" loading="lazy" alt="Aerial photo of Red Hook, Brooklyn: a pier with ships moored along a warehouse, container yard at top right"><img src="img/redhook-built.jpg" width="960" height="540" loading="lazy" alt="Raw 3D render of the same Red Hook basin: flat blue water, the warehouse as a block at measured height, ships and containers present only as photo on the ground"></div><figcaption>Red Hook, Brooklyn, the miss: the aerial the run started from (left) and what shipped (right), unretouched. Water is segmented and the warehouse has LiDAR height; the ships, containers and cranes are only pixels in the ground photo, and the file isn’t posted yet.</figcaption></figure>
   </section>
 
-  <section class="compare" aria-labelledby="h-compare">
-    <h2 id="h-compare">How it compares</h2>
-    <div class="cmp" role="table" aria-label="Ways to get a real place into a game">
+  <section class="reveal-line" aria-label="What you get">
+    <p>Measured heights, the aerial photo on the roofs, and a file you can keep and ship.</p>
+  </section>
+
+  <section class="compare" id="compare" aria-labelledby="h-compare">
+    <header class="rv"><p class="eyebrow">12 other ways to get a real place</p><h2 id="h-compare" class="sec-h">How it compares</h2></header>
+    <div class="cmp rv" role="table" aria-label="Ways to get a real place into a game">
       <div class="cmp-row cmp-head" role="row"><span role="columnheader">Approach</span><span role="columnheader">Heights</span><span role="columnheader">Looks like the place</span><span role="columnheader">Can you keep it?</span><span role="columnheader">Cost</span></div>
       <div class="cmp-row" role="row"><b role="rowheader">Modelled by hand</b><span role="cell" data-k="Heights">By eye from photos; remembered measurements turn out wrong (<a href="https://digitalproduction.com/2026/08/07/workshop-building-real-time-location/">Digital Production</a>)</span><span role="cell" data-k="Looks like the place">As good as the artist</span><span role="cell" data-k="Keep it">Yes</span><span role="cell" data-k="Cost">$20k+ and months for a city district (<a href="https://rocketbrush.com/blog/3d-environment-art-team-hire-cost-pricing-factors-and-how-to-choose-the-right-studio">RocketBrush</a>)</span></div>
       <div class="cmp-row" role="row"><b role="rowheader">Google Photorealistic 3D Tiles</b><span role="cell" data-k="Heights">Photogrammetry</span><span role="cell" data-k="Looks like the place">Photoreal</span><span role="cell" data-k="Keep it">No: <a href="https://developers.google.com/maps/documentation/tile/policies">may not be cached or used offline</a></span><span role="cell" data-k="Cost">Streamed, billed per request</span></div>
       <div class="cmp-row" role="row"><b role="rowheader">OSM plugins (Blosm, CityGen3D)</b><span role="cell" data-k="Heights">Only where tagged: most buildings in 11 of 13 US neighbourhoods we sampled, 12% in downtown Pittsburgh</span><span role="cell" data-k="Looks like the place">Boxes; generic textures in paid tiers</span><span role="cell" data-k="Keep it">Yes (ODbL)</span><span role="cell" data-k="Cost"><a href="https://wiki.openstreetmap.org/wiki/Blender-osm">$17.80</a> to <a href="https://assetstore.unity.com/packages/tools/terrain/citygen3d-162468">$125</a> per seat</span></div>
-      <div class="cmp-row" role="row"><b role="rowheader">Bmap</b><span role="cell" data-k="Heights">From open map data, with the same gaps</span><span role="cell" data-k="Looks like the place">Stylised low-poly</span><span role="cell" data-k="Keep it">GLB export; their UE5 and Roblox are marked "soon"</span><span role="cell" data-k="Cost"><a href="https://bmap.io/">$29 per city</a>; <a href="https://app.bmap.io/">Google sign-in</a> to generate</span></div>
+      <div class="cmp-row" role="row"><b role="rowheader">Bmap</b><span role="cell" data-k="Heights">From open map data, with the same gaps</span><span role="cell" data-k="Looks like the place">Stylised low poly</span><span role="cell" data-k="Keep it">GLB export; their UE5 and Roblox are marked "soon"</span><span role="cell" data-k="Cost"><a href="https://bmap.io/">$29 per city</a>; <a href="https://app.bmap.io/">Google sign in</a> to generate</span></div>
       <div class="cmp-row" role="row"><b role="rowheader">Cityweft</b><span role="cell" data-k="Heights">Measured from LiDAR</span><span role="cell" data-k="Looks like the place">Untextured; <a href="https://cityweft.com/coverage/united-states">no textures listed</a></span><span role="cell" data-k="Keep it">Yes</span><span role="cell" data-k="Cost"><a href="https://cityweft.com/pricing">€30 per km² per export, or €298/mo for US</a></span></div>
       <div class="cmp-row" role="row"><b role="rowheader">EarthDefine</b><span role="cell" data-k="Heights">Measured from LiDAR for <a href="https://www.earthdefine.com/buildings/">184M+ of 202M+ US buildings</a></span><span role="cell" data-k="Looks like the place">No model: height, roof slope and volume as GIS attributes</span><span role="cell" data-k="Keep it">Licensed per project; GIS files, no glTF stated</span><span role="cell" data-k="Cost"><a href="https://www.earthdefine.com/buildings/">Per project, $1,000 minimum</a></span></div>
       <div class="cmp-row" role="row"><b role="rowheader">Mantle Place</b><span role="cell" data-k="Heights">Building massing from OSM and Overture footprints; <a href="https://mantle.place/">height source not stated</a></span><span role="cell" data-k="Looks like the place">Aerial photo on the terrain; building texture not stated</span><span role="cell" data-k="Keep it">OBJ, glTF, USDZ; licence ships with every file</span><span role="cell" data-k="Cost"><a href="https://mantle.place/compare/google-photorealistic-3d-tiles">$5 + $2 per km²</a>, free to 2 km²</span></div>
-      <div class="cmp-row" role="row"><b role="rowheader">halfmaps</b><span role="cell" data-k="Heights">From <a href="https://halfmaps.io/pricing">vector-tile data when it has them</a> (OpenStreetMap), otherwise a minimum height you set</span><span role="cell" data-k="Looks like the place">Coloured massing, roads, terrain; no imagery stated</span><span role="cell" data-k="Keep it">glTF, GLB, OBJ, DXF, STL, 3MF; commercial licence</span><span role="cell" data-k="Cost"><a href="https://halfmaps.io/pricing">$15 per area, or $49 a month</a></span></div>
+      <div class="cmp-row" role="row"><b role="rowheader">halfmaps</b><span role="cell" data-k="Heights">From <a href="https://halfmaps.io/pricing">vector tile data when it has them</a> (OpenStreetMap), otherwise a minimum height you set</span><span role="cell" data-k="Looks like the place">Coloured massing, roads, terrain; no imagery stated</span><span role="cell" data-k="Keep it">glTF, GLB, OBJ, DXF, STL, 3MF; commercial licence</span><span role="cell" data-k="Cost"><a href="https://halfmaps.io/pricing">$15 per area, or $49 a month</a></span></div>
       <div class="cmp-row" role="row"><b role="rowheader">CadMapper</b><span role="cell" data-k="Heights">"In many places", from <a href="https://schwarzplan.eu/en/city-map-cad-providers.md">OpenStreetMap, NASA, USGS</a> (not specified which)</span><span role="cell" data-k="Looks like the place">Simple blocks and cylinders (<a href="https://www.fabbaloo.com/2018/12/the-amazing-cadmapper">2018 review</a>)</span><span role="cell" data-k="Keep it">DXF, SketchUp, Rhino, 3DS; no glTF listed</span><span role="cell" data-k="Cost"><a href="https://schwarzplan.eu/en/city-map-cad-providers.md">Free to 1 km² with an account</a>; larger areas paid, price not published there</span></div>
-      <div class="cmp-row" role="row"><b role="rowheader">CAD Atlas</b><span role="cell" data-k="Heights">"Actual height data"; missing ones <a href="https://cad-atlas.com/">estimated by a trained algorithm</a> (source not named)</span><span role="cell" data-k="Looks like the place">Site-plan blocks for architecture programs</span><span role="cell" data-k="Keep it">DWG, DXF, SketchUp, Rhino, 3DS, OBJ, IFC; no glTF listed</span><span role="cell" data-k="Cost"><a href="https://cad-atlas.com/">Free to try</a>; no price published on the page</span></div>
+      <div class="cmp-row" role="row"><b role="rowheader">CAD Atlas</b><span role="cell" data-k="Heights">"Actual height data"; missing ones <a href="https://cad-atlas.com/">estimated by a trained algorithm</a> (source not named)</span><span role="cell" data-k="Looks like the place">Site plan blocks for architecture programs</span><span role="cell" data-k="Keep it">DWG, DXF, SketchUp, Rhino, 3DS, OBJ, IFC; no glTF listed</span><span role="cell" data-k="Cost"><a href="https://cad-atlas.com/">Free to try</a>; no price published on the page</span></div>
       <div class="cmp-row" role="row"><b role="rowheader">urban:EXPORT</b><span role="cell" data-k="Heights">OSM height tags, <a href="https://urban-export.ildar.space/">otherwise a typical height for the building type</a>; LiDAR used for terrain only</span><span role="cell" data-k="Looks like the place">Untextured massing, roads, trees from satellite</span><span role="cell" data-k="Keep it">FBX for Unreal, plus CAD, IFC, SketchUp, STL</span><span role="cell" data-k="Cost"><a href="https://urban-export.ildar.space/pricing">Free to 3 areas a day; extra from about $0.30</a></span></div>
-      <div class="cmp-row" role="row"><b role="rowheader">Google Project Genie</b><span role="cell" data-k="Heights">Not stated; world is generated from Street View at your starting point</span><span role="cell" data-k="Looks like the place">AI-generated scene, in the style you pick</span><span role="cell" data-k="Keep it">Google <a href="https://blog.google/innovation-and-ai/models-and-research/google-deepmind/project-genie-expands/">does not say</a> whether you can export geometry</span><span role="cell" data-k="Cost">Experimental; <a href="https://blog.google/innovation-and-ai/models-and-research/google-deepmind/project-genie-expands/">$200/mo AI Ultra</a>, US places only</span></div>
-      <div class="cmp-row us" role="row"><b role="rowheader">RWGE</b><span role="cell" data-k="Heights">Measured from LiDAR, clipped to footprints</span><span role="cell" data-k="Looks like the place">Aerial photo on roofs, generated windows</span><span role="cell" data-k="Keep it">Yes: public-domain sources</span><span role="cell" data-k="Cost"><a href="#talk">Tell us your place</a></span></div>
+      <div class="cmp-row" role="row"><b role="rowheader">Google Project Genie</b><span role="cell" data-k="Heights">Not stated; world is generated from Street View at your starting point</span><span role="cell" data-k="Looks like the place">Scene generated by AI, in the style you pick</span><span role="cell" data-k="Keep it">Google <a href="https://blog.google/innovation-and-ai/models-and-research/google-deepmind/project-genie-expands/">does not say</a> whether you can export geometry</span><span role="cell" data-k="Cost">Experimental; <a href="https://blog.google/innovation-and-ai/models-and-research/google-deepmind/project-genie-expands/">$200/mo AI Ultra</a>, US places only</span></div>
+      <div class="cmp-row us" role="row"><b role="rowheader">RWGE</b><span role="cell" data-k="Heights">Measured from LiDAR, clipped to footprints</span><span role="cell" data-k="Looks like the place">Aerial photo on roofs, generated windows</span><span role="cell" data-k="Keep it">Yes: public domain sources</span><span role="cell" data-k="Cost"><a href="#talk">Tell us your place</a></span></div>
     </div>
   </section>
 
-  <h2 class="kicker toc-kick">Seven jobs that break when you build a real place, in the words of people doing it</h2>
+  <header class="jobs-h rv" id="jobs"><p class="eyebrow">Seven jobs</p><h2 class="sec-h">What breaks when you build a real place, in the words of people doing it</h2></header>
 
-  <nav class="toc" aria-label="The seven jobs">
+  <nav class="toc rv" aria-label="The seven jobs">
     <ol>
-      <li><a href="#p-segment"><span class="tn">1</span> Find what’s there</a><span class="tj">Map data doesn’t say what’s there</span></li>
-      <li><a href="#p-infer"><span class="tn">2</span> Get real heights</a><span class="tj">From above you only see roofs</span></li>
-      <li><a href="#s-source"><span class="tn">3</span> Build it so you can keep it</a><span class="tj">The best-looking data can’t be kept</span></li>
-      <li><a href="#p-optimize"><span class="tn">4</span> Make it walkable</a><span class="tj">Players fall through it</span></li>
-      <li><a href="#p-texture"><span class="tn">5</span> Texture the white boxes</a><span class="tj">Shapes arrive as white boxes</span></li>
-      <li><a href="#s-delight"><span class="tn">6</span> Take one day’s sun out of the photo</a><span class="tj">The photo has one day’s sun baked in</span></li>
-      <li><a href="#s-engine"><span class="tn">7</span> Get it into your engine</a><span class="tj">Many hops into the engine</span></li>
+      <li><a href="#p-segment"><span class="tn">1</span> Find what’s there<span class="tj">Map data doesn’t say what’s there</span></a></li>
+      <li><a href="#p-infer"><span class="tn">2</span> Get real heights<span class="tj">From above you only see roofs</span></a></li>
+      <li><a href="#s-source"><span class="tn">3</span> Build it so you can keep it<span class="tj">The data that looks best can’t be kept</span></a></li>
+      <li><a href="#p-optimize"><span class="tn">4</span> Make it walkable<span class="tj">Players fall through it</span></a></li>
+      <li><a href="#p-texture"><span class="tn">5</span> Texture the white boxes<span class="tj">Shapes arrive as white boxes</span></a></li>
+      <li><a href="#s-delight"><span class="tn">6</span> Take one day’s sun out of the photo<span class="tj">The photo has one day’s sun baked in</span></a></li>
+      <li><a href="#s-engine"><span class="tn">7</span> Get it into your engine<span class="tj">Many hops into the engine</span></a></li>
     </ol>
   </nav>
 
   <section class="step" aria-labelledby="p-segment">
     <header>
-      <p class="num">Job 1 of 7</p>
+      <div class="lede"><p class="num-l">Job 1 of 7</p>
       <h2 id="p-segment">Find what’s there</h2>
-      <p class="problem">The map doesn’t tell you what’s there. Map data only holds what someone tagged, so whole areas come in with streets and no buildings.</p>
-          <div class="today">
+      <p class="problem">The map doesn’t tell you what’s there. Map data only holds what someone tagged, so whole areas come in with streets and no buildings.</p></div>
+      <div class="today rv">
         <h3>What people do today</h3>
         <ul>
         <li>A Roblox developer building Tokyo traces roads from Google Earth screenshots and places buildings “completely eyeballed”, because exporting the building data was “too tedious”. <a href="https://devforum.roblox.com/t/miniature-tokyo-devlog-archive/4775237">Roblox devforum</a></li>
         <li>A buyer of a $125 Unity city generator: “rural or lesser-known areas often have almost no building data at all”. <a href="https://assetstore.unity.com/packages/tools/terrain/citygen3d-162468/reviews">Unity Asset Store review</a></li>
-        <li>Players of a real-city game find maps with “just streets and few buildings”. The answer they get is to edit OpenStreetMap and wait. <a href="https://steamcommunity.com/app/1364210/discussions/0/4039230429939367282/">Steam discussion</a></li>
+        <li>Players of a game set in real cities find maps with “just streets and few buildings”. The answer they get is to edit OpenStreetMap and wait. <a href="https://steamcommunity.com/app/1364210/discussions/0/4039230429939367282/">Steam discussion</a></li>
         </ul>
       </div>
     </header>
@@ -288,15 +307,15 @@
 
   <section class="step" aria-labelledby="p-infer">
     <header>
-      <p class="num">Job 2 of 7</p>
+      <div class="lede"><p class="num-l">Job 2 of 7</p>
       <h2 id="p-infer">Get real heights</h2>
-      <p class="problem">From above you only see roofs. Heights, walls and overhangs have to come from somewhere. Open map data has heights for most buildings in many US cities and for few in others.</p>
-          <div class="today">
+      <p class="problem">From above you only see roofs. Heights, walls and overhangs have to come from somewhere. Open map data has heights for most buildings in many US cities and for few in others.</p></div>
+      <div class="today rv">
         <h3>What people do today</h3>
         <ul>
-        <li>In Overture’s open building data for 13 US neighbourhoods we sampled, 11 have heights for 76–99% of buildings; downtown Kansas City has 36% and downtown Pittsburgh 12%. Where the tag is missing, map-based tools give every building the same height. Where it is present it can be a placeholder: in a block of houses we built in Austin, 80% of Overture heights sit at 4–6 m and they don’t track the LiDAR roof heights (correlation 0.03 over 106 buildings). <a href="https://docs.overturemaps.org/guides/buildings/">Overture, October 2026</a> · <a href="https://av.tib.eu/media/66355">FOSS4G 2023</a></li>
-        <li>Heights estimated from imagery are loose. A USGS and Ohio State comparison against LiDAR-derived heights at two US sites: Microsoft’s imagery-based building heights agree at R² 0.54–0.60 (typical error 2.5–3.1 m); LiDAR-based USA Structures at 0.86–0.87 (1.8–2.2 m). <a href="https://cartogis.org/docs/conferences/CaGIS_2026/abstracts/research/Liu_et_al_research_abstract_CaGIS_2026.pdf">CaGIS 2026 abstract</a></li>
-        <li>A Houdini user extruding San Francisco from map data got uniform-height buildings. The thread is unanswered. <a href="https://www.sidefx.com/forum/topic/77355">SideFX forum, 2021</a></li>
+        <li>In Overture’s open building data for 13 US neighbourhoods we sampled, 11 have heights for 76–99% of buildings; downtown Kansas City has 36% and downtown Pittsburgh 12%. Where the tag is missing, tools built on map data give every building the same height. Where it is present it can be a placeholder: in a block of houses we built in Austin, 80% of Overture heights sit at 4–6 m and they don’t track the LiDAR roof heights (correlation 0.03 over 106 buildings). <a href="https://docs.overturemaps.org/guides/buildings/">Overture, October 2026</a> · <a href="https://av.tib.eu/media/66355">FOSS4G 2023</a></li>
+        <li>Heights estimated from imagery are loose. A USGS and Ohio State comparison against heights derived from LiDAR at two US sites: Microsoft’s building heights estimated from imagery agree at R² 0.54–0.60 (typical error 2.5–3.1 m); USA Structures, based on LiDAR, at 0.86–0.87 (1.8–2.2 m). <a href="https://cartogis.org/docs/conferences/CaGIS_2026/abstracts/research/Liu_et_al_research_abstract_CaGIS_2026.pdf">CaGIS 2026 abstract</a></li>
+        <li>A Houdini user extruding San Francisco from map data got buildings all of one height. The thread is unanswered. <a href="https://www.sidefx.com/forum/topic/77355">SideFX forum, 2021</a></li>
         <li>Esri’s CityEngine builds city models from OpenStreetMap, but its own FAQ says it “does not support lidar data”; heights from lidar need a separate ArcGIS Pro workflow. <a href="https://doc.arcgis.com/en/cityengine/2023.0/get-started/cityengine-faq.htm">CityEngine FAQ</a></li>
         <li>A studio rebuilding a Tokyo station measured by phone and from memory, and found the remembered measurements wrong. They aim for 5–10 cm; errors over 20 cm show. <a href="https://digitalproduction.com/2026/08/07/workshop-building-real-time-location/">Digital Production, 2026</a></li>
         </ul>
@@ -307,14 +326,14 @@
 
   <section class="step" aria-labelledby="s-source">
     <header>
-      <p class="num">Job 3 of 7</p>
+      <div class="lede"><p class="num-l">Job 3 of 7</p>
       <h2 id="s-source">Build it so you can keep it</h2>
-      <p class="problem">The best-looking data can’t be kept. Photoreal 3D tiles look right but can’t be turned into game assets, so serious work goes back to modelling by hand.</p>
-          <div class="today">
+      <p class="problem">The data that looks best can’t be kept. Photoreal 3D tiles look right but can’t be turned into game assets, so serious work goes back to modelling by hand.</p></div>
+      <div class="today rv">
         <h3>What people do today</h3>
         <ul>
-        <li>A glider-sim developer asked to export Google’s 3D tiles as models. Cesium staff: not allowed under Google’s or Bing’s terms. <a href="https://community.cesium.com/t/edit-3d-photorealistic-google-tiles-offline-3d-model/33278">Cesium forum, 2024</a></li>
-        <li>Under a 610-point launch of San Francisco as a game, a professional said the same terms blocked their own project, and others asked “Is there a guide out there to do this for any area?” <a href="https://news.ycombinator.com/item?id=49422784">Hacker News, 2026</a></li>
+        <li>A glider sim developer asked to export Google’s 3D tiles as models. Cesium staff: not allowed under Google’s or Bing’s terms. <a href="https://community.cesium.com/t/edit-3d-photorealistic-google-tiles-offline-3d-model/33278">Cesium forum, 2024</a></li>
+        <li>Under a launch of San Francisco as a game that drew 610 points on Hacker News, a professional said the same terms blocked their own project, and others asked “Is there a guide out there to do this for any area?” <a href="https://news.ycombinator.com/item?id=49422784">Hacker News, 2026</a></li>
         <li>A professional XR studio built a real station about 90% by hand in Blender, preferring that to scans whose topology it couldn’t edit. <a href="https://digitalproduction.com/2026/08/07/workshop-building-real-time-location/">Digital Production, 2026</a></li>
         </ul>
       </div>
@@ -324,10 +343,10 @@
 
   <section class="step" aria-labelledby="p-optimize">
     <header>
-      <p class="num">Job 4 of 7</p>
+      <div class="lede"><p class="num-l">Job 4 of 7</p>
       <h2 id="p-optimize">Make it walkable</h2>
-      <p class="problem">Players fall through it. A city that looks right still has to be walkable, collide and run, and generated or streamed geometry often isn’t.</p>
-          <div class="today">
+      <p class="problem">Players fall through it. A city that looks right still has to be walkable, collide and run, and generated or streamed geometry often isn’t.</p></div>
+      <div class="today rv">
         <h3>What people do today</h3>
         <ul>
         <li>Characters float above streamed 3D tiles; an aircraft sinks through buildings set to block everything. Unresolved across two years of threads. <a href="https://community.cesium.com/t/collision-detection-issue-with-unreal-and-3d-tiles/24750">Cesium forum</a></li>
@@ -342,10 +361,10 @@
 
   <section class="step" aria-labelledby="p-texture">
     <header>
-      <p class="num">Job 5 of 7</p>
+      <div class="lede"><p class="num-l">Job 5 of 7</p>
       <h2 id="p-texture">Texture the white boxes</h2>
-      <p class="problem">Shapes arrive as white boxes. Measured buildings come without surfaces, and textures are the part people pay extra for.</p>
-          <div class="today">
+      <p class="problem">Shapes arrive as white boxes. Measured buildings come without surfaces, and textures are the part people pay extra for.</p></div>
+      <div class="today rv">
         <h3>What people do today</h3>
         <ul>
         <li>Cesium staff, asked for textured buildings for a real place: “OpenStreetMap does not provide textures”. <a href="https://community.cesium.com/t/osm-buildings-to-3d-buildings/43672">Cesium forum, 2025</a></li>
@@ -360,14 +379,14 @@
 
   <section class="step" aria-labelledby="s-delight">
     <header>
-      <p class="num">Job 6 of 7</p>
+      <div class="lede"><p class="num-l">Job 6 of 7</p>
       <h2 id="s-delight">Take one day’s sun out of the photo</h2>
-      <p class="problem">The photo has one day’s sun baked in. Put an aerial photo on a building and its shadows stay, whatever the game’s lighting.</p>
-          <div class="today">
+      <p class="problem">The photo has one day’s sun baked in. Put an aerial photo on a building and its shadows stay, whatever the game’s lighting.</p></div>
+      <div class="today rv">
         <h3>What people do today</h3>
         <ul>
-        <li>Production de-lighting tools assume the capture avoided hard sun. Unity’s own guide calls strong directional shadows “a situation that must be avoided”, and falls back to Photoshop “to remove lighting artistically”. <a href="https://unity3d.com/files/solutions/photogrammetry/Unity-Photogrammetry-Workflow_2017-07_v2.pdf">Unity Photogrammetry Workflow</a></li>
-        <li>Metashape’s remove-lighting: “delighting in strong shadows is not supported.” Aerial imagery is flown in sunlight, so hard shadows are always there. <a href="https://agisoft.freshdesk.com/support/solutions/articles/31000158885-remove-lighting-from-texture-in-agisoft-metashape-professional">Agisoft</a></li>
+        <li>Production delighting tools assume the capture avoided hard sun. Unity’s own guide calls strong directional shadows “a situation that must be avoided”, and falls back to Photoshop “to remove lighting artistically”. <a href="https://unity3d.com/files/solutions/photogrammetry/Unity-Photogrammetry-Workflow_2017-07_v2.pdf">Unity Photogrammetry Workflow</a></li>
+        <li>Metashape’s remove lighting tool: “delighting in strong shadows is not supported.” Aerial imagery is flown in sunlight, so hard shadows are always there. <a href="https://agisoft.freshdesk.com/support/solutions/articles/31000158885-remove-lighting-from-texture-in-agisoft-metashape-professional">Agisoft</a></li>
         </ul>
       </div>
     </header>
@@ -376,16 +395,16 @@
 
   <section class="step" aria-labelledby="s-engine">
     <header>
-      <p class="num">Job 7 of 7</p>
+      <div class="lede"><p class="num-l">Job 7 of 7</p>
       <h2 id="s-engine">Get it into your engine</h2>
-      <p class="problem">Many hops into the engine. Even with the data in hand, getting a real place into Unreal or Unity is a chain of tools and hand fixes.</p>
-          <div class="today">
+      <p class="problem">Many hops into the engine. Even with the data in hand, getting a real place into Unreal or Unity is a chain of tools and hand fixes.</p></div>
+      <div class="today rv">
         <h3>What people do today</h3>
         <ul>
-        <li>“It’s a LOT of manual work”: a developer making 1:1 real cities in Unreal describes a five-tool hop and terrain data off by 20–30 m. <a href="https://forums.unrealengine.com/t/questions-on-how-to-create-1-1-replicas-of-real-life-cities-and-landscapes/146722">Unreal forum, 2020</a></li>
+        <li>“It’s a LOT of manual work”: a developer making 1:1 real cities in Unreal describes a hop through five tools and terrain data off by 20–30 m. <a href="https://forums.unrealengine.com/t/questions-on-how-to-create-1-1-replicas-of-real-life-cities-and-landscapes/146722">Unreal forum, 2020</a></li>
         <li>A Houdini user building city blocks from OpenStreetMap plus a terrain heightfield has to match the two by hand. SideFX staff: “We don’t currently have any other tools that can do that aligning automatically.” Another user fetched heights from QGIS and aligned them themselves. <a href="https://www.sidefx.com/forum/post/453588/">SideFX forum, 2026</a></li>
         <li>Georeferenced data in Unreal: no native projection support, format hops, alignment issues. <a href="https://isprs-archives.copernicus.org/articles/XLVIII-M-6-2025/353/2025/">ISPRS, 2025</a></li>
-        <li>A solo WW2 shooter developer imports real heights, imagery and streets, then hand-finishes roads, ground, structures and set dressing, and wants to “explore how to maybe automate”. <a href="https://desertfoxdev.itch.io/longestfront/devlog/613826/real-world-terrain-data">itch.io devlog</a></li>
+        <li>A solo WW2 shooter developer imports real heights, imagery and streets, then finishes roads, ground, structures and set dressing by hand, and wants to “explore how to maybe automate”. <a href="https://desertfoxdev.itch.io/longestfront/devlog/613826/real-world-terrain-data">itch.io devlog</a></li>
         </ul>
       </div>
     </header>
@@ -396,7 +415,7 @@
     <h2 id="h-talk">You can start with one job or the whole place</h2>
     <p>Tell us which place, which of the seven jobs hurts most (or all of them), how you do it today, and what it costs you in people and weeks. We’d like to talk.</p>
 
-    <p class="closed" id="closed"><a class="send mail" href="mailto:holtby.jonathan@gmail.com?subject=RWGE%20%E2%80%94%20a%20real%20place%20we%20build&amp;body=Which%20real%20place%3A%0AWhich%20job%20hurts%20most%2C%20or%20the%20whole%20place%3A%0AHow%20you%20build%20it%20today%20(and%20what%20it%20costs%20in%20people%20and%20weeks)%3A%0AWhere%20it%20hurts%20or%20breaks%3A%0AStudio%20(optional)%3A%0A">Email us</a></p>
+    <p class="closed" id="closed"><a class="btn" href="mailto:holtby.jonathan@gmail.com?subject=RWGE%20%E2%80%94%20a%20real%20place%20we%20build&amp;body=Which%20real%20place%3A%0AWhich%20job%20hurts%20most%2C%20or%20the%20whole%20place%3A%0AHow%20you%20build%20it%20today%20(and%20what%20it%20costs%20in%20people%20and%20weeks)%3A%0AWhere%20it%20hurts%20or%20breaks%3A%0AStudio%20(optional)%3A%0A">Email us</a></p>
 
     <form id="contact" hidden novalidate>
       <div class="field">
@@ -425,11 +444,12 @@
         <label for="website">Leave this empty</label>
         <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
       </div>
-      <button class="send" id="send" type="submit">Send</button>
+      <button class="btn send" id="send" type="submit">Send <i class="ph ph-arrow-right" aria-hidden="true"></i></button>
       <p class="form-msg" id="form-msg" role="status" aria-live="polite"></p>
     </form>
   </section>
 
+</main>
   <footer>
     <p>We build on named locations, only on imagery we can license, with sensitive sites left out. Every file keeps its source.</p>
     <div class="foot"><span>RWGE · Real World Game Engine</span><span>v1 · October 2026</span></div>
@@ -455,8 +475,9 @@ var CONTACT = { live: true, url: "https://qdfgvfukozsssiuicbtt.supabase.co", key
     msg.className = 'form-msg'; msg.textContent = '';
     if (form.website.value) { msg.className = 'form-msg ok'; msg.textContent = 'Sent. We’ll reply by email.'; form.reset(); return; }
     var text = form.msg.value.trim(), email = form.email.value.trim();
-    if (!text) { msg.className = 'form-msg err'; msg.textContent = 'Tell us which place and how you build it today.'; form.msg.focus(); return; }
-    if (!email || !form.email.checkValidity()) { msg.className = 'form-msg err'; msg.textContent = 'Add an email address we can reply to.'; form.email.focus(); return; }
+    form.msg.removeAttribute('aria-invalid'); form.email.removeAttribute('aria-invalid');
+    if (!text) { form.msg.setAttribute('aria-invalid', 'true'); msg.className = 'form-msg err'; msg.textContent = 'Tell us which place and how you build it today.'; form.msg.focus(); return; }
+    if (!email || !form.email.checkValidity()) { form.email.setAttribute('aria-invalid', 'true'); msg.className = 'form-msg err'; msg.textContent = 'Add an email address we can reply to.'; form.email.focus(); return; }
     send.disabled = true; send.textContent = 'Sending';
     fetch(CONTACT.url.replace(/\/$/, '') + '/rest/v1/events', {
       method: 'POST',
@@ -470,7 +491,7 @@ var CONTACT = { live: true, url: "https://qdfgvfukozsssiuicbtt.supabase.co", key
       msg.className = 'form-msg ok'; msg.textContent = 'Sent. We’ll reply by email.'; form.reset();
     }).catch(function () {
       msg.className = 'form-msg err'; msg.textContent = 'That didn’t send. Check your connection and try again.';
-    }).then(function () { send.disabled = false; send.textContent = 'Send'; });
+    }).then(function () { send.disabled = false; send.innerHTML = 'Send <i class="ph ph-arrow-right" aria-hidden="true"></i>'; });
   });
 })();
 </script>
@@ -503,7 +524,7 @@ var CONTACT = { live: true, url: "https://qdfgvfukozsssiuicbtt.supabase.co", key
 <script>
 document.getElementById('orbit').addEventListener('click', function (e) {
   var b = e.currentTarget, v = document.getElementById('view');
-  b.disabled = true; b.textContent = 'Loading 3D (5.8 MB)…';
+  b.disabled = true; b.textContent = 'Loading 3D, 5.8 MB';
   var sc = document.createElement('script');
   sc.type = 'module';
   sc.src = 'https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js';
@@ -521,6 +542,29 @@ document.getElementById('orbit').addEventListener('click', function (e) {
   };
   document.head.appendChild(sc);
 });
+</script>
+<script>
+// Scroll reveals, word by word tagline, and the current section in the island nav. IntersectionObserver only.
+(function () {
+  if (!('IntersectionObserver' in window)) { document.documentElement.classList.remove('js'); return; }
+  var rv = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); rv.unobserve(e.target); } }); }, { rootMargin: '0px 0px -10% 0px' });
+  document.querySelectorAll('.rv').forEach(function (el) { rv.observe(el); });
+
+  var line = document.querySelector('.reveal-line p');
+  if (line) {
+    line.innerHTML = line.textContent.split(' ').map(function (w) { return '<span class="w">' + w + '</span>'; }).join(' ');
+    var ws = new IntersectionObserver(function (es) {
+      es.filter(function (e) { return e.isIntersecting; }).forEach(function (e, i) { ws.unobserve(e.target); setTimeout(function () { e.target.classList.add('on'); }, i * 90); });
+    }, { rootMargin: '0px 0px -40% 0px' });
+    line.querySelectorAll('.w').forEach(function (w) { ws.observe(w); });
+  }
+
+  var links = {}; document.querySelectorAll('.island .links a').forEach(function (a) { links[a.getAttribute('href').slice(1)] = a; });
+  var cur = new IntersectionObserver(function (es) {
+    es.forEach(function (e) { var a = links[e.target.id]; if (a && e.isIntersecting) { for (var k in links) links[k].removeAttribute('aria-current'); a.setAttribute('aria-current', 'true'); } });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  Object.keys(links).forEach(function (id) { var el = document.getElementById(id); if (el) cur.observe(el); });
+})();
 </script>
 </body>
 </html>
