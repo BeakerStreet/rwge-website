@@ -238,6 +238,7 @@
   .facts div { display: grid; gap: 0.1rem; }
   .facts b { font-family: var(--display); font-weight: 800; font-stretch: 85%; font-size: 1.4rem; line-height: 1.1; }
   .facts span { font-size: 0.85rem; color: var(--ink-2); }
+  .flows .facts-h { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-2); margin: 0 0 -0.4rem; }
   .flows .miss { border-left: 3px solid var(--magenta); padding-left: 0.85rem; font-size: 0.98rem; }
 
   /* ---------- 04 places library ---------- */
@@ -450,11 +451,12 @@
         <h3>A downtown block you can walk</h3>
         <p class="chain"><span>Place</span>→<span>Footprints</span>→<span>LiDAR heights</span>→<span>Ground</span>→<span>Build</span>→<span>Texture</span>→<span>Walk test</span>→<span>Street judge</span>→<span>glTF</span></p>
         <div class="pair">
-          <figure><img src="img/fidi-source-naip.jpg" width="740" height="929" loading="lazy" alt="NAIP aerial photo of San Francisco's Financial District around Market Street"><figcaption>Source: the NAIP aerial the run draped on the ground</figcaption></figure>
-          <figure><img src="img/fidi-flat-walls-preview.png" width="800" height="600" loading="lazy" alt="Raw 3D render of the Financial District: towers at measured heights with generated windows"><figcaption>Shipped: the same blocks, towers at LiDAR height</figcaption></figure>
+          <figure><img src="img/fidi-source-naip.jpg" width="740" height="929" loading="lazy" alt="NAIP aerial photo of San Francisco's Financial District around Market Street"><figcaption>Source: Financial District, the NAIP aerial the run draped on the ground</figcaption></figure>
+          <figure><img src="img/fidi-flat-walls-preview.png" width="800" height="600" loading="lazy" alt="Raw 3D render of the Financial District: towers at measured heights with generated windows"><figcaption>Shipped: the same blocks, towers at LiDAR height. 8 Oct file, 15 / 20 routes</figcaption></figure>
         </div>
+        <p class="facts-h">Best downtown run: Times Square, 24 Oct</p>
         <div class="facts">
-          <div><b>20 / 20</b><span>routes walked, Times Square</span></div>
+          <div><b>20 / 20</b><span>routes walked</span></div>
           <div><b>105</b><span>buildings, 90% at LiDAR height</span></div>
           <div><b>31 min</b><span>for the run</span></div>
           <div><b>$4.78</b><span>model compute (not a price)</span></div>
