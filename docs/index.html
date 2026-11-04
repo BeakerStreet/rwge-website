@@ -99,6 +99,22 @@
   .hero h1 { font-size: clamp(2.6rem, 8vw, 5.6rem); font-weight: 850; font-stretch: 75%; line-height: 0.96; max-width: 16ch; letter-spacing: -0.01em; }
   .hero h1 em { font-style: normal; color: var(--magenta); }
   .hero .lede { font-size: clamp(1.125rem, 2vw, 1.35rem); max-width: 38rem; }
+  .hero-copy { display: grid; gap: 1.25rem; justify-items: start; }
+  .hero-fig { margin: 0; width: 100%; display: grid; gap: 0.6rem; }
+  .hero-fig .stage { position: relative; border-radius: 6px; overflow: hidden; background: #b3cbe9; border: 1px solid var(--rule); aspect-ratio: 16 / 9; }
+  .hero-fig .stage > img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .hero-fig .inset { position: absolute; left: 0.75rem; bottom: 0.75rem; width: 26%; margin: 0; border: 2px solid #fff; border-radius: 4px; overflow: hidden; box-shadow: 0 6px 18px rgb(0 0 0 / 0.28); background: #fff; }
+  .hero-fig .inset img { display: block; width: 100%; height: auto; }
+  .hero-fig .tag { position: absolute; white-space: nowrap; font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.05em; text-transform: uppercase; background: rgb(21 31 28 / 0.86); color: #f1f3ee; padding: 0.25rem 0.45rem; border-radius: 3px; }
+  .hero-fig .tag.in { left: 0.75rem; top: 0.75rem; }
+  .hero-fig .inset .tag { left: 0.3rem; top: 0.3rem; font-size: 0.62rem; }
+  .hero-fig figcaption { font-family: var(--mono); font-size: var(--small); color: var(--ink-2); line-height: 1.5; }
+  .hero-fig figcaption a { color: inherit; }
+  @media (min-width: 960px) {
+    .hero { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); column-gap: 3rem; align-items: center; }
+    .hero h1 { font-size: clamp(2.6rem, 5.4vw, 5rem); }
+    .hero .tools { grid-column: 1 / -1; }
+  }
   .ctas { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.5rem; }
   .tools { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.5rem 1.75rem; padding-block: 1.25rem; border-top: 1px solid var(--rule); margin-top: 2rem; width: 100%; }
   .tools .label { font-family: var(--mono); font-size: var(--small); color: var(--ink-2); }
@@ -330,10 +346,20 @@
 <main class="page">
 
   <header class="hero">
-    <p class="kicker">Real World Game Engine</p>
-    <h1>Production-grade <em>real places</em></h1>
-    <p class="lede">An agent graph that turns public aerial imagery and LiDAR into a real US place you can open, walk and ship. One glTF file, built from sources you can name, scored against the street it came from.</p>
-    <p class="ctas"><a class="btn" href="#talk">Tell us your place</a><a class="btn ghost" href="#viewer">Inspect a place ↓</a></p>
+    <div class="hero-copy">
+      <p class="kicker">Real World Game Engine</p>
+      <h1>Production-grade <em>real places</em></h1>
+      <p class="lede">An agent graph that turns public aerial imagery and LiDAR into a real US place you can open, walk and ship. One glTF file, built from sources you can name, scored against the street it came from.</p>
+      <p class="ctas"><a class="btn" href="#talk">Tell us your place</a><a class="btn ghost" href="#viewer">Inspect a place ↓</a></p>
+    </div>
+    <figure class="hero-fig">
+      <div class="stage">
+        <img src="img/parkslope-built.jpg" width="960" height="540" fetchpriority="high" alt="Raw render of the built Park Slope world: brick rowhouses at measured heights along tree-lined blocks">
+        <span class="tag in">Built · glTF</span>
+        <figure class="inset"><img src="img/parkslope-source.jpg" width="508" height="662" alt="The aerial photo of Park Slope the run started from"><span class="tag">Source aerial</span></figure>
+      </div>
+      <figcaption>Park Slope, Brooklyn. One agent run, raw render, no retouching. 18 / 20 walk routes completed. <a href="#pipelines">See where it misses</a></figcaption>
+    </figure>
     <div class="tools" aria-label="Opens in your tools">
       <span class="label">One glTF 2.0 file, into</span>
       <b>Unreal</b><b>Unity</b><b>Godot</b><b>Blender</b><b>Houdini</b>
