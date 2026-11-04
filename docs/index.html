@@ -108,6 +108,7 @@
   .hero-fig .tag { position: absolute; white-space: nowrap; font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.05em; text-transform: uppercase; background: rgb(21 31 28 / 0.86); color: #f1f3ee; padding: 0.25rem 0.45rem; border-radius: 3px; }
   .hero-fig .tag.in { left: 0.75rem; top: 0.75rem; }
   .hero-fig .inset .tag { left: 0.3rem; top: 0.3rem; font-size: 0.62rem; }
+  @media (max-width: 560px) { .hero-fig .inset { width: 34%; left: 0.5rem; bottom: 0.5rem; } .hero-fig .inset .tag { left: 0.2rem; top: 0.2rem; font-size: 0.55rem; letter-spacing: 0.02em; padding: 0.15rem 0.3rem; } .hero-fig .tag.in { left: auto; right: 0.5rem; top: 0.5rem; } }
   .hero-fig figcaption { font-family: var(--mono); font-size: var(--small); color: var(--ink-2); line-height: 1.5; }
   .hero-fig figcaption a { color: inherit; }
   @media (min-width: 960px) {
@@ -121,7 +122,8 @@
   .tools b { font-family: var(--display); font-weight: 800; font-stretch: 90%; font-size: 1.15rem; color: var(--ink); opacity: 0.85; }
 
   .proof { list-style: none; margin: 0; padding: 1.25rem 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(13rem, 42%), 1fr)); gap: 1rem 1.5rem; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); }
-  .proof li { display: grid; gap: 0.2rem; }
+  .proof li { display: grid; gap: 0.2rem; align-content: start; }
+  @media (max-width: 560px) { .proof b { font-size: 1.4rem; } }
   .proof b { font-family: var(--display); font-weight: 820; font-stretch: 85%; font-size: 1.75rem; line-height: 1.1; }
   .proof span { font-size: 0.95rem; color: var(--ink-2); }
 
