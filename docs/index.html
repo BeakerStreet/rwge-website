@@ -382,7 +382,7 @@
     <div class="sec-head">
       <p class="kicker">01 · The agents</p>
       <h2 id="h-graph">Agents build the place, one stage at a time</h2>
-      <p>Name a US place. Each node is an agent with one job and one public source, and every edge passes on where its data came from. Click a node to see what it did in the Financial District run.</p>
+      <p>Name a US place. Each node is an agent with one job and one public source, and every edge passes on where its data came from. Click a node to see what it did in the 24 Oct Financial District run.</p>
     </div>
     <div class="canvas">
       <div class="bar"><span><span class="dot"></span>RWGE graph · place-run</span><span class="grow"></span><span id="g-status">Draft · 9 nodes</span></div>
@@ -397,7 +397,7 @@
         </div>
         <aside class="inspector" id="insp" aria-live="polite"></aside>
       </div>
-      <div class="graph-foot"><span id="g-foot">Example run: SF Financial District · 31 min · $4.74 model compute</span><a href="#talk" id="claim">Send us this place</a></div>
+      <div class="graph-foot"><span id="g-foot">Example run: SF Financial District, 24 Oct · 31 min · $4.74 model compute</span><a href="#talk" id="claim">Send us this place</a></div>
     </div>
   </section>
 
@@ -684,19 +684,19 @@ shots/         <span class="c">source aerial · overview · street frame</span><
   var NODES = [
     { id: 'place', kind: 'input', name: 'Place', src: 'You', out: 'Market St & Montgomery St', st: '',
       what: 'The place you name, resolved to a fixed extent on the ground.',
-      run: '440 × 552 m around Market Street', note: 'Any US place with public LiDAR coverage.' },
+      run: '311 × 393 m around Market Street (the downloadable 8 Oct file covers 440 × 552 m)', note: 'Any US place with public LiDAR coverage.' },
     { id: 'find', kind: 'agent', name: 'Find what’s there', src: 'Overture Maps', out: 'building footprints', st: 'ok',
       what: 'Collects every building outline in the extent, so the world starts from what exists rather than what was tagged.',
-      run: 'Footprints for the downtown blocks', lic: 'ODbL' },
+      run: '85 Overture footprints, plus 1 building the LiDAR found that Overture missed: 86.', lic: 'ODbL' },
     { id: 'heights', kind: 'agent', name: 'Measure heights', src: 'USGS 3DEP LiDAR', out: 'roof height per footprint', st: 'ok',
       what: 'Reads LiDAR returns inside each footprint and sets the roof there, so a tower is as tall as the tower.',
-      run: 'Towers to 191 m. Times Square: 90% of 105 buildings at LiDAR height.', lic: 'Public domain' },
+      run: '84 of 86 buildings at LiDAR height; returns read to 177 m above ground.', lic: 'Public domain' },
     { id: 'ground', kind: 'agent', name: 'Read the ground', src: 'USDA NAIP aerial', out: 'ground, water, trees', st: 'ok', down: true,
       what: 'Segments the aerial into streets, ground, water and vegetation, and drapes it on the terrain.',
       run: 'Streets read between every block.', lic: 'Public domain' },
     { id: 'build', kind: 'agent', name: 'Build', src: 'Blender', out: 'meshes', st: 'ok',
       what: 'Turns footprints and heights into closed building meshes on the terrain, with a street kit where the place needs one.',
-      run: '60,720 triangles in the shipped file.' },
+      run: '31,504 triangles, 2.75 MB shipped.' },
     { id: 'texture', kind: 'agent', name: 'Texture', src: 'Aerial + generated', out: 'PBR materials', st: 'warn',
       what: 'Puts the aerial photo on roofs and ground, and generates facades.',
       run: 'Windows are generated, not photographed. One day’s sun stays baked into the aerial.' },
@@ -708,7 +708,7 @@ shots/         <span class="c">source aerial · overview · street frame</span><
       run: '0 of 4 buildings matched over 7 photos: tier 1. Measured heights; generic facades.' },
     { id: 'out', kind: 'output', name: 'glTF + record', src: 'Khronos validator', out: 'world.glb · record.json', st: 'ok',
       what: 'One GLB and the run record: every source, licence and score.',
-      run: '0 errors, 0 warnings in the Khronos validator.' }
+      run: '4 of 7 evals passed. This run’s file isn’t hosted; the downloadable 8 Oct file has 0 errors, 0 warnings in the Khronos validator.' }
   ];
   var ol = document.getElementById('nodes'), insp = document.getElementById('insp');
   var place = 'Market St & Montgomery St, San Francisco';
@@ -724,7 +724,7 @@ shots/         <span class="c">source aerial · overview · street frame</span><
     insp.innerHTML = '<p class="k">Node ' + String(sel + 1).padStart(2, '0') + ' · ' + n.kind + '</p><h3>' + esc(n.name) + '</h3><p>' + esc(n.what) + '</p>' +
       '<dl><dt>Source</dt><dd>' + esc(n.src) + (n.lic ? ' · ' + esc(n.lic) : '') + '</dd>' +
       '<dt>Passes on</dt><dd>' + esc(n.id === 'place' ? place : n.out) + '</dd>' +
-      '<dt>In the FiDi run</dt><dd>' + esc(n.run) + '</dd>' + (n.note ? '<dt>Note</dt><dd>' + esc(n.note) + '</dd>' : '') + '</dl>';
+      '<dt>In the 24 Oct FiDi run</dt><dd>' + esc(n.run) + '</dd>' + (n.note ? '<dt>Note</dt><dd>' + esc(n.note) + '</dd>' : '') + '</dl>';
   }
   var cur = 2; render(cur);
   ol.addEventListener('click', function (e) { var b = e.target.closest('button[data-i]'); if (!b) return; cur = +b.dataset.i; render(cur); });
