@@ -482,7 +482,8 @@ var CONTACT = { live: true, url: "https://qdfgvfukozsssiuicbtt.supabase.co", key
 <script>
 // Counts a visit and a few clicks into events (insert-only). No cookies; session id lives in sessionStorage.
 (function () {
-  if (!CONTACT.live) return;
+  // Count real visitors only: the live host, not local files, local servers, previews or automated browsers.
+  if (!CONTACT.live || location.hostname !== 'beakerstreet.github.io' || navigator.webdriver) return;
   var sid; try { sid = sessionStorage.getItem('rwge-sid'); } catch (e) {}
   if (!sid) { sid = Math.random().toString(36).slice(2, 12); try { sessionStorage.setItem('rwge-sid', sid); } catch (e) {} }
   function log(kind, extra) {
