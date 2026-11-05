@@ -99,13 +99,31 @@
   .hero h1 { font-size: clamp(2.6rem, 8vw, 5.6rem); font-weight: 850; font-stretch: 75%; line-height: 0.96; max-width: 16ch; letter-spacing: -0.01em; }
   .hero h1 em { font-style: normal; color: var(--magenta); }
   .hero .lede { font-size: clamp(1.125rem, 2vw, 1.35rem); max-width: 38rem; }
+  .hero-copy { display: grid; gap: 1.25rem; justify-items: start; }
+  .hero-fig { margin: 0; width: 100%; display: grid; gap: 0.6rem; }
+  .hero-fig .stage { position: relative; border-radius: 6px; overflow: hidden; background: #b3cbe9; border: 1px solid var(--rule); aspect-ratio: 16 / 9; }
+  .hero-fig .stage > img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .hero-fig .inset { position: absolute; left: 0.75rem; bottom: 0.75rem; width: 26%; margin: 0; border: 2px solid #fff; border-radius: 4px; overflow: hidden; box-shadow: 0 6px 18px rgb(0 0 0 / 0.28); background: #fff; }
+  .hero-fig .inset img { display: block; width: 100%; height: auto; }
+  .hero-fig .tag { position: absolute; white-space: nowrap; font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.05em; text-transform: uppercase; background: rgb(21 31 28 / 0.86); color: #f1f3ee; padding: 0.25rem 0.45rem; border-radius: 3px; }
+  .hero-fig .tag.in { left: 0.75rem; top: 0.75rem; }
+  .hero-fig .inset .tag { left: 0.3rem; top: 0.3rem; font-size: 0.62rem; }
+  @media (max-width: 560px) { .hero-fig .inset { width: 34%; left: 0.5rem; bottom: 0.5rem; } .hero-fig .inset .tag { left: 0.2rem; top: 0.2rem; font-size: 0.55rem; letter-spacing: 0.02em; padding: 0.15rem 0.3rem; } .hero-fig .tag.in { left: auto; right: 0.5rem; top: 0.5rem; } }
+  .hero-fig figcaption { font-family: var(--mono); font-size: var(--small); color: var(--ink-2); line-height: 1.5; }
+  .hero-fig figcaption a { color: inherit; }
+  @media (min-width: 960px) {
+    .hero { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); column-gap: 3rem; align-items: center; }
+    .hero h1 { font-size: clamp(2.6rem, 5.4vw, 5rem); }
+    .hero .tools { grid-column: 1 / -1; }
+  }
   .ctas { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.5rem; }
   .tools { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.5rem 1.75rem; padding-block: 1.25rem; border-top: 1px solid var(--rule); margin-top: 2rem; width: 100%; }
   .tools .label { font-family: var(--mono); font-size: var(--small); color: var(--ink-2); }
   .tools b { font-family: var(--display); font-weight: 800; font-stretch: 90%; font-size: 1.15rem; color: var(--ink); opacity: 0.85; }
 
   .proof { list-style: none; margin: 0; padding: 1.25rem 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(13rem, 42%), 1fr)); gap: 1rem 1.5rem; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); }
-  .proof li { display: grid; gap: 0.2rem; }
+  .proof li { display: grid; gap: 0.2rem; align-content: start; }
+  @media (max-width: 560px) { .proof b { font-size: 1.4rem; } }
   .proof b { font-family: var(--display); font-weight: 820; font-stretch: 85%; font-size: 1.75rem; line-height: 1.1; }
   .proof span { font-size: 0.95rem; color: var(--ink-2); }
 
@@ -220,6 +238,7 @@
   .facts div { display: grid; gap: 0.1rem; }
   .facts b { font-family: var(--display); font-weight: 800; font-stretch: 85%; font-size: 1.4rem; line-height: 1.1; }
   .facts span { font-size: 0.85rem; color: var(--ink-2); }
+  .flows .facts-h { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-2); margin: 0 0 -0.4rem; }
   .flows .miss { border-left: 3px solid var(--magenta); padding-left: 0.85rem; font-size: 0.98rem; }
 
   /* ---------- 04 places library ---------- */
@@ -275,6 +294,7 @@
   .tier .price { font-family: var(--display); font-weight: 850; font-stretch: 80%; font-size: 2rem; line-height: 1; }
   .tier ul { margin: 0; padding-left: 1.1rem; display: grid; gap: 0.35rem; font-size: 0.95rem; }
   .tier .btn { justify-self: start; }
+  .tier-dl { display: flex; flex-wrap: wrap; gap: 0.5rem; }
   .fine { margin-top: 1rem; font-family: var(--mono); font-size: var(--small); color: var(--ink-2); }
 
   /* ---------- CTA / form ---------- */
@@ -330,10 +350,20 @@
 <main class="page">
 
   <header class="hero">
-    <p class="kicker">Real World Game Engine</p>
-    <h1>Production-grade <em>real places</em></h1>
-    <p class="lede">An agent graph that turns public aerial imagery and LiDAR into a real US place you can open, walk and ship. One glTF file, built from sources you can name, scored against the street it came from.</p>
-    <p class="ctas"><a class="btn" href="#talk">Tell us your place</a><a class="btn ghost" href="#viewer">Inspect a place ↓</a></p>
+    <div class="hero-copy">
+      <p class="kicker">Real World Game Engine</p>
+      <h1>Production-grade <em>real places</em></h1>
+      <p class="lede">An agent graph that turns public aerial imagery and LiDAR into a real US place you can open, walk and ship. One glTF file, built from sources you can name, scored against the street it came from.</p>
+      <p class="ctas"><a class="btn" href="#talk">Tell us your place</a><a class="btn ghost" href="#viewer">Inspect a place ↓</a></p>
+    </div>
+    <figure class="hero-fig">
+      <div class="stage">
+        <img src="img/parkslope-built.jpg" width="960" height="540" fetchpriority="high" alt="Raw render of the built Park Slope world: brick rowhouses at measured heights along tree-lined blocks">
+        <span class="tag in">Built · glTF</span>
+        <figure class="inset"><img src="img/parkslope-source.jpg" width="508" height="662" alt="The aerial photo of Park Slope the run started from"><span class="tag">Source aerial</span></figure>
+      </div>
+      <figcaption>Park Slope, Brooklyn. One agent run, raw render, no retouching. 17 / 20 walk routes completed. <a href="#pipelines">See where it misses</a></figcaption>
+    </figure>
     <div class="tools" aria-label="Opens in your tools">
       <span class="label">One glTF 2.0 file, into</span>
       <b>Unreal</b><b>Unity</b><b>Godot</b><b>Blender</b><b>Houdini</b>
@@ -352,7 +382,7 @@
     <div class="sec-head">
       <p class="kicker">01 · The agents</p>
       <h2 id="h-graph">Agents build the place, one stage at a time</h2>
-      <p>Name a US place. Each node is an agent with one job and one public source, and every edge passes on where its data came from. Click a node to see what it did in the Financial District run.</p>
+      <p>Name a US place. Each node is an agent with one job and one public source, and every edge passes on where its data came from. Click a node to see what it did in the 24 Oct Financial District run.</p>
     </div>
     <div class="canvas">
       <div class="bar"><span><span class="dot"></span>RWGE graph · place-run</span><span class="grow"></span><span id="g-status">Draft · 9 nodes</span></div>
@@ -367,7 +397,7 @@
         </div>
         <aside class="inspector" id="insp" aria-live="polite"></aside>
       </div>
-      <div class="graph-foot"><span id="g-foot">Example run: SF Financial District · 31 min · $4.74 model compute</span><a href="#talk" id="claim">Send us this place</a></div>
+      <div class="graph-foot"><span id="g-foot">Example run: SF Financial District, 24 Oct · 31 min · $4.74 model compute</span><a href="#talk" id="claim">Send us this place</a></div>
     </div>
   </section>
 
@@ -422,11 +452,12 @@
         <h3>A downtown block you can walk</h3>
         <p class="chain"><span>Place</span>→<span>Footprints</span>→<span>LiDAR heights</span>→<span>Ground</span>→<span>Build</span>→<span>Texture</span>→<span>Walk test</span>→<span>Street judge</span>→<span>glTF</span></p>
         <div class="pair">
-          <figure><img src="img/fidi-source-naip.jpg" width="740" height="929" loading="lazy" alt="NAIP aerial photo of San Francisco's Financial District around Market Street"><figcaption>Source: the NAIP aerial the run draped on the ground</figcaption></figure>
-          <figure><img src="img/fidi-flat-walls-preview.png" width="800" height="600" loading="lazy" alt="Raw 3D render of the Financial District: towers at measured heights with generated windows"><figcaption>Shipped: the same blocks, towers at LiDAR height</figcaption></figure>
+          <figure><img src="img/fidi-source-naip.jpg" width="740" height="929" loading="lazy" alt="NAIP aerial photo of San Francisco's Financial District around Market Street"><figcaption>Source: Financial District, the NAIP aerial the run draped on the ground</figcaption></figure>
+          <figure><img src="img/fidi-flat-walls-preview.png" width="800" height="600" loading="lazy" alt="Raw 3D render of the Financial District: towers at measured heights with generated windows"><figcaption>Shipped: the same blocks, towers at LiDAR height. 8 Oct file, 15 / 20 routes</figcaption></figure>
         </div>
+        <p class="facts-h">Best downtown run: Times Square, 24 Oct</p>
         <div class="facts">
-          <div><b>20 / 20</b><span>routes walked, Times Square</span></div>
+          <div><b>20 / 20</b><span>routes walked</span></div>
           <div><b>105</b><span>buildings, 90% at LiDAR height</span></div>
           <div><b>31 min</b><span>for the run</span></div>
           <div><b>$4.78</b><span>model compute (not a price)</span></div>
@@ -442,7 +473,7 @@
           <figure><img src="img/parkslope-street.jpg" width="640" height="360" loading="lazy" alt="Raw street-level render in Park Slope: brick blocks, lamp posts, bare trees and parked cars as grey boxes"><figcaption>Shipped: street level, kerbs, lamps, parked cars, trees</figcaption></figure>
         </div>
         <div class="facts">
-          <div><b>18 / 20</b><span>routes walked (78% over 60)</span></div>
+          <div><b>17 / 20</b><span>routes walked (73% over 60)</span></div>
           <div><b>2 / 15</b><span>street photos with matching buildings</span></div>
           <div><b>2 / 5</b><span>street rated a layout blockout</span></div>
         </div>
@@ -520,7 +551,7 @@
           <div class="line"><span>Run</span><b>31 min · $4.74 model compute</b></div>
           <div class="line"><span>Licence</span><b>Yours to cache, modify and ship; keep the ODbL credit</b></div>
         </div>
-        <div class="acts"><a href="files/fidi-world.glb" download>Download glTF</a><a href="#viewer">Inspect</a><a href="#talk">Run my place</a></div>
+        <div class="acts"><a href="files/fidi-world.glb" download title="The hosted file is the 8 Oct run, which walked 15 of 20 routes">Download 8 Oct file · 15/20</a><a href="#viewer">Inspect</a><a href="#talk">Run my place</a></div>
       </div>
       <div class="canvas rec judge">
         <div class="bar"><span><span class="dot" style="background:var(--cv-hot)"></span>Street judge</span><span class="grow"></span><span>Park Slope, Brooklyn</span></div>
@@ -585,8 +616,8 @@ shots/         <span class="c">source aerial · overview · street frame</span><
       <div class="tier">
         <p class="tn"><span>Open</span></p>
         <p class="price">Free</p>
-        <ul><li>Two San Francisco places as GLB</li><li>The run record for each</li><li>Yours to cache and ship</li></ul>
-        <a class="btn ghost" href="files/fidi-world.glb" download>Download glTF</a>
+        <ul><li>Two San Francisco places as GLB, both run 8 Oct</li><li>Walk test for each: Pacific Heights 20 / 20, Financial District 15 / 20</li><li>Yours to cache and ship; keep the ODbL credit</li></ul>
+        <div class="tier-dl"><a class="btn ghost" href="files/pacheights-world.glb" download>Pacific Heights · 5.3 MB</a><a class="btn ghost" href="files/fidi-world.glb" download>Financial District · 5.8 MB</a></div>
       </div>
       <div class="tier hot">
         <p class="tn"><span>Your place</span><i>Start here</i></p>
@@ -653,19 +684,19 @@ shots/         <span class="c">source aerial · overview · street frame</span><
   var NODES = [
     { id: 'place', kind: 'input', name: 'Place', src: 'You', out: 'Market St & Montgomery St', st: '',
       what: 'The place you name, resolved to a fixed extent on the ground.',
-      run: '440 × 552 m around Market Street', note: 'Any US place with public LiDAR coverage.' },
+      run: '311 × 393 m around Market Street (the downloadable 8 Oct file covers 440 × 552 m)', note: 'Any US place with public LiDAR coverage.' },
     { id: 'find', kind: 'agent', name: 'Find what’s there', src: 'Overture Maps', out: 'building footprints', st: 'ok',
       what: 'Collects every building outline in the extent, so the world starts from what exists rather than what was tagged.',
-      run: 'Footprints for the downtown blocks', lic: 'ODbL' },
+      run: '85 Overture footprints, plus 1 building the LiDAR found that Overture missed: 86.', lic: 'ODbL' },
     { id: 'heights', kind: 'agent', name: 'Measure heights', src: 'USGS 3DEP LiDAR', out: 'roof height per footprint', st: 'ok',
       what: 'Reads LiDAR returns inside each footprint and sets the roof there, so a tower is as tall as the tower.',
-      run: 'Towers to 191 m. Times Square: 90% of 105 buildings at LiDAR height.', lic: 'Public domain' },
+      run: '84 of 86 buildings at LiDAR height; returns read to 177 m above ground.', lic: 'Public domain' },
     { id: 'ground', kind: 'agent', name: 'Read the ground', src: 'USDA NAIP aerial', out: 'ground, water, trees', st: 'ok', down: true,
       what: 'Segments the aerial into streets, ground, water and vegetation, and drapes it on the terrain.',
       run: 'Streets read between every block.', lic: 'Public domain' },
     { id: 'build', kind: 'agent', name: 'Build', src: 'Blender', out: 'meshes', st: 'ok',
       what: 'Turns footprints and heights into closed building meshes on the terrain, with a street kit where the place needs one.',
-      run: '60,720 triangles in the shipped file.' },
+      run: '31,504 triangles, 2.75 MB shipped.' },
     { id: 'texture', kind: 'agent', name: 'Texture', src: 'Aerial + generated', out: 'PBR materials', st: 'warn',
       what: 'Puts the aerial photo on roofs and ground, and generates facades.',
       run: 'Windows are generated, not photographed. One day’s sun stays baked into the aerial.' },
@@ -677,7 +708,7 @@ shots/         <span class="c">source aerial · overview · street frame</span><
       run: '0 of 4 buildings matched over 7 photos: tier 1. Measured heights; generic facades.' },
     { id: 'out', kind: 'output', name: 'glTF + record', src: 'Khronos validator', out: 'world.glb · record.json', st: 'ok',
       what: 'One GLB and the run record: every source, licence and score.',
-      run: '0 errors, 0 warnings in the Khronos validator.' }
+      run: '4 of 7 evals passed. This run’s file isn’t hosted; the downloadable 8 Oct file has 0 errors, 0 warnings in the Khronos validator.' }
   ];
   var ol = document.getElementById('nodes'), insp = document.getElementById('insp');
   var place = 'Market St & Montgomery St, San Francisco';
@@ -693,7 +724,7 @@ shots/         <span class="c">source aerial · overview · street frame</span><
     insp.innerHTML = '<p class="k">Node ' + String(sel + 1).padStart(2, '0') + ' · ' + n.kind + '</p><h3>' + esc(n.name) + '</h3><p>' + esc(n.what) + '</p>' +
       '<dl><dt>Source</dt><dd>' + esc(n.src) + (n.lic ? ' · ' + esc(n.lic) : '') + '</dd>' +
       '<dt>Passes on</dt><dd>' + esc(n.id === 'place' ? place : n.out) + '</dd>' +
-      '<dt>In the FiDi run</dt><dd>' + esc(n.run) + '</dd>' + (n.note ? '<dt>Note</dt><dd>' + esc(n.note) + '</dd>' : '') + '</dl>';
+      '<dt>In the 24 Oct FiDi run</dt><dd>' + esc(n.run) + '</dd>' + (n.note ? '<dt>Note</dt><dd>' + esc(n.note) + '</dd>' : '') + '</dl>';
   }
   var cur = 2; render(cur);
   ol.addEventListener('click', function (e) { var b = e.target.closest('button[data-i]'); if (!b) return; cur = +b.dataset.i; render(cur); });
@@ -733,12 +764,12 @@ shots/         <span class="c">source aerial · overview · street frame</span><
     ['Pacific Heights, San Francisco', 'residential', 20, 'Hills and houses; Lafayette Park.', 'files/pacheights-world.glb'],
     ['Times Square, Manhattan', 'downtown', 20, '105 buildings, 90% at LiDAR height; no signage.'],
     ['4th & Madison, Seattle', 'downtown', 20, 'Agents found the USGS LiDAR themselves.'],
-    ['Financial District, San Francisco', 'downtown', 20, 'Towers to 191 m.', 'files/fidi-world.glb'],
+    ['Financial District, San Francisco', 'downtown', 20, 'Towers to 191 m. The file here is the earlier 8 Oct run: 15 / 20.', 'files/fidi-world.glb'],
     ['Allandale, Austin', 'residential', 19, 'Houses measured; trees mostly missing.'],
-    ['Park Slope, Brooklyn', 'residential', 18, 'Rowhouses, street trees, kerbs, lamps.'],
     ['Red Hook, Brooklyn', 'waterfront', 18, 'Water segmented; 6 of 100 structures.'],
     ['Downtown Denver', 'downtown', 18, ''],
     ['Downtown Dallas', 'downtown', 18, ''],
+    ['Park Slope, Brooklyn', 'residential', 17, 'Rowhouses, street trees, kerbs, lamps.'],
     ['Downtown Kansas City', 'downtown', 17, ''],
     ['Downtown Pittsburgh', 'downtown', 17, ''],
     ['Back Bay, Boston', 'residential', 16, ''],
