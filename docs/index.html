@@ -286,6 +286,7 @@
   .engines b { font-family: var(--display); font-weight: 780; font-stretch: 88%; font-size: 1.1rem; }
   .engines span { color: var(--ink-2); font-size: 0.95rem; }
   pre.call { margin: 0; padding: 1rem; font: 0.8rem/1.6 var(--mono); color: var(--cv-ink); overflow-x: auto; white-space: pre; }
+  pre.call:focus-visible { outline-offset: -2px; }
   pre.call .c { color: var(--cv-ink-2); } pre.call .s { color: var(--cv-ok); } pre.call .k { color: var(--cv-hot); }
 
   /* ---------- 07 access ---------- */
@@ -596,7 +597,7 @@
         </div>
         <div class="canvas">
           <div class="bar"><span><span class="dot"></span>place-run</span><span class="grow"></span><span>1 place → 1 world</span></div>
-<pre class="call"><span class="c"># what you send</span>
+<pre class="call" tabindex="0" role="region" aria-label="Example request and response"><span class="c"># what you send</span>
 {
   <span class="k">"place"</span>:  <span class="s">"Market St &amp; Montgomery St, San Francisco"</span>,
   <span class="k">"extent"</span>: <span class="s">"440 x 552 m"</span>
