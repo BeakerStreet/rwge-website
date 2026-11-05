@@ -845,7 +845,8 @@ const PLACES = {
 const SRC = 'GLB · PBR · 60,720 tris';
 const stage = document.getElementById('stage'), loadBtn = document.getElementById('load'), poster = document.getElementById('poster');
 const meta = document.getElementById('meta');
-let placeKey = 'fidi', mode = 'textured', T = null, ready = false;
+let placeKey = 'fidi', mode = 'textured', T = null, ready = false, booting = null, onScreen = true;
+const still = matchMedia('(prefers-reduced-motion: reduce)');
 
 function setMeta() {
   const p = PLACES[placeKey];
@@ -853,7 +854,10 @@ function setMeta() {
 }
 setMeta();
 
-async function boot() {
+// One renderer per page: taps on the mode buttons while the place is loading join the same boot.
+function boot() { return booting || (booting = start()); }
+
+async function start() {
   loadBtn.disabled = true; loadBtn.textContent = 'Loading…';
   try {
     const THREE = await import('three');
@@ -871,8 +875,9 @@ async function boot() {
     const ortho = new THREE.OrthographicCamera(-1, 1, 1, -1, 1, 4000);
     ortho.position.set(220, 1500, 276); ortho.up.set(0, 0, -1); ortho.lookAt(220, 0, 276);
     const controls = new OrbitControls(persp, r.domElement);
-    controls.enableDamping = true; controls.maxPolarAngle = Math.PI * 0.49; controls.autoRotate = true; controls.autoRotateSpeed = 0.5;
+    controls.enableDamping = true; controls.maxPolarAngle = Math.PI * 0.49; controls.autoRotate = !still.matches; controls.autoRotateSpeed = 0.5;
     controls.addEventListener('start', () => { controls.autoRotate = false; });
+    still.addEventListener?.('change', e => { if (e.matches) controls.autoRotate = false; });
     const mats = {
       clay: new THREE.MeshStandardMaterial({ color: 0xd9d4ca, roughness: 0.92, metalness: 0 }),
       wire: new THREE.MeshBasicMaterial({ color: 0x8fd0a2, wireframe: true, transparent: true, opacity: 0.55 }),
@@ -887,7 +892,10 @@ async function boot() {
       Object.assign(ortho, { left: -hw, right: hw, top: hh, bottom: -hh }); ortho.updateProjectionMatrix();
     };
     new ResizeObserver(resize).observe(stage); resize();
+    // Draw only while the viewer is on screen and the tab is visible.
+    new IntersectionObserver(es => { onScreen = es[es.length - 1].isIntersecting; }).observe(stage);
     r.setAnimationLoop(() => {
+      if (!onScreen || document.hidden) return;
       if (mode === 'source') r.render(scene, ortho);
       else { controls.update(); r.render(scene, persp); }
     });
@@ -895,6 +903,9 @@ async function boot() {
     poster.remove(); loadBtn.remove(); ready = true; applyMode();
   } catch (err) {
     console.error(err);
+    booting = null;
+    stage.querySelectorAll('canvas').forEach(c => c.remove());
+    if (T && T.r) { T.r.setAnimationLoop(null); T.r.dispose(); }
     loadBtn.disabled = false; loadBtn.textContent = '3D unavailable here · download the GLB';
     loadBtn.onclick = () => { location.href = PLACES[placeKey].file; };
   }
@@ -902,7 +913,6 @@ async function boot() {
 
 async function loadPlace(key) {
   const { THREE, GLTFLoader, scene, persp, controls, cache } = T;
-  if (T.root) scene.remove(T.root);
   if (!cache[key]) {
     const g = await new GLTFLoader().loadAsync(PLACES[key].file);
     const root = g.scene;
@@ -912,6 +922,7 @@ async function loadPlace(key) {
     });
     cache[key] = root;
   }
+  if (T.root) scene.remove(T.root);
   T.root = cache[key]; scene.add(T.root);
   const box = new THREE.Box3().setFromObject(T.root), c = box.getCenter(new THREE.Vector3());
   controls.target.copy(c);
@@ -954,8 +965,9 @@ document.getElementById('placepick').addEventListener('click', async e => {
   setMeta();
   if (!ready) { if (poster) poster.src = PLACES[placeKey].poster; loadBtn.textContent = `Load the place · ${PLACES[placeKey].mb} MB`; return; }
   document.querySelectorAll('#placepick button').forEach(x => x.disabled = true);
-  await loadPlace(placeKey); applyMode();
-  document.querySelectorAll('#placepick button').forEach(x => x.disabled = false);
+  try { await loadPlace(placeKey); applyMode(); }
+  catch (err) { console.error(err); }
+  finally { document.querySelectorAll('#placepick button').forEach(x => x.disabled = false); }
 });
 loadBtn.addEventListener('click', boot);
 // Load on its own when the viewer scrolls into view on a wide screen; on phones, wait for a tap.
