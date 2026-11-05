@@ -322,6 +322,8 @@
   .fcols ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.3rem; }
   .fcols a { color: var(--ink); text-decoration: none; } .fcols a:hover { color: var(--magenta); }
   .legal { font-family: var(--mono); font-size: var(--small); color: var(--ink-2); display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+  /* Tap targets: standalone links at least 24px tall (WCAG 2.5.8) */
+  .fcols a, .caption a, #lib a[download], .hero-fig figcaption a { display: inline-block; min-height: 24px; line-height: 24px; }
 </style>
 <script type="importmap">
 { "imports": {
