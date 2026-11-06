@@ -845,7 +845,8 @@ const PLACES = {
 const SRC = 'GLB · PBR · 60,720 tris';
 const stage = document.getElementById('stage'), loadBtn = document.getElementById('load'), poster = document.getElementById('poster');
 const meta = document.getElementById('meta');
-let placeKey = 'fidi', mode = 'textured', T = null, ready = false, booting = null, onScreen = true;
+let placeKey = 'fidi', mode = 'textured', T = null, ready = false, booting = null, onScreen = true, noGL = false;
+const GL_MODES = ['clay', 'wire', 'normals'];
 const still = matchMedia('(prefers-reduced-motion: reduce)');
 
 function setMeta() {
@@ -905,9 +906,20 @@ async function start() {
     console.error(err);
     booting = null;
     stage.querySelectorAll('canvas').forEach(c => c.remove());
-    if (T && T.r) { T.r.setAnimationLoop(null); T.r.dispose(); }
-    loadBtn.disabled = false; loadBtn.textContent = '3D unavailable here · download the GLB';
+    const hadRenderer = !!(T && T.r);
+    if (hadRenderer) { T.r.setAnimationLoop(null); T.r.dispose(); }
+    T = null;
+    loadBtn.disabled = false;
+    if (hadRenderer) { loadBtn.textContent = 'Could not load the place · try again'; return; }
+    // No WebGL in this browser: Source and Score are 2D and still work; the 3D modes are switched off.
+    noGL = true;
+    loadBtn.removeEventListener('click', boot);
     loadBtn.onclick = () => { location.href = PLACES[placeKey].file; };
+    document.querySelectorAll('#modes button').forEach(b => {
+      if (GL_MODES.includes(b.dataset.mode)) { b.disabled = true; b.title = 'Needs WebGL, which this browser has turned off'; }
+    });
+    if (GL_MODES.includes(mode)) mode = 'textured';
+    applyMode();
   }
 }
 
@@ -933,6 +945,7 @@ async function loadPlace(key) {
 function applyMode() {
   document.querySelectorAll('#modes button').forEach(b => b.setAttribute('aria-pressed', b.dataset.mode === mode));
   stage.querySelectorAll('.aerial,.swipe,.scorecard').forEach(e => e.remove());
+  if (noGL) { flatMode(); return; }
   if (!ready) return;
   const { mats, root, controls } = T;
   root.traverse(o => { if (o.isMesh) o.material = (mats[mode] || o.userData.orig); });
@@ -954,16 +967,39 @@ function applyMode() {
   }
 }
 
+// Without WebGL: the poster stands in for Textured; Source shows the aerial alone; Score shows the card.
+function flatMode() {
+  const p = PLACES[placeKey];
+  loadBtn.textContent = `3D unavailable here · download the GLB · ${p.mb} MB`;
+  loadBtn.hidden = mode === 'source' || mode === 'score';
+  if (poster) poster.hidden = mode === 'source';
+  if (mode === 'source') {
+    const img = document.createElement('img'); img.className = 'aerial'; img.src = p.aerial; img.alt = 'NAIP aerial photo the run started from, same extent';
+    const sw = document.createElement('div'); sw.className = 'swipe';
+    sw.innerHTML = '<span class="tag" style="left:.75rem">Source aerial · NAIP</span>';
+    stage.append(img, sw);
+  }
+  if (mode === 'score') {
+    const sc = document.createElement('div'); sc.className = 'scorecard';
+    sc.innerHTML = p.score.map(([k, v, c]) => v === null ? `<h4>${k}</h4>` : `<div class="row"><span>${k}</span><b class="${c}">${v}</b></div>`).join('') + `<p>${p.note}</p>`;
+    stage.append(sc);
+  }
+}
+
 document.getElementById('modes').addEventListener('click', e => {
-  const b = e.target.closest('button[data-mode]'); if (!b) return;
-  mode = b.dataset.mode; if (!ready) { boot(); } applyMode();
+  const b = e.target.closest('button[data-mode]'); if (!b || b.disabled) return;
+  mode = b.dataset.mode; if (!ready && !noGL) { boot(); } applyMode();
 });
 document.getElementById('placepick').addEventListener('click', async e => {
   const b = e.target.closest('button[data-place]'); if (!b || b.dataset.place === placeKey) return;
   placeKey = b.dataset.place;
   document.querySelectorAll('#placepick button').forEach(x => x.setAttribute('aria-pressed', x === b));
   setMeta();
-  if (!ready) { if (poster) poster.src = PLACES[placeKey].poster; loadBtn.textContent = `Load the place · ${PLACES[placeKey].mb} MB`; return; }
+  if (!ready) {
+    if (poster) poster.src = PLACES[placeKey].poster;
+    if (noGL) applyMode(); else loadBtn.textContent = `Load the place · ${PLACES[placeKey].mb} MB`;
+    return;
+  }
   document.querySelectorAll('#placepick button').forEach(x => x.disabled = true);
   try { await loadPlace(placeKey); applyMode(); }
   catch (err) { console.error(err); }
